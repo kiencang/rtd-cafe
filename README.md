@@ -1,12 +1,12 @@
 # rtd-cafe
 Cài đặt nhanh tăng tốc &amp; bảo mật cho Cloudflare. Công cụ đang trong giai đoạn thử nghiệm.
 
-Yêu cầu người dùng:
+### Yêu cầu người dùng
 - Có am hiểu Cloudflare cơ bản
 - Site là blog / tin tức WordPress
 - Chấp nhận overwrite (ghi đè) lên rule cũ
 
-Khung lý thuyết dựa vào để tạo rule:
+### Khung lý thuyết dựa vào để tạo rule
 - Bảo mật: https://wpsila.com/bao-mat-wp/
 - Cache: https://blog.wpsila.com/cache-rules-trong-cloudflare/
 
