@@ -64,7 +64,7 @@ Tool sẽ tự động thiết lập các quy tắc sau dựa trên [lý thuyế
 - 🔄 **Bypass thông minh:** Tự động bỏ qua Cache khi phát hiện:
   - Admin đăng nhập (`wordpress_logged_in_*`)
   - WP-Cron, XMLRPC, WP-JSON API
-  - Mà một số logic khác
+  - Và một số logic khác
 
 ### C. Tối ưu (Transform Rules)
 - 🧹 **Query String Cleaning:** Tự động loại bỏ các query rác (`fbclid`, `utm_source`, `gclid`...) để tăng tỷ lệ HIT cache.
