@@ -19,7 +19,7 @@ Tool này **KHÔNG** dành cho người mới bắt đầu (Newbie).
 
 ### Cách 1: Sử dụng công cụ Online (Khuyên dùng)
 Truy cập giao diện web để cấu hình nhanh mà không cần động vào code:
-👉 **[Link Tool: rtd-cafe Configuration](https://rtd-cafe.wpsila.com)**
+👉 **[Link Tool: rtd-cafe.wpsila.com](https://rtd-cafe.wpsila.com)**
 
 ### Cách 2: Tự triển khai (Self-hosted)
 Nếu bạn muốn tự chạy Worker trên tài khoản Cloudflare của mình để đảm bảo quyền riêng tư tuyệt đối:
@@ -72,7 +72,7 @@ Tool sẽ tự động thiết lập các quy tắc sau dựa trên [lý thuyế
 ---
 
 ## 📚 Tài liệu tham khảo
-Các rule này được xây dựng dựa trên kinh nghiệm vận hành thực tế và các bài viết chuyên sâu:
+Các rule này được xây dựng dựa trên kinh nghiệm vận hành thực tế và các bài viết sau:
 *   [Bảo mật WordPress với Cloudflare](https://wpsila.com/bao-mat-wp/)
 *   [Cache Rules cho WordPress trên Cloudflare](https://blog.wpsila.com/cache-rules-trong-cloudflare/)
 
