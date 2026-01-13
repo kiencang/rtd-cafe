@@ -172,13 +172,38 @@
     form.addEventListener('submit', async (e) => {
         e.preventDefault();
 
-        // Lấy dữ liệu
-        const data = {
-            zoneId: document.getElementById('zoneId').value.trim(),
-            token: document.getElementById('token').value.trim(),
-            domain: document.getElementById('domain').value.trim().replace(/^https?:\/\//, '').replace(/\/$/, ''),
-            server_ip: document.getElementById('server_ip').value.trim()
-        };
+		// 1. Lấy và làm sạch tên miền trước
+		let rawDomain = document.getElementById('domain').value.trim();
+		// Loại bỏ protocol (http, https) và dấu / ở cuối, chuyển về chữ thường
+		let cleanDomain = rawDomain.replace(/^https?:\/\//, '').replace(/\/$/, '').toLowerCase();
+
+		// 2. Validate tên miền bằng Regex (Biểu thức chính quy)
+		// Giải thích Regex: 
+		// ^[a-z0-9] : Bắt đầu bằng chữ hoặc số
+		// (?:[a-z0-9-]{0,61}[a-z0-9])? : Phần giữa có thể chứa gạch ngang (-), độ dài tối đa label là 63 ký tự
+		// (?:\.[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?)+$ : Phải có ít nhất một dấu chấm (.) theo sau là đuôi tên miền
+		const domainRegex = /^[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?(?:\.[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?)+$/;
+
+		if (!domainRegex.test(cleanDomain)) {
+			// Hiển thị lỗi ngay lập tức
+			statusDiv.style.display = 'block';
+			statusDiv.className = 'error';
+			statusDiv.innerHTML = `
+				<strong>❌ Tên miền không hợp lệ:</strong><br>
+				Bạn nhập: "<em>${rawDomain}</em>"<br>
+				Vui lòng nhập đúng định dạng (VD: example.com, wpsila.com). Đừng bao gồm http:// hay đường dẫn con.
+			`;
+			// Dừng luôn, không gửi request
+			return; 
+		}
+
+		// 3. Nếu tên miền OK thì mới đóng gói data
+		const data = {
+			zoneId: document.getElementById('zoneId').value.trim(),
+			token: document.getElementById('token').value.trim(),
+			domain: cleanDomain, // Dùng biến đã làm sạch
+			server_ip: document.getElementById('server_ip').value.trim()
+		};
 
         // UI Loading
         btn.disabled = true;
