@@ -4,6 +4,8 @@ rtd-cafe là công cụ hỗ trợ triển khai nhanh các rule cache và bảo 
 
 Công cụ không cài plugin, không chạy nền, và chỉ cần chạy một lần để thiết lập các rule chuẩn. Sau khi hoàn tất, người dùng có thể tinh chỉnh thêm trực tiếp trong Cloudflare nếu có nhu cầu riêng.
 
+Link vào ứng dụng: https://rtd-cafe.wpsila.com/
+
 > ⚠️ **Tool này không dành cho người mới và có thể ghi đè (overwrite) các rule Cloudflare hiện có.**
 
 ---
