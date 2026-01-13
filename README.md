@@ -1,10 +1,17 @@
 # rtd-cafe
-Cài đặt nhanh tăng tốc &amp; bảo mật cho Cloudflare. Công cụ đang trong giai đoạn thử nghiệm.
+Cài đặt nhanh tăng tốc &amp; bảo mật cho Cloudflare. Công cụ đang trong giai đoạn phát triển thêm, test chức năng đã hoạt động ổn.
 
 ### Yêu cầu người dùng
 - Có am hiểu Cloudflare cơ bản
 - Site là blog / tin tức WordPress
 - Chấp nhận overwrite (ghi đè) lên rule cũ
+- Biết cách tạo API token để công cụ sử dụng chi việc tạo rule trên Cloudflare
+
+### Các quyền cho API token bắt buộc phải có
+Chỉ cần 3 quyền sau:
+- Zone.Cache Rules (Edit): để tạo các rule liên quan đến cache
+- Zone.WAF (Edit): để tạo các rule bảo mật
+- Zone.Transform Rules (Edit): để tạo rule liên quan đến việc bỏ qua các query cho nhiệm vụ đảm bảo hiệu suất cao
 
 ### Khung lý thuyết dựa vào để tạo rule
 - Bảo mật: https://wpsila.com/bao-mat-wp/
