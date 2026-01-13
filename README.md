@@ -1,78 +1,82 @@
-# rtd-cafe
+# ⚡ rtd-cafe: WP Cloudflare Optimizer
 
-rtd-cafe là công cụ hỗ trợ triển khai nhanh các rule cache và bảo mật cho Cloudflare, được thiết kế chuyên cho blog / site tin tức WordPress tự quản hạ tầng.
+**rtd-cafe** là công cụ tự động hóa việc cấu hình **Cache Rules** và **WAF (Bảo mật)** trên Cloudflare, được tối ưu hóa đặc biệt cho **WordPress Blog & Trang tin tức** tự quản trị hạ tầng (Self-hosted).
 
-Công cụ không cài plugin, không chạy nền, và chỉ cần chạy một lần để thiết lập các rule chuẩn. Sau khi hoàn tất, người dùng có thể tinh chỉnh thêm trực tiếp trong Cloudflare nếu có nhu cầu riêng.
-
-Link vào ứng dụng (sử dụng trực tuyến): https://rtd-cafe.wpsila.com
-
-> ⚠️ **Tool này không dành cho người mới và có thể ghi đè (overwrite) các rule Cloudflare hiện có.**
+> 💡 **Triết lý:** Không Plugin, Không chạy nền, "Set and Forget" (Cấu hình một lần dùng lâu dài).
 
 ---
 
-## Yêu cầu người dùng
+## ⚠️ Cảnh báo quan trọng
 
-rtd-cafe chỉ phù hợp nếu bạn đáp ứng các điều kiện sau:
+Tool này **KHÔNG** dành cho người mới bắt đầu (Newbie).
 
-- Có am hiểu Cloudflare ở mức cơ bản  
-- Website là blog / site tin tức WordPress  
-- Chấp nhận việc tool ghi đè lên các rule cũ  
-- Biết cách tạo và quản lý Cloudflare API Token  
+1.  **Ghi đè cấu hình:** Tool sẽ **XÓA VÀ THAY THẾ** các Cache Rules, WAF Custom Rules và Rate Limiting Rules hiện có trong Zone của bạn.
+2.  **Phạm vi:** Chỉ tối ưu cho Blog/Tin tức. **Không dùng** cho WooCommerce, Membership Site hoặc LMS (web học trực tuyến).
 
 ---
 
-## Quyền API bắt buộc
+## 🚀 Cách sử dụng
 
-API Token sử dụng cho rtd-cafe **chỉ cần đúng 3 quyền sau**:
+### Cách 1: Sử dụng công cụ Online (Khuyên dùng)
+Truy cập giao diện web để cấu hình nhanh mà không cần động vào code:
+👉 **[Link Tool: rtd-cafe Configuration](https://rtd-cafe.wpsila.com)**
 
-- `Zone.Cache Rules (Edit)` – tạo và quản lý rule cache  
-- `Zone.WAF (Edit)` – tạo rule bảo mật  
-- `Zone.Transform Rules (Edit)` – xử lý query để tối ưu hiệu suất  
+### Cách 2: Tự triển khai (Self-hosted)
+Nếu bạn muốn tự chạy Worker trên tài khoản Cloudflare của mình để đảm bảo quyền riêng tư tuyệt đối:
 
-Không yêu cầu quyền dư thừa.
-
----
-
-## Khung lý thuyết & tài liệu tham khảo
-
-Các rule được xây dựng dựa trên các nguyên tắc đã trình bày tại:
-
-- Bảo mật WordPress với Cloudflare  
-  https://wpsila.com/bao-mat-wp/
-
-- Cache Rules cho WordPress trên Cloudflare  
-  https://blog.wpsila.com/cache-rules-trong-cloudflare/
+1. Clone repository này.
+2. Chỉnh sửa thêm mã nếu cần (ví dụ thêm bớt rule)
+3. Dùng index.html làm giao diện cài đặt
+4. Dùng worker.js làm phần đưa cài đặt vào Cloudflare
+5. Upload lên Cloudflare Worker, lấy các đường link tương ứng của nó cho index.html và worker.js
+6. Trong worker.js tìm đến phần const ALLOWED_ORIGIN = "https://rtd-cafe.wpsila.com"; thay thế https://rtd-cafe.wpsila.com bằng link index.html thực tế của bạn
+7. Trong index.html tìm đến phần const WORKER_URL = "https://rtd-cafe-settings.wpsila.com"; thay thế https://rtd-cafe-settings.wpsila.com bằng link worker.js thực tế của bạn
+8. Upload lại index.html & edit code worker.js để nó cập nhật các đường link mới của riêng bạn
+9. Bắt đầu sử dụng.
 
 ---
 
-## Ưu điểm
+## ✅ Yêu cầu đầu vào
 
-- Không cần cài thêm plugin WordPress  
-- Cấu hình một lần, hiếm khi cần chỉnh sửa lại  
-- Logic rõ ràng, có thể tinh chỉnh thủ công trong Cloudflare  
-- Phù hợp cho mô hình **“set up đúng từ đầu, dùng lâu dài”**
-
----
-
-## Các rule được triển khai
-
-### A. Rule bảo mật
-
-- Chặn truy cập các file nhạy cảm  
-- Bảo vệ trang đăng nhập và khu vực admin  
-- Hạn chế bot rác và comment spam  
-- Giới hạn tần suất đăng nhập  
-- Tránh tự chặn chính quản trị viên  
-
-### B. Rule cache
-
-- Cache trang HTML cho người dùng chưa đăng nhập  
-- Cache CSS, JS, font  
-- Cache ảnh, media, file PDF  
-- Cache ngắn cho sitemap và feed  
-- Bỏ qua cache với admin, user login, API, page builder và các query đặc biệt  
+Để sử dụng tool, bạn cần chuẩn bị:
+- **Kiến thức:** Hiểu cơ bản về Cloudflare Proxy (đám mây cam) và DNS.
+- **Hạ tầng:** Website WordPress chạy trên VPS/Server riêng.
+- **API Token:** Tạo token tại Cloudflare Dashboard với đúng **3 quyền** sau:
+  - `Zone`.`Cache Rules`: **Edit**
+  - `Zone`.`WAF`: **Edit**
+  - `Zone`.`Transform Rules`: **Edit**
 
 ---
 
-**Lưu ý:** Trước khi sử dụng, hãy đọc kỹ tuyên bố từ chối trách nhiệm tại:  
-https://github.com/kiencang/rtd-cafe/blob/main/DISCLAIMERS.md
+## 🛠️ Các tính năng kỹ thuật
+
+Tool sẽ tự động thiết lập các quy tắc sau dựa trên [lý thuyết tối ưu của wpsila](https://blog.wpsila.com/cache-rules-trong-cloudflare/):
+
+### A. Bảo mật (WAF & Security)
+- 🛡️ **Whitelist Server IP:** Ngăn chặn việc tự chặn chính mình (Self-blocking).
+- 🔒 **Sensitive Files:** Chặn truy cập trực tiếp vào `.log`, `.sql`, `.env`, `.git`...
+- 🤖 **Anti-Bot:** Thách thức (Challenge) các bot rác, user-agent đáng ngờ.
+- 🚪 **Login Protection:** Giới hạn Rate Limit cho `wp-login.php` để chống Brute Force.
+
+### B. Tăng tốc (Cache Rules)
+- ⚡ **Cache Everything:** Cache HTML cho trang chủ, chuyên mục, bài viết (cho khách).
+- 🎨 **Static Cache:** Cache dài hạn cho CSS, JS, Fonts, Images.
+- 🔄 **Bypass thông minh:** Tự động bỏ qua Cache khi phát hiện:
+  - Admin đăng nhập (`wordpress_logged_in_*`)
+  - WP-Cron, XMLRPC, WP-JSON API
+  - Mà một số logic khác
+
+### C. Tối ưu (Transform Rules)
+- 🧹 **Query String Cleaning:** Tự động loại bỏ các query rác (`fbclid`, `utm_source`, `gclid`...) để tăng tỷ lệ HIT cache.
+
+---
+
+## 📚 Tài liệu tham khảo
+Các rule này được xây dựng dựa trên kinh nghiệm vận hành thực tế và các bài viết chuyên sâu:
+*   [Bảo mật WordPress với Cloudflare](https://wpsila.com/bao-mat-wp/)
+*   [Cache Rules cho WordPress trên Cloudflare](https://blog.wpsila.com/cache-rules-trong-cloudflare/)
+
+---
+
+## ⚖️ Tuyên bố từ chối trách nhiệm (Disclaimer)
+Công cụ được cung cấp "nguyên trạng" (as-is). Tác giả không chịu trách nhiệm cho bất kỳ thiệt hại nào về dữ liệu hoặc gián đoạn dịch vụ khi sử dụng công cụ này. Vui lòng xem chi tiết tại [DISCLAIMERS.md](DISCLAIMERS.md).
