@@ -21,7 +21,7 @@ const MY_CACHE_RULES = [
     "action": "set_cache_settings",
     "action_parameters": {
       "cache": true,
-      "edge_ttl": { "default": 86400, "mode": "override_origin" }, // 1 ngày
+      "edge_ttl": { "default": 28800, "mode": "override_origin" }, // 8 tiếng, tính theo giây
       "browser_ttl": { "default": 7200, "mode": "override_origin" } // 2 tiếng
     },
     "description": "Quy tắc 1: Quy tắc cache chung",
