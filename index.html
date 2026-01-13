@@ -53,6 +53,22 @@
             color: #744210;
             border-radius: 4px;
         }
+		
+        .alert-warning {
+            background-color: #fff5f5; /* Nền đỏ rất nhạt */
+            border-left: 4px solid var(--error); /* Viền trái màu đỏ đậm (theo biến --error có sẵn) */
+            padding: 0.85rem 1rem;
+            margin-bottom: 1rem; /* Khoảng cách với nút bấm */
+            font-size: 0.85rem;
+            color: #c53030; /* Màu chữ đỏ tối dễ đọc */
+            border-radius: 4px;
+            line-height: 1.5;
+        }
+        
+        .alert-warning strong {
+            font-weight: 700;
+            color: #9b2c2c;
+        }		
 
         .form-group { margin-bottom: 1.25rem; }
         label { display: block; margin-bottom: 0.5rem; font-weight: 600; font-size: 0.9rem; color: #4a5568; }
@@ -125,6 +141,10 @@
             <input type="text" id="server_ip" placeholder="VD: 113.161.x.x" required>
             <div style="font-size: 0.75rem; color: #718096; margin-top: 5px;">Để whitelist tránh tự chặn chính mình.</div>
         </div>
+		
+        <div class="alert-warning">
+            ⚠️ <strong>Lưu ý quan trọng:</strong> Tool sẽ <strong>GHI ĐÈ (Xóa & Thay thế)</strong> toàn bộ Cache Rules, WAF Rules và Rate Limit hiện có trên Zone này. Hãy cân nhắc nếu bạn đang có cấu hình riêng.
+        </div>		
 
         <button type="submit" id="submitBtn">🚀 Triển khai ngay</button>
     </form>
