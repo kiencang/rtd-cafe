@@ -10,9 +10,12 @@ Khung lý thuyết dựa vào để tạo rule:
 - Bảo mật: https://wpsila.com/bao-mat-wp/
 - Cache: https://blog.wpsila.com/cache-rules-trong-cloudflare/
 
----
+### Ưu điểm
+- Không phải cài thêm plugin
+- Cài xong một lần là xong, hiếm khi phải điều chỉnh lại
+- Có thể tinh chỉnh thêm thủ công trong chính Cloudflare nếu có nhu cầu riêng
 
-## Các rule bao gồm:
+## Các rule bao gồm
 
 ### A. Rule cho bảo mật
 - Chặn truy cập các file nhạy cảm
