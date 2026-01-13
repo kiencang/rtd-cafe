@@ -103,5 +103,5 @@ rtd-cafe **không giữ quyền kiểm soát**, chỉ hỗ trợ khởi tạo c�
 
 ---
 
-Nếu bạn đã đọc đến đây và vẫn thấy rtd-cafe phù hợp,  
-bạn chính là **đối tượng người dùng mà công cụ này hướng tới**.
+Nếu bạn đã đọc đến đây và vẫn thấy rtd-cafe phù hợp, bạn chính là **đối tượng người dùng mà công cụ này hướng tới**.
+
