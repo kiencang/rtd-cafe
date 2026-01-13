@@ -22,7 +22,7 @@ Truy cập giao diện web để cấu hình nhanh mà không cần động vào
 👉 **[Link Tool: rtd-cafe.wpsila.com](https://rtd-cafe.wpsila.com)**
 
 ### Cách 2: Tự triển khai (Self-hosted)
-Nếu bạn muốn tự chạy Worker trên tài khoản Cloudflare của mình để đảm bảo quyền riêng tư tuyệt đối:
+Nếu bạn muốn tự chạy Worker trên tài khoản Cloudflare của mình để đảm bảo quyền riêng tư tuyệt đối (không phải gửi API token qua giao diện web của tôi):
 
 1. Clone repository này
 2. Chỉnh sửa thêm mã nếu cần (ví dụ thêm bớt rule)
