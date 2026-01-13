@@ -1,23 +1,25 @@
 # rtd-cafe
 
-**rtd-cafe** là công cụ hỗ trợ **triển khai nhanh các rule cache và bảo mật cho Cloudflare**, được thiết kế **chuyên cho blog / site tin tức WordPress tự quản hạ tầng**.
+rtd-cafe là công cụ hỗ trợ triển khai nhanh các rule cache và bảo mật cho Cloudflare, được thiết kế chuyên cho blog / site tin tức WordPress tự quản hạ tầng.
 
-Công cụ không cài plugin, không chạy nền, và **chỉ cần chạy một lần** để thiết lập các rule chuẩn. Sau khi hoàn tất, người dùng có thể tinh chỉnh thêm trực tiếp trong Cloudflare nếu có nhu cầu riêng.
+Công cụ không cài plugin, không chạy nền, và chỉ cần chạy một lần để thiết lập các rule chuẩn. Sau khi hoàn tất, người dùng có thể tinh chỉnh thêm trực tiếp trong Cloudflare nếu có nhu cầu riêng.
 
-> ⚠️ Tool này **không dành cho người mới** và **có thể ghi đè (overwrite) các rule Cloudflare hiện có**.
+> ⚠️ **Tool này không dành cho người mới và có thể ghi đè (overwrite) các rule Cloudflare hiện có.**
 
 ---
 
 ## Yêu cầu người dùng
 
-rtd-cafe **chỉ phù hợp** nếu bạn đáp ứng các điều kiện sau:
+rtd-cafe chỉ phù hợp nếu bạn đáp ứng các điều kiện sau:
 
 - Có am hiểu Cloudflare ở mức cơ bản  
 - Website là blog / site tin tức WordPress  
 - Chấp nhận việc tool ghi đè lên các rule cũ  
 - Biết cách tạo và quản lý Cloudflare API Token  
 
-### Quyền API bắt buộc
+---
+
+## Quyền API bắt buộc
 
 API Token sử dụng cho rtd-cafe **chỉ cần đúng 3 quyền sau**:
 
@@ -70,5 +72,5 @@ Các rule được xây dựng dựa trên các nguyên tắc đã trình bày t
 
 ---
 
-Lưu ý: Quý vị vui lòng đọc kỹ tuyên bố từ chối trách nhiệm trước khi dùng (DISCLAIMERS.md).
-Link: https://github.com/kiencang/rtd-cafe/blob/main/DISCLAIMERS.md
+**Lưu ý:** Trước khi sử dụng, hãy đọc kỹ tuyên bố từ chối trách nhiệm tại:  
+https://github.com/kiencang/rtd-cafe/blob/main/DISCLAIMERS.md
