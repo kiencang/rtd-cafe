@@ -69,3 +69,6 @@ Các rule được xây dựng dựa trên các nguyên tắc đã trình bày t
 - Bỏ qua cache với admin, user login, API, page builder và các query đặc biệt  
 
 ---
+
+Lưu ý: Quý vị vui lòng đọc kỹ tuyên bố từ chối trách nhiệm trước khi dùng (DISCLAIMERS.md).
+Link: https://github.com/kiencang/rtd-cafe/blob/main/DISCLAIMERS.md
