@@ -1,7 +1,7 @@
 /**
  * CLOUDFLARE WORKER: WORDPRESS OPTIMIZER & SECURITY
  * Chức năng: Tự động cấu hình Cache Rules, WAF, Transform Rules và Rate Limiting.
- * Phiên bản v1.0.4
+ * Phiên bản v1.0.5
  */
 
 // =========================================================================
