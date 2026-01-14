@@ -20,10 +20,12 @@ Tool này **KHÔNG** dành cho người mới bắt đầu (Newbie).
 ### Cách 1: Sử dụng công cụ Online (Khuyên dùng)
 Truy cập giao diện web để cấu hình nhanh mà không cần động vào code:
 👉 **[Link Tool: rtd-cafe.wpsila.com](https://rtd-cafe.wpsila.com)**
+
 Bạn chỉ cần biết cách tạo API token trên Cloudflare là sử dụng được tool này để tăng tốc & bảo mật cho blog WordPress.
 
 ### Cách 2: Tự triển khai
 Cách này phức tạp hơn vì bạn phải tự triển khai công cụ.
+
 **Lý do chính**: Nếu bạn muốn tự chạy mã trên tài khoản Cloudflare của riêng bạn để đảm bảo quyền riêng tư tuyệt đối (để không phải gửi API token qua giao diện web của tôi):
 
 1. Clone repository này.
