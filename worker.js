@@ -25,7 +25,7 @@ const MY_CACHE_RULES = [
       "edge_ttl": { "default": 28800, "mode": "override_origin" }, // 8 tiếng, tính theo giây
       "browser_ttl": { "default": 180, "mode": "override_origin" } // 3 phút
     },
-    "description": "Quy tắc 1: Quy tắc cache chung",
+    "description": "Quy tắc 1: Quy tắc cache chung (HTML cache)",
     "enabled": true,
     // Loại trừ các file tĩnh (để Rule 2,3 xử lý) và trang đăng nhập
     "expression": "(not http.request.uri.path contains \"/wp-login.php\" and not http.request.uri.path contains \"/wp-admin\" and not http.cookie contains \"wordpress_logged_in_\" and not http.request.uri.path.extension in {\"css\" \"js\" \"woff\" \"woff2\" \"ttf\" \"otf\" \"eot\" \"map\" \"jpg\" \"png\" \"jpeg\" \"webp\" \"avif\" \"ico\" \"svg\" \"gif\" \"pdf\" \"mp3\" \"mp4\" \"webm\"})"
@@ -50,7 +50,7 @@ const MY_CACHE_RULES = [
       "edge_ttl": { "default": 31536000, "mode": "override_origin" }, // 1 năm
       "browser_ttl": { "default": 2592000, "mode": "override_origin" } // 1 tháng
     },
-    "description": "Quy tắc 3: Cache ảnh, pdf, media",
+    "description": "Quy tắc 3: Cache ảnh, PDF, media",
     "enabled": true,
     "expression": "(http.request.uri.path.extension in {\"jpg\" \"png\" \"jpeg\" \"webp\" \"avif\" \"ico\" \"svg\" \"gif\" \"pdf\" \"mp3\" \"mp4\" \"webm\"})"
   },
@@ -62,7 +62,7 @@ const MY_CACHE_RULES = [
       "edge_ttl": { "default": 28800, "mode": "override_origin" }, // 8 tiếng
       "browser_ttl": { "default": 28800, "mode": "override_origin" }
     },
-    "description": "Quy tắc 4: Cache ngắn cho sitemap & feed",
+    "description": "Quy tắc 4: Cache ngắn cho Sitemap & Feed",
     "enabled": true,
     "expression": "(http.request.uri.path contains \"sitemap\") or (http.request.uri.path contains \"/feed/\")"
   },
@@ -74,7 +74,7 @@ const MY_CACHE_RULES = [
     "enabled": true,
     "expression": "(http.request.uri.path contains \"/wp-admin\") or (http.request.uri.path contains \"/wp-login.php\") or (http.request.uri.path contains \"/robots.txt\") or (http.request.uri.path contains \"/wp-json/\") or (http.request.uri.query contains \"rest_route=\") or (http.request.uri.path contains \"/xmlrpc.php\") or (http.request.uri.path contains \"/wp-cron.php\") or (http.request.uri.query contains \"doing_wp_cron=\") or (http.cookie contains \"wordpress_logged_in_\") or (http.cookie contains \"wp-postpass_\") or (http.cookie contains \"wordpress_sec_\") or (http.cookie contains \"comment_author_\") or (http.request.uri.query contains \"replytocom=\") or (http.request.uri.query contains \"unapproved=\") or (http.request.uri.query contains \"moderation-hash=\") or (http.request.uri.query contains \"preview=\") or (http.request.uri.query contains \"preview_id=\") or (http.request.uri.query contains \"preview_nonce=\") or (http.request.uri.query contains \"customize_changeset_uuid\") or (http.request.uri.query contains \"customize_preview=\") or (http.request.uri.query contains \"customize=\") or (http.request.uri.query contains \"_wpnonce\") or (http.request.uri.query contains \"s=\") or (http.request.uri.query contains \"action=\") or (http.request.uri.query contains \"elementor-preview\") or (http.request.uri.query contains \"fl_builder\") or (http.request.uri.query contains \"et_fb\") or (http.request.uri.query contains \"vc_editable\") or (http.request.uri.query contains \"bricks=\") or (http.request.uri.query contains \"tve=\") or (http.request.uri.query contains \"brizy-edit\")"
   },
-  // Rule 6: Cache cho trang admin (css, js, font)
+  // Rule 6: Cache cho trang Admin (CSS, JS, font)
   {
     "action": "set_cache_settings",
     "action_parameters": {
@@ -82,7 +82,7 @@ const MY_CACHE_RULES = [
       "edge_ttl": { "default": 604800, "mode": "override_origin" }, // 7 ngày
       "browser_ttl": { "default": 7200, "mode": "override_origin" } // 2 tiếng
     },
-    "description": "Quy tắc 6: Cache cho trang admin (chỉ css, js, font)",
+    "description": "Quy tắc 6: Cache cho trang Admin (chỉ CSS, JS và font)",
     "enabled": true,
     "expression": "(http.request.uri.path contains \"/wp-admin\" and http.request.uri.path.extension in {\"css\" \"js\" \"woff\" \"woff2\" \"ttf\" \"otf\" \"eot\"})"
   }
