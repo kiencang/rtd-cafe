@@ -29,10 +29,11 @@ Nếu bạn muốn tự chạy Worker trên tài khoản Cloudflare của mình 
 3. Dùng index.html làm giao diện cài đặt (giao diện nơi người dùng nhập form)
 4. Dùng worker.js làm phần đưa cài đặt các rule vào Cloudflare
 5. Upload lên Cloudflare Worker, lấy các đường link tương ứng của nó cho index.html và worker.js
-6. Trong worker.js tìm đến phần const ALLOWED_ORIGIN = "https://rtd-cafe.wpsila.com"; thay thế https://rtd-cafe.wpsila.com bằng link index.html thực tế của bạn
-7. Trong index.html tìm đến phần const WORKER_URL = "https://rtd-cafe-settings.wpsila.com"; thay thế https://rtd-cafe-settings.wpsila.com bằng link worker.js thực tế của bạn
-8. Upload lại index.html & edit code worker.js để nó cập nhật các đường link mới của riêng bạn
-9. Bắt đầu sử dụng.
+6. Trong worker.js tìm đến phần '''const ALLOWED_ORIGIN = "https://rtd-cafe.wpsila.com";''' thay thế '''https://rtd-cafe.wpsila.com bằng link index.html''' thực tế của bạn
+7. Trong index.html tìm đến phần '''const WORKER_URL = "https://rtd-cafe-settings.wpsila.com";''' thay thế '''https://rtd-cafe-settings.wpsila.com''' bằng link worker.js thực tế của bạn
+8. Vẫn trong index.html, xóa dòng '''<link rel="canonical" href="https://rtd-cafe.wpsila.com">'''
+9. Upload lại index.html & edit code worker.js để nó cập nhật các đường link mới của riêng bạn
+10. Bắt đầu sử dụng.
 
 ---
 
