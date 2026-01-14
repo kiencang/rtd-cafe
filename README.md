@@ -1,6 +1,6 @@
 # ⚡ rtd-cafe: WP Cloudflare Optimizer
 
-**rtd-cafe** là công cụ tự động hóa việc cấu hình **Cache Rules** và **WAF (Bảo mật)** trên Cloudflare, được tối ưu hóa đặc biệt cho **WordPress Blog & Trang tin tức** tự quản trị hạ tầng (Self-hosted).
+**rtd-cafe** là công cụ tự động hóa việc cấu hình **Cache Rules** và **WAF (Bảo mật)** trên Cloudflare, được tối ưu hóa đặc biệt cho **WordPress Blog & Trang tin tức** sử dụng VPS.
 
 > 💡 **Triết lý:** Không Plugin, Không chạy nền, "Set and Forget" (Cấu hình một lần dùng lâu dài).
 
