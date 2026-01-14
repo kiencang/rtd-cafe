@@ -22,11 +22,11 @@ Truy cập giao diện web để cấu hình nhanh mà không cần động vào
 👉 **[Link Tool: rtd-cafe.wpsila.com](https://rtd-cafe.wpsila.com)**
 
 ### Cách 2: Tự triển khai (Self-hosted)
-Nếu bạn muốn tự chạy Worker trên tài khoản Cloudflare của mình để đảm bảo quyền riêng tư tuyệt đối (không phải gửi API token qua giao diện web của tôi):
+Nếu bạn muốn tự chạy Worker trên tài khoản Cloudflare của mình để đảm bảo quyền riêng tư tuyệt đối (để không phải gửi API token qua giao diện web của tôi):
 
 1. Clone repository này
-2. Chỉnh sửa thêm mã nếu cần (ví dụ thêm bớt rule)
-3. Dùng index.html làm giao diện cài đặt
+2. Chỉnh sửa thêm mã nếu cần (ví dụ thêm bớt rule, điều chỉnh rule)
+3. Dùng index.html làm giao diện cài đặt (giao diện nơi người dùng nhập form)
 4. Dùng worker.js làm phần đưa cài đặt các rule vào Cloudflare
 5. Upload lên Cloudflare Worker, lấy các đường link tương ứng của nó cho index.html và worker.js
 6. Trong worker.js tìm đến phần const ALLOWED_ORIGIN = "https://rtd-cafe.wpsila.com"; thay thế https://rtd-cafe.wpsila.com bằng link index.html thực tế của bạn
