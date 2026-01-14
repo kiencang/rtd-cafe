@@ -21,7 +21,7 @@ Tool này **KHÔNG** dành cho người mới bắt đầu (Newbie).
 Truy cập giao diện web để cấu hình nhanh mà không cần động vào code:
 👉 **[Link Tool: rtd-cafe.wpsila.com](https://rtd-cafe.wpsila.com)**
 
-### Cách 2: Tự triển khai (Self-hosted)
+### Cách 2: Tự triển khai 
 Nếu bạn muốn tự chạy Worker trên tài khoản Cloudflare của mình để đảm bảo quyền riêng tư tuyệt đối (để không phải gửi API token qua giao diện web của tôi):
 
 1. Clone repository này.
