@@ -28,7 +28,7 @@ Cách này phức tạp hơn vì bạn phải tự triển khai công cụ.
 
 **Lý do chính**: Nếu bạn muốn tự chạy mã trên tài khoản Cloudflare của riêng bạn để đảm bảo quyền riêng tư tuyệt đối (để không phải gửi API token qua giao diện web của tôi):
 
-1. Clone repository này (tốt nhất là tải mã về từ bản phát hành chính thức mới nhất: https://github.com/kiencang/rtd-cafe/releases).
+1. Clone repository này (tốt nhất là tải mã về từ bản phát hành chính thức mới nhất [latest]: https://github.com/kiencang/rtd-cafe/releases).
 2. Chỉnh sửa thêm mã nếu cần (ví dụ thêm bớt rule, điều chỉnh rule).
 3. Dùng `index.html` làm giao diện cài đặt (giao diện nơi người dùng nhập form).
 4. Dùng `worker.js` làm phần đưa cài đặt các rule vào Cloudflare.
