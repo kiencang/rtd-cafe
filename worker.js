@@ -1,7 +1,7 @@
 /**
  * CLOUDFLARE WORKER: WORDPRESS OPTIMIZER & SECURITY
  * Chức năng: Tự động cấu hình Cache Rules, WAF, Transform Rules và Rate Limiting.
- * Phiên bản v1.0.9
+ * Phiên bản v1.0.10
  */
 
 // =========================================================================
@@ -10,11 +10,11 @@
 // Để dấu "*" nếu bạn muốn test thử.
 // Khi chạy chính thức, hãy thay bằng link trang HTML của bạn (VD: "https://tool-cua-ban.pages.dev")
 // để chặn người khác dùng trộm Worker của bạn.
-const ALLOWED_ORIGIN = "https://rtd-cafe.wpsila.com";
+let ALLOWED_ORIGIN = "https://rtd-cafe.wpsila.com";
 
 
 // =========================================================================
-// 1. CẤU HÌNH CACHE RULES (5 RULES)
+// 1. CẤU HÌNH CACHE RULES (6 RULES)
 // =========================================================================
 const MY_CACHE_RULES = [
   // Rule 1: Cache chung cho HTML (Bài viết, Trang chủ...)
@@ -151,7 +151,7 @@ const getWafRules = (domain, vpsIp) => [
     "action": "managed_challenge",
     "description": "Bảo mật 4: Hạn chế bot rác",
     "enabled": true,
-    "expression": "(http.user_agent eq \"\") or (http.user_agent contains \"go-http\") or (http.user_agent contains \"axios\") or (http.user_agent contains \"wpscan\") or (http.user_agent contains \"sqlmap\") or (http.user_agent contains \"nmap\") or (http.user_agent contains \"headless\") or (http.user_agent contains \"selenium\") or (http.request.method eq \"POST\" and http.referer eq \"\" and not cf.client.bot)"
+    "expression": "(http.user_agent eq \"\" and not cf.client.bot) or (http.user_agent contains \"go-http\" and not cf.client.bot) or (http.user_agent contains \"axios\" and not cf.client.bot) or (http.user_agent contains \"wpscan\" and not cf.client.bot) or (http.user_agent contains \"sqlmap\" and not cf.client.bot) or (http.user_agent contains \"nmap\" and not cf.client.bot) or (http.user_agent contains \"headless\" and not cf.client.bot) or (http.user_agent contains \"selenium\" and not cf.client.bot) or (http.request.method eq \"POST\" and http.referer eq \"\" and not cf.client.bot)"
   },
   // Bảo mật 5: Chặn Spam Comment
   {
