@@ -28,7 +28,7 @@ Cách này phức tạp hơn vì bạn phải tự triển khai công cụ.
 
 **Lý do chính**: Nếu bạn muốn tự chạy mã trên tài khoản Cloudflare của riêng bạn để đảm bảo quyền riêng tư tuyệt đối (để không phải gửi API token qua giao diện web của tôi):
 
-1. Clone repository này (tốt nhất là tải mã về từ bản phát hành chính thức mới nhất [latest]: https://github.com/kiencang/rtd-cafe/releases).
+1. Tải bản này về: https://github.com/kiencang/rtd-cafe/archive/refs/tags/v1.0.10.zip (lý do là vì các phiên bản sau có cập nhật bảo mật chặt hơn với Turnstile nên sẽ khó điều chỉnh hơn khá nhiều).
 2. Chỉnh sửa thêm mã nếu cần (ví dụ thêm bớt rule, điều chỉnh rule).
 3. Dùng `index.html` làm giao diện cài đặt (giao diện nơi người dùng nhập form).
 4. Dùng `worker.js` làm phần đưa cài đặt các rule vào Cloudflare.
@@ -38,6 +38,8 @@ Cách này phức tạp hơn vì bạn phải tự triển khai công cụ.
 8. Vẫn trong `index.html`, xóa dòng `<link rel="canonical" href="https://rtd-cafe.wpsila.com">`, lưu file để hoàn tất.
 9. Upload lại `index.html` & edit code `worker.js` thay thế nó bằng mã đã điều chỉnh để nó cập nhật các đường link mới của riêng bạn.
 10. Bắt đầu sử dụng.
+
+**PS**: Với bạn nào có khả năng tìm hiểu sâu thêm nên tải bản mới nhất về, nó sử dụng thêm Turnstile để chống worker bị lạm dụng.
 
 ---
 
