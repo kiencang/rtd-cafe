@@ -174,6 +174,17 @@ const corsHeaders = {
 
 export default {
   async fetch(request) {
+    // =========================================================================
+    // 1. KIỂM TRA ĐƯỜNG DẪN (QUAN TRỌNG: CODE MỚI THÊM VÀO)
+    // =========================================================================
+    const url = new URL(request.url);
+    
+    // Nếu đường dẫn KHÔNG phải là "/rtd-cafe-worker-api" thì trả về 404 luôn
+    if (url.pathname !== "/rtd-cafe-worker-api") {
+      // Trả về lỗi 404 Not Found
+      return new Response("Trang không tồn tại", { status: 404 });
+    }
+	
     // 1. Handle CORS Preflight
     if (request.method === "OPTIONS") return new Response(null, { headers: corsHeaders });
     
