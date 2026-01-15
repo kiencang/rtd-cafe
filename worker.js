@@ -1,15 +1,18 @@
 /**
  * CLOUDFLARE WORKER: WORDPRESS OPTIMIZER & SECURITY
  * Chức năng: Tự động cấu hình Cache Rules, WAF, Transform Rules và Rate Limiting.
- * Phiên bản v1.0.10
+ * Phiên bản v1.0.11 (Có tích hợp Turnstile)
  */
 
 // =========================================================================
 // CẤU HÌNH BẢO MẬT (QUAN TRỌNG)
 // =========================================================================
+
+// [MỚI] SECRET KEY TURNSTILE (Lấy từ Cloudflare Dashboard)
+// Hãy thay mã bên dưới bằng Secret Key của bạn.
+const TURNSTILE_SECRET_KEY = "nhập Secret Key";
+
 // Để dấu "*" nếu bạn muốn test thử.
-// Khi chạy chính thức, hãy thay bằng link trang HTML của bạn (VD: "https://tool-cua-ban.pages.dev")
-// để chặn người khác dùng trộm Worker của bạn.
 let ALLOWED_ORIGIN = "https://rtd-cafe.wpsila.com";
 
 
@@ -175,7 +178,7 @@ const corsHeaders = {
 export default {
   async fetch(request) {
     // =========================================================================
-    // 1. KIỂM TRA ĐƯỜNG DẪN (QUAN TRỌNG: CODE MỚI THÊM VÀO)
+    // 1. KIỂM TRA ĐƯỜNG DẪN
     // =========================================================================
     const url = new URL(request.url);
     
@@ -189,7 +192,7 @@ export default {
     if (request.method === "OPTIONS") return new Response(null, { headers: corsHeaders });
 	
 	// =================================================================
-    // [CẢI TIẾN] BẢO MẬT: KHÓA CHẶT ORIGIN (CHẶN CẢ POSTMAN/SCRIPT)
+    // [CẢI TIẾN] BẢO MẬT: KHÓA CHẶT ORIGIN
     // =================================================================
     const origin = request.headers.get("Origin");
     
@@ -211,7 +214,39 @@ export default {
     if (request.method !== "POST") return new Response("Method Not Allowed", { status: 405, headers: corsHeaders });
 
     try {
-      const { zoneId, token, domain, server_ip } = await request.json();
+      // Nhận thêm turnstileToken
+      const { zoneId, token, domain, server_ip, turnstileToken } = await request.json();
+
+      // =========================================================
+      // [QUAN TRỌNG] XÁC THỰC TURNSTILE
+      // =========================================================
+      if (!turnstileToken) {
+         return new Response(JSON.stringify({ success: false, message: "Thiếu mã xác thực Turnstile" }), { status: 403, headers: corsHeaders });
+      }
+
+      // Xác thực token với Cloudflare
+      const ip = request.headers.get('CF-Connecting-IP');
+      const formData = new FormData();
+      formData.append('secret', TURNSTILE_SECRET_KEY);
+      formData.append('response', turnstileToken);
+      formData.append('remoteip', ip);
+
+      const turnstileUrl = 'https://challenges.cloudflare.com/turnstile/v0/siteverify';
+      const turnstileResult = await fetch(turnstileUrl, {
+        body: formData,
+        method: 'POST',
+      });
+
+      const outcome = await turnstileResult.json();
+
+      // Nếu Token sai hoặc hết hạn -> Chặn ngay
+      if (!outcome.success) {
+        return new Response(JSON.stringify({ success: false, message: "Xác thực Captcha thất bại. Vui lòng thử lại." }), { status: 403, headers: corsHeaders });
+      }
+      
+      // =========================================================
+      // TOKEN HỢP LỆ -> CHẠY LOGIC CHÍNH
+      // =========================================================
 
       // Validate Input
       if (!zoneId || !token) {

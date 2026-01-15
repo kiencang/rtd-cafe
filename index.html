@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>WP Cloudflare Optimizer - Cấu hình 1 click</title>
     <meta name="description" content="Công cụ tự động cấu hình Cloudflare Cache, WAF, Security cho WordPress Blog. An toàn, Nhanh chóng, Miễn phí.">
+
 	<link rel="canonical" href="https://rtd-cafe.wpsila.com">
 	<!-- Favicon -->
     <!-- Dành cho các trình duyệt hiện đại (Hỗ trợ tốt nhất, dung lượng nhẹ) -->
@@ -23,6 +24,8 @@
     <!-- Màu sắc giao diện trình duyệt (Thanh địa chỉ trên Mobile) -->
     <meta name="theme-color" content="#ffffff">
     
+	<!-- Bảo mật Turnstile, chống lạm dụng worker -->
+	<script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
 	<style>
         :root {
             --primary: #f6821f;
@@ -166,7 +169,13 @@
 		
         <div class="alert-warning">
             ⚠️ <strong>Lưu ý quan trọng:</strong> Tool sẽ <strong>GHI ĐÈ (Xóa & Thay thế)</strong> toàn bộ Cache Rules, WAF Rules và Rate Limit hiện có trên Zone này. Hãy cân nhắc nếu bạn đang có cấu hình riêng.
-        </div>		
+        </div>	
+
+		<!-- Thêm Widget Turnstile -->
+		<div class="form-group">
+			<!-- Thay SITE_KEY của bạn vào bên dưới -->
+			<div class="cf-turnstile" data-sitekey="nhập Site Key"></div>
+		</div>		
 
         <button type="submit" id="submitBtn">🚀 Triển khai ngay</button>
     </form>
@@ -175,7 +184,7 @@
 
     <div class="footer">
         <p>Tool được phát triển bởi <strong>wpsila</strong>.</p>
-        <p><a href="https://github.com/kiencang/rtd-cafe/releases" target="_blank">v1.0.10</a> • <a href="https://github.com/kiencang/rtd-cafe" target="_blank">Xem mã nguồn (GitHub)</a> • <a href="https://github.com/kiencang/rtd-cafe/issues" target="_blank">Báo lỗi</a></p>
+        <p><a href="https://github.com/kiencang/rtd-cafe/releases" target="_blank">v1.0.11</a> • <a href="https://github.com/kiencang/rtd-cafe" target="_blank">Xem mã nguồn (GitHub)</a> • <a href="https://github.com/kiencang/rtd-cafe/issues" target="_blank">Báo lỗi</a></p>
     </div>
 </div>
 
@@ -214,14 +223,27 @@
 			// Dừng luôn, không gửi request
 			return; 
 		}
+		
+		// --- [MỚI] Lấy Token Turnstile ---
+		// Lấy dữ liệu từ widget turnstile
+		const formData = new FormData(form);
+		const turnstileToken = formData.get('cf-turnstile-response');
 
-		// 3. Nếu tên miền OK thì mới đóng gói data
+		if (!turnstileToken) {
+			statusDiv.style.display = 'block';
+			statusDiv.className = 'error';
+			statusDiv.innerHTML = '<strong>❌ Vui lòng xác thực bạn không phải là Robot!</strong>';
+			return;
+		}
+
+		// 3. Đóng gói data (Thêm turnstileToken vào JSON)
 		const data = {
 			zoneId: document.getElementById('zoneId').value.trim(),
 			token: document.getElementById('token').value.trim(),
 			domain: cleanDomain, // Dùng biến đã làm sạch
-			server_ip: document.getElementById('server_ip').value.trim()
-		};
+			server_ip: document.getElementById('server_ip').value.trim(),
+			turnstileToken: turnstileToken // <--- Gửi kèm token
+		};		
 
         // UI Loading
         btn.disabled = true;
@@ -252,7 +274,8 @@
                     </ul>
                     <p style="margin-bottom: 0; margin-top: 10px;">Hãy vào Cloudflare Dashboard kiểm tra lại nhé!</p>
                 `;
-                form.reset();
+                form.reset(); // Xóa form
+				if (window.turnstile) turnstile.reset(); // [Nên thêm] Reset Captcha để sẵn sàng cho lần nhập tiếp theo
             } else {
                 throw new Error(result.message || "Lỗi không xác định từ Cloudflare.");
             }
@@ -263,6 +286,8 @@
                 ${error.message}<br><br>
                 <em>Kiểm tra lại Zone ID, Token hoặc quyền hạn của Token.</em>
             `;
+			// [QUAN TRỌNG] Reset Turnstile nếu lỗi để người dùng thử lại
+			if (window.turnstile) turnstile.reset(); 
         } finally {
             btn.disabled = false;
             btn.innerText = "🚀 Triển khai ngay";
