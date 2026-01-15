@@ -1,7 +1,7 @@
 /**
  * CLOUDFLARE WORKER: WORDPRESS OPTIMIZER & SECURITY
  * Chức năng: Tự động cấu hình Cache Rules, WAF, Transform Rules và Rate Limiting.
- * Phiên bản v1.0.8
+ * Phiên bản v1.0.9
  */
 
 // =========================================================================
@@ -72,7 +72,7 @@ const MY_CACHE_RULES = [
     "action_parameters": { "cache": false },
     "description": "Quy tắc 5: Bỏ qua không cache (Admin, Login, API)",
     "enabled": true,
-    "expression": "(http.request.uri.path contains \"/wp-admin\") or (http.request.uri.path contains \"/wp-login.php\") or (http.request.uri.path contains \"/robots.txt\") or (http.request.uri.path contains \"/wp-json/\") or (http.request.uri.query contains \"rest_route=\") or (http.request.uri.path contains \"/xmlrpc.php\") or (http.request.uri.path contains \"/wp-cron.php\") or (http.request.uri.query contains \"doing_wp_cron=\") or (http.cookie contains \"wordpress_logged_in_\") or (http.cookie contains \"wp-postpass_\") or (http.cookie contains \"wordpress_sec_\") or (http.cookie contains \"comment_author_\") or (http.request.uri.query contains \"replytocom=\") or (http.request.uri.query contains \"unapproved=\") or (http.request.uri.query contains \"moderation-hash=\") or (http.request.uri.query contains \"preview=\") or (http.request.uri.query contains \"preview_id=\") or (http.request.uri.query contains \"preview_nonce=\") or (http.request.uri.query contains \"customize_changeset_uuid\") or (http.request.uri.query contains \"customize_preview=\") or (http.request.uri.query contains \"customize=\") or (http.request.uri.query contains \"_wpnonce\") or (http.request.uri.query contains \"s=\") or (http.request.uri.query contains \"action=\") or (http.request.uri.query contains \"elementor-preview\") or (http.request.uri.query contains \"fl_builder\") or (http.request.uri.query contains \"et_fb\") or (http.request.uri.query contains \"vc_editable\") or (http.request.uri.query contains \"bricks=\") or (http.request.uri.query contains \"tve=\") or (http.request.uri.query contains \"brizy-edit\") or (http.request.uri.path contains \"/wp-signup.php\") or (http.request.uri.path contains \"/wp-activate.php\") or (http.request.uri.query contains \"nocache\")"
+    "expression": "(http.request.uri.path contains \"/wp-admin\" and not http.request.uri.path.extension in {\"css\" \"js\" \"woff\" \"woff2\" \"ttf\" \"otf\" \"eot\"}) or (http.request.uri.path contains \"/wp-login.php\") or (http.request.uri.path contains \"/robots.txt\") or (http.request.uri.path contains \"/wp-json/\") or (http.request.uri.query contains \"rest_route=\") or (http.request.uri.path contains \"/xmlrpc.php\") or (http.request.uri.path contains \"/wp-cron.php\") or (http.request.uri.query contains \"doing_wp_cron=\") or (http.cookie contains \"wordpress_logged_in_\") or (http.cookie contains \"wp-postpass_\") or (http.cookie contains \"wordpress_sec_\") or (http.cookie contains \"comment_author_\") or (http.request.uri.query contains \"replytocom=\") or (http.request.uri.query contains \"unapproved=\") or (http.request.uri.query contains \"moderation-hash=\") or (http.request.uri.query contains \"preview=\") or (http.request.uri.query contains \"preview_id=\") or (http.request.uri.query contains \"preview_nonce=\") or (http.request.uri.query contains \"customize_changeset_uuid\") or (http.request.uri.query contains \"customize_preview=\") or (http.request.uri.query contains \"customize=\") or (http.request.uri.query contains \"_wpnonce\") or (http.request.uri.query contains \"s=\") or (http.request.uri.query contains \"action=\") or (http.request.uri.query contains \"elementor-preview\") or (http.request.uri.query contains \"fl_builder\") or (http.request.uri.query contains \"et_fb\") or (http.request.uri.query contains \"vc_editable\") or (http.request.uri.query contains \"bricks=\") or (http.request.uri.query contains \"tve=\") or (http.request.uri.query contains \"brizy-edit\") or (http.request.uri.path contains \"/wp-signup.php\") or (http.request.uri.path contains \"/wp-activate.php\") or (http.request.uri.query contains \"nocache\")"
   },
   // Rule 6: Cache cho trang Admin (CSS, JS, font)
   {
@@ -111,7 +111,7 @@ const MY_RATE_LIMIT_RULES = [
       // QUAN TRỌNG: Gói Free bắt buộc phải có "cf.colo.id"
       "characteristics": ["cf.colo.id", "ip.src"], 
       "period": 10,            // Trong 10 giây
-      "requests_per_period": 3, // Tối đa 3 lần
+      "requests_per_period": 5, // Tối đa 5 lần
       "mitigation_timeout": 10  // Chặn 10 giây
     },
     "description": "Giới hạn số lần vào trang đăng nhập",
@@ -187,6 +187,22 @@ export default {
 	
     // 1. Handle CORS Preflight
     if (request.method === "OPTIONS") return new Response(null, { headers: corsHeaders });
+	
+	// =================================================================
+    // [CẢI TIẾN] BẢO MẬT: KHÓA CHẶT ORIGIN (CHẶN CẢ POSTMAN/SCRIPT)
+    // =================================================================
+    const origin = request.headers.get("Origin");
+    
+    if (ALLOWED_ORIGIN !== "*") {
+      // Nếu không có Origin (truy cập ẩn danh từ script) HOẶC Origin không khớp
+      if (!origin || origin !== ALLOWED_ORIGIN) {
+        return new Response("Forbidden: Direct or Unauthorized Access Not Allowed", { 
+          status: 403, 
+          headers: corsHeaders 
+        });
+      }
+    }
+    // =================================================================
     
     // 2. Health Check
     if (request.method === "GET") return new Response("✅ Worker hoạt động tốt!", { status: 200, headers: corsHeaders });
