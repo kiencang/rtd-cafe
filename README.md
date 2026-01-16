@@ -39,7 +39,7 @@ Cách này phức tạp hơn vì bạn phải tự triển khai công cụ.
 9. Upload lại `index.html` & edit code `worker.js` thay thế nó bằng mã đã điều chỉnh để nó cập nhật các đường link mới của riêng bạn.
 10. Bắt đầu sử dụng.
 
-**PS**: Với bạn nào có khả năng tìm hiểu sâu thêm nên tải bản mới nhất về, nó sử dụng thêm Turnstile để chống worker bị lạm dụng. Các bản mới nhất sử dụng biến môi trường cho Turnstile & ALLOWED_ORIGIN
+**PS**: Với bạn nào có khả năng tìm hiểu sâu hơn nên tải bản mới nhất về, nó sử dụng thêm Turnstile để chống worker bị lạm dụng. Các bản mới nhất sử dụng biến môi trường cho Turnstile & ALLOWED_ORIGIN.
 
 ---
 
