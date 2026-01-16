@@ -1,8 +1,10 @@
 /**
  * CLOUDFLARE WORKER: WORDPRESS OPTIMIZER & SECURITY
  * Chức năng: Tự động cấu hình Cache Rules, WAF, Transform Rules và Rate Limiting.
- * Phiên bản v1.0.12 (Có tích hợp Turnstile)
+ * Phiên bản v1.0.12 (Có tích hợp Turnstile để chống lạm dụng worker)
  * Thuộc dự án: rtd-cafe
+ * Link ứng dụng: https://rtd-cafe.wpsila.com (index.html & file css, js liên quan)
+ * Link của worker.js: https://rtd-cafe-settings.wpsila.com/rtd-cafe-worker-api (chặn truy cập trực tiếp, chỉ gọi được qua ứng dụng)
  * Tác giả: wpsila - Nguyễn Đức Anh
  */
 
@@ -10,7 +12,9 @@
 
 // =========================================================================
 // 1. CẤU HÌNH CACHE RULES (6 RULES)
-// Lưu ý ở trong expression, các dấu nháy " được bổ sung thành \" để không lỗi cú pháp
+// Lưu ý ở trong expression, các dấu nháy " được bổ sung thành \" để không lỗi cú pháp.
+// Cache ở phía Edge cho rule 1 có thể tăng thêm thành 3 ngày hoặc 1 tuần nếu có plugin xóa cache tự động.
+// Cache phía trình duyệt cho html ở rule chỉ nên để trong khoảng từ 1 - 5 phút, không nên hơn.
 // =========================================================================
 const MY_CACHE_RULES = [
 // --------------------------------------------------------------------------------------------------------------------------------
@@ -30,8 +34,8 @@ const MY_CACHE_RULES = [
   },
 // --------------------------------------------------------------------------------------------------------------------------------  
   // Rule 2: Cache CSS, JS, Font
-  // CSS, JS thay đổi luôn kèm version
-  // Các font hiếm khi thay đổi
+  // CSS, JS thay đổi luôn kèm version nên có thể để cache lâu.
+  // Các font hiếm khi thay đổi.
   {
     "action": "set_cache_settings",
     "action_parameters": {
@@ -66,7 +70,7 @@ const MY_CACHE_RULES = [
     "action_parameters": {
       "cache": true,
       "edge_ttl": { "default": 28800, "mode": "override_origin" }, // 8 tiếng
-      "browser_ttl": { "default": 28800, "mode": "override_origin" }
+      "browser_ttl": { "default": 28800, "mode": "override_origin" } // 8 tiếng
     },
     "description": "Quy tắc 4: Cache ngắn cho Sitemap & Feed",
     "enabled": true,
@@ -85,6 +89,8 @@ const MY_CACHE_RULES = [
   },
 // --------------------------------------------------------------------------------------------------------------------------------  
   // Rule 6: Cache cho trang Admin (CSS, JS, font)
+  // Cải tiến này giúp trang admin tải nhanh hơn. CSS & JS của admin luôn có version đi kèm.
+  // Tuy vậy để chắc chắn cũng không nên để thời gian cache quá lâu.
   {
     "action": "set_cache_settings",
     "action_parameters": {
@@ -110,7 +116,7 @@ const MY_TRANSFORM_RULES = [
   {
     "action": "rewrite",
     "action_parameters": { "uri": { "query": { "value": "" } } },
-    "description": "Quy tắc 7: Xóa tất cả query tracking (fbclid, utm...)",
+    "description": "Quy tắc 7: Xóa các query tracking phổ biến (fbclid, utm...)",
     "enabled": true,
     "expression": "(http.request.uri.query contains \"fbclid\") or (http.request.uri.query contains \"utm_\") or (http.request.uri.query contains \"gclid\") or (http.request.uri.query contains \"ttclid\") or (http.request.uri.query contains \"wbraid\") or (http.request.uri.query contains \"gbraid\") or (http.request.uri.query contains \"msclkid\") or (http.request.uri.query contains \"yclid\") or (http.request.uri.query contains \"mc_cid\") or (http.request.uri.query contains \"_hsenc\") or (http.request.uri.query contains \"dclid\")"
   }
@@ -123,6 +129,7 @@ const MY_TRANSFORM_RULES = [
 // =========================================================================
 // 3. CẤU HÌNH RATE LIMITING (GIỚI HẠN TỐC ĐỘ)
 // Chống việc bị tấn công vào trang login của WordPress (wp-login.php)
+// Có thể mở rộng thêm các trang khác bằng cú pháp OR trong khi điều chỉnh rule thủ công.
 // =========================================================================
 const MY_RATE_LIMIT_RULES = [
   {
@@ -149,6 +156,7 @@ const MY_RATE_LIMIT_RULES = [
 // =========================================================================
 const getWafRules = (domain, vpsIP) => [
   // Bảo mật 1: Whitelist IP VPS
+  // Rule quan trọng để tránh chặn chính mình khi bản thân WordPress thực thi một số tác vụ quay về chính VPS.
   {
     "action": "skip",
     "action_parameters": { "ruleset": "current" },
@@ -158,7 +166,7 @@ const getWafRules = (domain, vpsIP) => [
   },
 // --------------------------------------------------------------------------------------------------------------------------------  
   // Bảo mật 2: Chặn file nhạy cảm
-  // Một danh sách dài các file chứa thông tin quan trọng không được để lộ ra ngoài
+  // Một danh sách dài các file chứa thông tin quan trọng không được để lộ ra ngoài.
   {
     "action": "block",
     "description": "Bảo mật 2: Chặn truy cập các file nhạy cảm",
@@ -167,7 +175,7 @@ const getWafRules = (domain, vpsIP) => [
   },
 // --------------------------------------------------------------------------------------------------------------------------------  
   // Bảo mật 3: Bảo vệ Login & Admin
-  // Thử thách bằng managed_challenge, một trong các giải pháp rất mạnh để hạn chế bot
+  // Thử thách bằng managed_challenge, một trong các giải pháp rất mạnh để hạn chế bot.
   {
     "action": "managed_challenge",
     "description": "Bảo mật 3: Hạn chế bot vào trang login và admin",
@@ -195,11 +203,13 @@ const getWafRules = (domain, vpsIP) => [
   }
 ];
 // --------------------------------------------------------------------------------------------------------------------------------
+// Đến đây là kết thúc phần logic cho các rule cần cài đặt.
 
 // +++
 
 // =========================================================================
 // 5. MAIN LOGIC (WORKER API)
+// Bắt đầu các logic tương tác với Cloudflare để đẩy các rule vào zone (tên miền) tương ứng.
 // =========================================================================
 
 // --------------------------------------------------------------------------------------------------------------------------------
@@ -209,6 +219,8 @@ export default {
   
     // 0. LẤY CẤU HÌNH TỪ BIẾN MÔI TRƯỜNG (ENV)
     // Nếu quên đặt trong cài đặt, nó sẽ lấy giá trị mặc định sau dấu ||
+	// TURNSTILE_SECRET_KEY thì bắt buộc phải thiết lập, không được quên
+	// Biến môi trường cài đặt trong phần worker tương ứng chạy file này, phải đặt đúng tên
     const TURNSTILE_SECRET = env.TURNSTILE_SECRET_KEY; 
     const ALLOWED_ORIGIN = env.ALLOWED_ORIGIN || "https://rtd-cafe.wpsila.com";
 
@@ -312,6 +324,7 @@ export default {
 
 // --------------------------------------------------------------------------------------------------------------------------------
       // --- EXECUTE UPDATES (thực thi các cập nhật, ở đây là ghi đè mới hoàn toàn) ---
+	  // Đẩy các rule vào entrypoint tương ứng, có 4 entrypoint.
 
       // Task 1: Update Cache Rules 
       const cacheRes = await fetch(`https://api.cloudflare.com/client/v4/zones/${zoneId}/rulesets/phases/http_request_cache_settings/entrypoint`, {
