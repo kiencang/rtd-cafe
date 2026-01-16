@@ -1,7 +1,7 @@
 /**
  * CLOUDFLARE WORKER: WORDPRESS OPTIMIZER & SECURITY
  * Chức năng: Tự động cấu hình Cache Rules, WAF, Transform Rules và Rate Limiting.
- * Phiên bản v1.0.13 (Có tích hợp Turnstile để chống lạm dụng worker)
+ * Phiên bản v1.0.14 (Có tích hợp Turnstile để chống lạm dụng worker)
  * Thuộc dự án: rtd-cafe
  * Link ứng dụng: https://rtd-cafe.wpsila.com (index.html & file css, js liên quan)
  * Link của worker.js: https://rtd-cafe-settings.wpsila.com/rtd-cafe-worker-api (chặn truy cập trực tiếp, chỉ gọi được qua ứng dụng)
@@ -27,7 +27,7 @@ const MY_CACHE_RULES = [
       "edge_ttl": { "default": 28800, "mode": "override_origin" }, // Cache ở phía Edge (Cloudflare) 8 tiếng
       "browser_ttl": { "default": 180, "mode": "override_origin" } // Cache ở phía trình duyệt người dùng 3 phút
     },
-    "description": "Quy tắc 1: Quy tắc cache chung (HTML cache)", // Đặt tên cho quy tắc
+    "description": "Quy tắc 1 (v1.0.14-phiên bản rule): Quy tắc cache chung (HTML cache)", // Đặt tên cho quy tắc
     "enabled": true, // Bật tính năng này
     // Loại trừ các file tĩnh (để Rule 2,3 xử lý) và trang đăng nhập
     "expression": "(not http.request.uri.path contains \"/wp-login.php\" and not http.request.uri.path contains \"/wp-admin\" and not http.cookie contains \"wordpress_logged_in_\" and not http.request.uri.path.extension in {\"css\" \"js\" \"woff\" \"woff2\" \"ttf\" \"otf\" \"eot\" \"map\" \"jpg\" \"png\" \"jpeg\" \"webp\" \"avif\" \"ico\" \"svg\" \"gif\" \"pdf\" \"mp3\" \"mp4\" \"webm\"})"
@@ -327,22 +327,25 @@ export default {
       
       // Tạo danh sách các task cần chạy (chưa await vội)
       const wafRules = getWafRules(targetDomain, targetIp);
-      
+	  
+	  // Tạo biến hằng số cho Base URL.
+      const BASE_API = `https://api.cloudflare.com/client/v4/zones/${zoneId}/rulesets/phases`;
+	  
       const tasks = [
         // Task 1: Update Cache Rules
-        fetch(`https://api.cloudflare.com/client/v4/zones/${zoneId}/rulesets/phases/http_request_cache_settings/entrypoint`, {
+        fetch(`${BASE_API}/http_request_cache_settings/entrypoint`, {
           method: "PUT", headers: commonHeaders, body: JSON.stringify({ rules: MY_CACHE_RULES })
         }),
         // Task 2: Update Transform Rules
-        fetch(`https://api.cloudflare.com/client/v4/zones/${zoneId}/rulesets/phases/http_request_transform/entrypoint`, {
+        fetch(`${BASE_API}/http_request_transform/entrypoint`, {
           method: "PUT", headers: commonHeaders, body: JSON.stringify({ rules: MY_TRANSFORM_RULES })
         }),
         // Task 3: Update WAF Custom Rules
-        fetch(`https://api.cloudflare.com/client/v4/zones/${zoneId}/rulesets/phases/http_request_firewall_custom/entrypoint`, {
+        fetch(`${BASE_API}/http_request_firewall_custom/entrypoint`, {
           method: "PUT", headers: commonHeaders, body: JSON.stringify({ rules: wafRules })
         }),
         // Task 4: Update Rate Limiting
-        fetch(`https://api.cloudflare.com/client/v4/zones/${zoneId}/rulesets/phases/http_ratelimit/entrypoint`, {
+        fetch(`${BASE_API}/http_ratelimit/entrypoint`, {
           method: "PUT", headers: commonHeaders, body: JSON.stringify({ rules: MY_RATE_LIMIT_RULES })
         })
       ];
@@ -350,29 +353,39 @@ export default {
       // Bắt đầu chạy tất cả cùng lúc và chờ kết quả
       const responses = await Promise.all(tasks);
 
-      // Lấy kết quả JSON từ các response
+      // Lấy kết quả JSON
       const [cacheJson, transformJson, wafJson, rateLimitJson] = await Promise.all(
         responses.map(r => r.json())
       );
-	  
-	// --- PROCESS RESULTS (xử lý kết quả) ---           
-      const results = {
-        cache: cacheJson,
-        transform: transformJson,
-        waf: wafJson,
-        rate_limit: rateLimitJson
+
+      // Hàm gom lỗi từ Cloudflare response
+      const getErrors = (res) => res.success ? null : res.errors.map(e => e.message).join("; ");
+
+      const errors = {
+        cache: getErrors(cacheJson),
+        transform: getErrors(transformJson),
+        waf: getErrors(wafJson),
+        rate_limit: getErrors(rateLimitJson)
       };
 
-      // Check success: Phải thành công tất cả mới tính là thành công
-      const success = results.cache.success && results.transform.success && results.waf.success && results.rate_limit.success;
-// --------------------------------------------------------------------------------------------------------------------------------
+      // Chỉ thành công khi không có lỗi nào ở cả 4 task
+      const success = !errors.cache && !errors.transform && !errors.waf && !errors.rate_limit;
 
-// -------------------------------------------------------------------------------------------------------------------------------- 
-      return new Response(JSON.stringify({ success, details: results }), {
+      // Trả về kèm danh sách lỗi chi tiết (nếu có)
+      return new Response(JSON.stringify({ 
+          success, 
+          details: { 
+            cache: cacheJson.success, 
+            transform: transformJson.success, 
+            waf: wafJson.success, 
+            rate_limit: rateLimitJson.success 
+          },
+          errors: success ? null : errors // Client sẽ đọc được dòng này để biết lỗi gì
+      }), {
         status: success ? 200 : 400,
         headers: { ...corsHeaders, "Content-Type": "application/json" }
       });
-
+// --------------------------------------------------------------------------------------------------------------------------------
     } catch (err) {
       return new Response(JSON.stringify({ success: false, message: err.message }), {
         status: 500,
