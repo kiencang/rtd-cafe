@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>rtd-cafe: WP Cloudflare Optimizer - Cấu hình 1 click</title>
+    <meta name="description" content="rtd-cafe: Công cụ tự động cấu hình Cloudflare Cache, WAF, Security cho WordPress Blog. An toàn, Nhanh chóng, Miễn phí.">
+	
+	<link rel="canonical" href="https://rtd-cafe.wpsila.com">
+	<!-- Favicon -->
+    <!-- Dành cho các trình duyệt hiện đại (Hỗ trợ tốt nhất, dung lượng nhẹ) -->
+    <link rel="icon" type="image/svg+xml" href="/favicon/favicon.svg" sizes="any">
+    
+    <!-- Dành cho trình duyệt cũ hơn hoặc không hỗ trợ SVG -->
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon/favicon-16x16.png">
+    
+    <!-- Dành cho iPhone/iPad (Khi người dùng chọn "Thêm vào màn hình chính") -->
+    <link rel="apple-touch-icon" sizes="180x180" href="/favicon/apple-touch-icon.png">
+    
+    <!-- Fallback cổ điển (Dành cho trình duyệt rất cũ) -->
+    <link rel="shortcut icon" href="/favicon/favicon.ico">
+    
+    <!-- Màu sắc giao diện trình duyệt (Thanh địa chỉ trên Mobile) -->
+    <meta name="theme-color" content="#ffffff">
+    
+	<!-- Bảo mật Turnstile, chống lạm dụng worker -->
+	<script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
+	
+	<!-- CSS -->
+	<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="container">
+    <div class="header">
+        <span style="font-size: 3rem;">⚡</span>
+        <h1>rtd-cafe: WP Cloudflare Optimizer</h1>
+        <div class="badge">Dành cho WordPress dạng Blog & Tin tức</div>
+        <p>Triển khai nhanh cấu hình Cache & Bảo mật của Cloudflare.</p>
+    </div>
+
+    <div class="alert-info">
+        <strong>🔒 Cam kết an toàn:</strong> Tool này chạy trực tiếp qua API Cloudflare. Chúng tôi <strong>không lưu trữ</strong> Token hay thông tin của bạn. Mã nguồn chạy trên Cloudflare Workers. API token khi tạo nên điều chỉnh <a href="https://blog.wpsila.com/api-token-cloudflare/" target="_blank">các quyền vừa đủ dùng là Zone.Cache Rules (Edit), Zone.WAF (Edit), Zone.Transform Rules (Edit) và chỉ cần cho tên miền cụ thể cần nhắm tới</a>. Sau khi chạy lệnh trên website này thì để an tâm nhất nên <a href="https://blog.wpsila.com/xoa-hoac-doi-api-token/" target="_blank">xóa API Token đó hoặc đổi nó sang Token khác</a>.
+    </div>
+	
+    <div class="alert-info">
+        ⚠️ <strong>Tool này dành cho người đã hiểu Cloudflare cơ bản</strong>: Nếu bạn chưa biết <a href="https://blog.wpsila.com/cache-rules-trong-cloudflare/" target="_blank">Cache Rules</a> & <a href="https://wpsila.com/bao-mat-wp/" target="_blank">WAF</a> là gì, hãy đọc các bài vừa được dẫn link. Ngoài ra bạn hoàn toàn có thể cấu hình thủ công, công cụ này chỉ giúp quá trình đó nhanh & ít sai sót hơn. Tool này không phù hợp cho WooCommerce, Membership, LMS.
+    </div>
+
+    <div class="alert-info">
+        <strong>💡 Sản phẩm thay thế:</strong> Nếu bạn không muốn dùng ứng dụng này, hãy tham khảo plugin rất tốt có tên <a href="https://wordpress.org/plugins/wp-cloudflare-page-cache/" target="_blank">Super Page Cache</a>, nó có nhiều nét tương đồng với rtd-cafe.
+    </div>		
+
+    <form id="cfForm">
+        <div class="form-group">
+            <label for="zoneId">Zone ID <a href="https://blog.wpsila.com/zone-id-cloudflare/" target="_blank" class="help-link">Lấy Zone ID ở đâu?</a></label>
+            <input type="text" id="zoneId" placeholder="VD: 023e105f4ecef8ad9ca31..." required autocomplete="off">
+        </div>
+
+        <div class="form-group">
+            <label for="token">API Token <a href="https://blog.wpsila.com/api-token-cloudflare/" target="_blank" class="help-link">Cách tạo API Token?</a></label>
+            <!-- Bắt đầu phần sửa đổi -->
+			<div class="password-wrapper">
+				<input type="password" id="token" placeholder="VD: Ym9-ExAmPleToKeN..." required autocomplete="off">
+				
+				<!-- Nút icon con mắt (Dùng SVG inline để không phải load thư viện) -->
+				<span id="toggleToken" class="eye-icon" title="Hiện/Ẩn Token">
+					<!-- Icon Mắt Mở (Mặc định) -->
+					<svg class="eye-open" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+					
+					<!-- Icon Mắt Đóng (Ẩn đi lúc đầu) -->
+					<svg class="eye-closed" style="display: none;" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path><line x1="1" y1="1" x2="23" y2="23"></line></svg>
+				</span>
+			</div>
+			<!-- Kết thúc phần sửa đổi -->
+            <div style="font-size: 0.75rem; color: #718096; margin-top: 5px;">
+                Yêu cầu quyền: <em>Zone.Cache Rules (Edit), Zone.WAF (Edit), Zone.Transform Rules (Edit)</em>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="domain">Tên miền (Domain) của bạn</label>
+            <input type="text" id="domain" placeholder="VD: example.com" required>
+			<div style="font-size: 0.75rem; color: #718096; margin-top: 5px;">Đảm bảo tên miền của bạn đang bật đám mây vàng (proxied) trên DNS Cloudflare thì các rule này mới có tác dụng.</div>
+        </div>
+
+        <div class="form-group">
+            <label for="server_ip">IP Máy chủ (VPS IP) của bạn (nên copy paste thay vì gõ thủ công)</label>
+            <input type="text" id="server_ip" placeholder="VD: 113.161.x.x" required>
+            <div style="font-size: 0.75rem; color: #718096; margin-top: 5px;">Để whitelist tránh tự chặn chính mình.</div>
+        </div>
+		
+        <div class="alert-warning">
+            ⚠️ <strong>Lưu ý quan trọng:</strong> Tool sẽ <strong>GHI ĐÈ (Xóa & Thay thế)</strong> toàn bộ Cache Rules, WAF Rules và Rate Limit hiện có trên Zone này. Hãy cân nhắc nếu bạn đang có cấu hình riêng.
+        </div>	
+
+		<!-- Thêm Widget Turnstile -->
+		<div class="form-group">
+			<!-- Thay SITE_KEY của bạn vào bên dưới -->
+			<div class="cf-turnstile" data-sitekey="0x4AAAAAACMsWM_4U2nzK9J3"></div>
+		</div>		
+
+        <button type="submit" id="submitBtn">🚀 Triển khai ngay</button>
+    </form>
+
+    <div id="status"></div>
+
+    <div class="footer">
+        <p><strong>rtd-cafe</strong> được phát triển bởi <strong>wpsila</strong>.</p>
+		<p>rtd-cafe rất phù hợp khi dùng cùng với <a href="https://blog.wpsila.com/plugin-cache-enabler/" target="_blank"><strong>plugin Cache Enabler</strong></a>.</p>
+        <p><a href="https://github.com/kiencang/rtd-cafe/releases" target="_blank">v1.0.15</a> • <a href="https://github.com/kiencang/rtd-cafe" target="_blank">Xem mã nguồn (GitHub)</a> • <a href="https://github.com/kiencang/rtd-cafe/issues" target="_blank">Báo lỗi</a></p>
+		<p>Liên hệ: contact@wpsila.com</p>
+    </div>
+</div>
+
+<!-- Logic lệnh -->
+<script src="script.js"></script>
+
+</body>
+</html>
