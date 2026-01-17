@@ -138,6 +138,44 @@ input:focus {
   text-decoration: underline;
 }
 
+/* Con mắt */
+/* Wrapper để định vị tương đối */
+.password-wrapper {
+    position: relative;
+    width: 100%;
+}
+
+/* Tinh chỉnh lại input token để chữ không đè lên icon */
+#token {
+    padding-right: 40px; /* Chừa chỗ cho icon */
+    width: 100%; /* Đảm bảo full width như cũ */
+    box-sizing: border-box; /* Quan trọng để padding không làm vỡ layout */
+}
+
+/* Định vị icon con mắt */
+.eye-icon {
+    position: absolute;
+    right: 5px; /* Giảm right đi vì padding sẽ bù vào */
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+    color: #718096;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    user-select: none;
+    
+    /* Tăng vùng bấm cho Mobile */
+    padding: 10px; 
+    /* Đảm bảo icon vẫn nằm gọn */
+    width: 40px; 
+    height: 40px; 
+}
+
+.eye-icon:hover {
+    color: #2d3748; /* Đậm hơn khi di chuột vào */
+}
+
 /* Buttons */
 button {
   width: 100%;

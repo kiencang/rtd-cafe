@@ -26,6 +26,39 @@ form.addEventListener('submit', async (e) => {
         `;
         return; 
     }
+	
+    // ============================================================
+    // 👇 BẮT ĐẦU PHẦN THÊM MỚI (SANITY CHECK IP) 👇
+    // ============================================================
+    
+    // Lấy giá trị IP để kiểm tra
+    let serverIp = document.getElementById('server_ip').value.trim();
+
+    // Hàm kiểm tra hợp lý (Sanity Check)
+    const isIpLike = (str) => {
+        // IPv4: Trông giống 4 nhóm số (VD: 1.2.3.4) - Chấp nhận sai số nhỏ, chặn text/url
+        const looksLikeIPv4 = str.split('.').length === 4 && /^[0-9.]+$/.test(str);
+
+        // IPv6: Có ít nhất 2 dấu hai chấm và chỉ chứa Hex (VD: 2001:db8::1)
+        const looksLikeIPv6 = str.split(':').length >= 3 && /^[0-9a-fA-F:]+$/.test(str);
+
+        return looksLikeIPv4 || looksLikeIPv6;
+    };
+
+    if (!isIpLike(serverIp)) {
+        statusDiv.style.display = 'block';
+        statusDiv.className = 'error';
+        statusDiv.innerHTML = `
+            <strong>❌ IP Máy chủ không hợp lệ:</strong><br>
+            Bạn nhập: "<em>${serverIp}</em>"<br>
+            Vui lòng chỉ nhập địa chỉ IP (VD: 113.161.x.x hoặc IPv6).<br>
+            Tuyệt đối không nhập tên miền hay URL vào ô này.
+        `;
+        return; // Dừng lại, không gửi request
+    }
+    // ============================================================
+    // 👆 KẾT THÚC PHẦN THÊM MỚI 👆
+    // ============================================================	
     
     // 3. Lấy Token Turnstile
     const formData = new FormData(form);
@@ -43,7 +76,7 @@ form.addEventListener('submit', async (e) => {
         zoneId: document.getElementById('zoneId').value.trim(),
         token: document.getElementById('token').value.trim(),
         domain: cleanDomain,
-        server_ip: document.getElementById('server_ip').value.trim(),
+        server_ip: serverIp,
         turnstileToken: turnstileToken
     };      
 
@@ -92,5 +125,29 @@ form.addEventListener('submit', async (e) => {
     } finally {
         btn.disabled = false;
         btn.innerText = "🚀 Triển khai ngay";
+    }
+});
+
+document.addEventListener('DOMContentLoaded', function() {
+    const tokenInput = document.getElementById('token');
+    const toggleBtn = document.getElementById('toggleToken');
+    const eyeOpen = toggleBtn.querySelector('.eye-open');
+    const eyeClosed = toggleBtn.querySelector('.eye-closed');
+
+    if (toggleBtn && tokenInput) {
+        toggleBtn.addEventListener('click', function() {
+            // Kiểm tra trạng thái hiện tại
+            const type = tokenInput.getAttribute('type') === 'password' ? 'text' : 'password';
+            tokenInput.setAttribute('type', type);
+            
+            // Đổi icon
+            if (type === 'text') {
+                eyeOpen.style.display = 'none';
+                eyeClosed.style.display = 'block';
+            } else {
+                eyeOpen.style.display = 'block';
+                eyeClosed.style.display = 'none';
+            }
+        });
     }
 });
