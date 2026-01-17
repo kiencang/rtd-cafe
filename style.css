@@ -44,7 +44,7 @@ body {
   /* Bóng đổ xịn (Soft Shadow) */
   box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
   width: 100%;
-  max-width: 680px;
+  max-width: 650px;
   position: relative;
   overflow: hidden; /* Để chứa dải màu trang trí nếu cần */
   border: 1px solid #fff;
