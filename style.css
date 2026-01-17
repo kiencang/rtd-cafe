@@ -1,244 +1,182 @@
-/* --- Variables --- */
+/* --- Variables (Bảng màu tinh tế hơn) --- */
 :root {
-  --primary: #f6821f;
-  --primary-hover: #e67615;
-  --bg: #f8f9fa;
-  --card-bg: #ffffff;
-  --text: #2d3748;
+  --primary: #f6821f; /* Cam Cloudflare */
+  --primary-hover: #fa9d52;
+  --primary-shadow: rgba(246, 130, 31, 0.4);
+  
+  --bg-page: #f0f2f5; /* Xám xanh rất nhạt làm nền */
+  --bg-card: #ffffff;
+  
+  --text-main: #1a202c;
+  --text-muted: #718096;
   --border: #e2e8f0;
-  --success: #48bb78;
-  --error: #f56565;
+  --focus-ring: rgba(246, 130, 31, 0.2);
+  
+  --radius: 12px; /* Bo góc mềm mại hơn */
+  --font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
 }
 
-/* --- Global Reset --- */
-* {
-  box-sizing: border-box;
-}
+/* --- Global Reset & Base --- */
+* { box-sizing: border-box; }
 
-/* --- Base --- */
 body {
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-  background-color: var(--bg);
-  color: var(--text);
+  font-family: var(--font-family);
+  background-color: var(--bg-page);
+  /* Thêm họa tiết nền mờ ảo (Optional) */
+  background-image: radial-gradient(#cbd5e0 1px, transparent 1px);
+  background-size: 20px 20px;
+  
+  color: var(--text-main);
   margin: 0;
   padding: 20px;
   display: flex;
   justify-content: center;
   align-items: center;
   min-height: 100vh;
+  line-height: 1.6;
 }
 
-/* --- Layout --- */
+/* --- Container (Card chính) --- */
 .container {
-  background: var(--card-bg);
-  padding: 2rem;
-  border-radius: 1rem;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+  background: var(--bg-card);
+  padding: 2.5rem; /* Tăng khoảng cách */
+  border-radius: 16px; /* Bo góc lớn hơn */
+  /* Bóng đổ xịn (Soft Shadow) */
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
   width: 100%;
-  max-width: 550px;
+  max-width: 680px;
+  position: relative;
+  overflow: hidden; /* Để chứa dải màu trang trí nếu cần */
+  border: 1px solid #fff;
 }
 
-/* --- Components --- */
-/* Header */
-.header {
-  text-align: center;
-  margin-bottom: 2rem;
+/* Thanh màu trang trí trên đầu card */
+.container::before {
+    content: "";
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 6px;
+    background: linear-gradient(90deg, #f6821f, #fab916);
 }
 
+/* --- Header --- */
+.header { text-align: center; margin-bottom: 2rem; }
 .header h1 {
-  margin: 0;
-  color: #1a202c;
-  font-size: 1.5rem;
+  margin: 0.5rem 0 0;
+  font-size: 1.75rem;
+  letter-spacing: -0.5px;
+  color: #2d3748;
 }
-
-.header p {
-  color: #718096;
-  margin-top: 0.5rem;
-  font-size: 0.95rem;
-}
+.header p { color: var(--text-muted); font-size: 0.95rem; margin-top: 5px;}
 
 .badge {
-  background: #ebf8ff;
-  color: #3182ce;
-  padding: 4px 8px;
-  border-radius: 4px;
-  font-size: 0.75rem;
-  font-weight: bold;
-  display: inline-block;
-  margin-top: 5px;
+  background: #ebf8ff; color: #2b6cb0;
+  padding: 4px 10px; border-radius: 20px;
+  font-size: 0.75rem; font-weight: 600;
+  display: inline-block; margin-top: 8px;
+  border: 1px solid #bee3f8;
 }
 
-/* Alerts */
-.alert-info,
-.alert-warning {
-  padding: 1rem;
-  margin-bottom: 1.5rem;
-  font-size: 0.9rem;
-  border-radius: 4px;
-  border-left-width: 4px;
-  border-left-style: solid;
+/* --- Alerts (Làm dịu mắt hơn) --- */
+.alert-info, .alert-warning {
+  padding: 1rem; margin-bottom: 1.5rem;
+  font-size: 0.9rem; border-radius: var(--radius);
+  border: 1px solid transparent;
 }
+.alert-info { background-color: #ebf8ff; border-color: #bee3f8; color: #2c5282; }
+.alert-info a { color: #2b6cb0; text-decoration: underline; }
 
-.alert-info {
-  background-color: #fffaf0;
-  border-left-color: var(--primary);
-  color: #744210;
-}
+.alert-warning { background-color: #fffaf0; border-color: #fbd38d; color: #9c4221; }
 
-.alert-warning {
-  background-color: #fff5f5;
-  border-left-color: var(--error);
-  color: #c53030;
-  padding: 0.85rem 1rem;
-  margin-bottom: 1rem;
-  line-height: 1.5;
-}
-
-.alert-warning strong {
-  font-weight: 700;
-  color: #9b2c2c;
-}
-
-/* Forms */
-.form-group {
-  margin-bottom: 1.25rem;
-}
+/* --- Forms & Inputs --- */
+.form-group { margin-bottom: 1.5rem; position: relative; }
 
 label {
-  display: block;
-  margin-bottom: 0.5rem;
-  font-weight: 600;
-  font-size: 0.9rem;
-  color: #4a5568;
+  display: block; margin-bottom: 0.5rem;
+  font-weight: 600; font-size: 0.9rem; color: #4a5568;
 }
 
+/* Input Styles */
 input {
   width: 100%;
-  padding: 0.75rem;
+  padding: 0.85rem 1rem; /* Input cao hơn cho dễ bấm */
   border: 1px solid var(--border);
-  border-radius: 0.5rem;
+  border-radius: var(--radius);
   font-size: 1rem;
-  transition: all 0.2s;
+  transition: all 0.2s ease;
+  background-color: #fcfcfc;
 }
 
 input:focus {
   outline: none;
+  background-color: #fff;
   border-color: var(--primary);
-  box-shadow: 0 0 0 3px rgba(246, 130, 31, 0.15);
+  box-shadow: 0 0 0 4px var(--focus-ring); /* Hiệu ứng focus ring lan tỏa */
 }
 
-.help-link {
-  font-size: 0.8rem;
-  color: #3182ce;
-  text-decoration: none;
-  float: right;
-}
+/* Phần wrapper cho icon con mắt & input token */
+.password-wrapper { position: relative; width: 100%; }
+#token { padding-right: 45px; }
 
-.help-link:hover {
-  text-decoration: underline;
-}
-
-/* Con mắt */
-/* Wrapper để định vị tương đối */
-.password-wrapper {
-    position: relative;
-    width: 100%;
-}
-
-/* Tinh chỉnh lại input token để chữ không đè lên icon */
-#token {
-    padding-right: 40px; /* Chừa chỗ cho icon */
-    width: 100%; /* Đảm bảo full width như cũ */
-    box-sizing: border-box; /* Quan trọng để padding không làm vỡ layout */
-}
-
-/* Định vị icon con mắt */
 .eye-icon {
-    position: absolute;
-    right: 5px; /* Giảm right đi vì padding sẽ bù vào */
-    top: 50%;
+    position: absolute; right: 12px; top: 50%;
     transform: translateY(-50%);
-    cursor: pointer;
-    color: #718096;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    user-select: none;
-    
-    /* Tăng vùng bấm cho Mobile */
-    padding: 10px; 
-    /* Đảm bảo icon vẫn nằm gọn */
-    width: 40px; 
-    height: 40px; 
+    cursor: pointer; color: #a0aec0;
+    display: flex; align-items: center; justify-content: center;
+    padding: 5px; border-radius: 50%;
+    transition: background 0.2s, color 0.2s;
 }
+.eye-icon:hover { background-color: #edf2f7; color: #4a5568; }
 
-.eye-icon:hover {
-    color: #2d3748; /* Đậm hơn khi di chuột vào */
-}
+.help-link { font-size: 0.8rem; color: var(--primary); text-decoration: none; float: right; font-weight: 500;}
+.help-link:hover { text-decoration: underline; }
 
-/* Buttons */
+/* --- Button (Juicy Button) --- */
 button {
-  width: 100%;
-  padding: 1rem;
-  background-color: var(--primary);
-  color: white;
-  border: none;
-  border-radius: 0.5rem;
-  font-size: 1rem;
-  font-weight: bold;
+  width: 100%; padding: 1rem;
+  background: linear-gradient(135deg, var(--primary), #e67615);
+  color: white; border: none;
+  border-radius: var(--radius);
+  font-size: 1.05rem; font-weight: 700;
   cursor: pointer;
-  transition: background-color 0.2s;
-  margin-top: 1rem;
+  box-shadow: 0 4px 14px 0 var(--primary-shadow);
+  transition: all 0.2s ease;
+  display: flex; justify-content: center; align-items: center; gap: 8px;
 }
 
 button:hover {
-  background-color: var(--primary-hover);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px var(--primary-shadow);
+  filter: brightness(1.05);
 }
+
+button:active { transform: translateY(0); box-shadow: 0 2px 5px var(--primary-shadow); }
 
 button:disabled {
-  background-color: #cbd5e0;
-  cursor: not-allowed;
+  background: #cbd5e0; cursor: not-allowed;
+  transform: none; box-shadow: none;
 }
 
-/* Status Messages */
+/* --- Status & Animations --- */
 #status {
-  margin-top: 1.5rem;
-  border-radius: 0.5rem;
-  padding: 1rem;
-  display: none;
+  margin-top: 1.5rem; border-radius: var(--radius);
+  padding: 1.25rem; display: none;
+  animation: fadeIn 0.4s ease-out;
 }
 
-.success {
-  background-color: #f0fff4;
-  color: #22543d;
-  border: 1px solid #c6f6d5;
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
-.error {
-  background-color: #fff5f5;
-  color: #742a2a;
-  border: 1px solid #fed7d7;
-}
-
+.success { background-color: #f0fff4; color: #276749; border: 1px solid #c6f6d5; }
+.error { background-color: #fff5f5; color: #c53030; border: 1px solid #fed7d7; }
 .loading {
-  text-align: center;
-  color: #718096;
-  font-style: italic;
+  background-color: #ebf8ff; color: #3182ce;
+  text-align: center; border: 1px solid #bee3f8;
 }
 
 /* Footer */
-.footer {
-  text-align: center;
-  margin-top: 2rem;
-  font-size: 0.8rem;
-  color: #a0aec0;
-}
-
-.footer a {
-  color: #a0aec0;
-  text-decoration: none;
-}
-
-.footer a:hover {
-  color: var(--primary);
-}
+.footer { text-align: center; margin-top: 2.5rem; font-size: 0.85rem; color: #a0aec0; border-top: 1px solid #edf2f7; padding-top: 1.5rem;}
+.footer a { color: #718096; text-decoration: none; transition: color 0.2s; }
+.footer a:hover { color: var(--primary); }
