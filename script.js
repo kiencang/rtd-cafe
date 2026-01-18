@@ -85,7 +85,7 @@ form.addEventListener('submit', async (e) => {
 	btn.disabled = true;
 	btn.innerHTML = "⏳ Đang kết nối API Cloudflare...";
 
-	// 🔒 Freeze form – summary lúc này là snapshot sẽ được commit
+	// 🔒 Freeze form
 	form.querySelectorAll('input:not([name="cf-turnstile-response"])')
 		.forEach(i => i.disabled = true);
 
