@@ -17,7 +17,7 @@
 // Cache phía trình duyệt cho html ở rule chỉ nên để trong khoảng từ 1 - 5 phút, không nên hơn.
 // =========================================================================
 const RTD_CAFE_VERSION = "v1.0.19"; // Phiên bản của script
-const DEPLOYED_AT = new Date().toISOString(); // Ghi mốc thời gian khi tạo các rule
+const DEPLOYED_AT = "2026-01-18 21:20"; // Mốc thời gian của mã này khi được build
 
 const MY_CACHE_RULES = [
 // --------------------------------------------------------------------------------------------------------------------------------
