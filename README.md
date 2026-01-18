@@ -2,7 +2,9 @@
 
 **rtd-cafe** là công cụ tự động hóa việc cấu hình **Cache Rules** và **WAF (Bảo mật)** trên Cloudflare, được tối ưu hóa đặc biệt cho **WordPress Blog & Trang tin tức** sử dụng VPS.
 
-> 💡 **Triết lý:** Không Plugin, Không chạy nền, "Set and Forget" (Cấu hình một lần dùng lâu dài).
+> 💡 **Triết lý:** Đơn giản, Không chạy nền, "Set and Forget" (Cấu hình một lần dùng lâu dài).
+
+rtd-cafe kết hợp rất ổn thỏa với plugin [Cache Enabler](https://blog.wpsila.com/plugin-cache-enabler/) để cải thiện hiệu suất hơn nữa. Cache Enabler lo phần cache phía server, còn rtd-cafe cài đặt cache cho bạn ở phía Cloudflare. Có hai lớp đệm cache này trang web của bạn có khả năng chịu được lưu lượng truy cập cao hơn rất nhiều.
 
 ---
 
