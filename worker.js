@@ -27,7 +27,7 @@ const MY_CACHE_RULES = [
       "edge_ttl": { "default": 28800, "mode": "override_origin" }, // Cache ở phía Edge (Cloudflare) 8 tiếng
       "browser_ttl": { "default": 180, "mode": "override_origin" } // Cache ở phía trình duyệt người dùng 3 phút
     },
-    "description": "Cache rules 1 [rtd-cafe-v1.0.16]: Quy tắc cache chung (HTML cache)", // Đặt tên cho quy tắc // phiên bản của rule
+    "description": "Cache rules 1 [rtd-cafe-v1.0.17]: Quy tắc cache chung (HTML cache)", // Đặt tên cho quy tắc // phiên bản của rule
     "enabled": true, // Bật tính năng này
     // Loại trừ các file tĩnh (để Rule 2,3 xử lý) và trang đăng nhập
     "expression": "(not http.request.uri.path contains \"/wp-login.php\" and not http.request.uri.path contains \"/wp-admin\" and not http.cookie contains \"wordpress_logged_in_\" and not http.request.uri.path.extension in {\"css\" \"js\" \"woff\" \"woff2\" \"ttf\" \"otf\" \"eot\" \"map\" \"jpg\" \"png\" \"jpeg\" \"webp\" \"avif\" \"ico\" \"svg\" \"gif\" \"pdf\" \"mp3\" \"mp4\" \"webm\"})"
@@ -171,7 +171,7 @@ const getWafRules = (domain, vpsIP) => [
     "action": "block",
     "description": "Security rules 2 [rtd-cafe]: Chặn truy cập các file nhạy cảm",
     "enabled": true,
-	"expression": "(http.request.uri.path contains \"/xmlrpc.php\") or (http.request.uri.path contains \"/wp-config.php\") or (http.request.uri.path contains \".htaccess\") or (http.request.uri.path contains \"/.env\") or (http.request.uri.path contains \"composer.json\") or (http.request.uri.path contains \"package.json\") or (http.request.uri.path contains \"/.git/\") or (http.request.uri.path contains \"/wp-includes/wlwmanifest.xml\") or (ends_with(http.request.uri.path, \".log\")) or (ends_with(http.request.uri.path, \".sql\")) or (ends_with(http.request.uri.path, \".bak\")) or (ends_with(http.request.uri.path, \".old\")) or (ends_with(http.request.uri.path, \"readme.html\")) or (ends_with(http.request.uri.path, \"license.txt\")) or (ends_with(http.request.uri.path, \".git\")) or (http.request.uri.path contains \"/wp-content/uploads/\" and http.request.uri.path contains \".php\") or (http.request.uri.path contains \"/debug.log\")"
+	"expression": "(http.request.uri.path contains \"/xmlrpc.php\") or (http.request.uri.path contains \"/wp-config.php\") or (http.request.uri.path contains \".htaccess\") or (http.request.uri.path contains \"/.env\") or (http.request.uri.path contains \"composer.json\") or (http.request.uri.path contains \"package.json\") or (http.request.uri.path contains \"/.git/\") or (http.request.uri.path contains \"/wp-includes/wlwmanifest.xml\") or (ends_with(http.request.uri.path, \".log\")) or (ends_with(http.request.uri.path, \".sql\")) or (ends_with(http.request.uri.path, \".bak\")) or (ends_with(http.request.uri.path, \".old\")) or (ends_with(http.request.uri.path, \"readme.html\")) or (ends_with(http.request.uri.path, \"license.txt\")) or (ends_with(http.request.uri.path, \".git\")) or (http.request.uri.path contains \"/wp-content/uploads/\" and http.request.uri.path contains \".php\")"
   },
 // --------------------------------------------------------------------------------------------------------------------------------  
   // Bảo mật 3: Bảo vệ Login & Admin
