@@ -135,7 +135,7 @@ form.addEventListener('submit', async (e) => {
 				form.reset();
 				if (window.turnstile) turnstile.reset();
 				resetSummary();
-			}, 3000);
+			}, 4000);
         } else {
             throw new Error(result.message || "Lỗi không xác định từ Cloudflare.");
         }
@@ -158,6 +158,7 @@ form.addEventListener('submit', async (e) => {
 }
 });
 
+// Con mắt ẩn hiện cho API Token
 document.addEventListener('DOMContentLoaded', function() {
     const tokenInput = document.getElementById('token');
     const toggleBtn = document.getElementById('toggleToken');
