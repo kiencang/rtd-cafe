@@ -6,6 +6,16 @@ const form = document.getElementById('cfForm');
 const statusDiv = document.getElementById('status');
 const btn = document.getElementById('submitBtn');
 
+const summaryBox = document.getElementById('preflightSummary');
+const summaryDomain = document.getElementById('summaryDomain');
+const summaryIp = document.getElementById('summaryIp');
+
+const resetSummary = () => {
+    summaryBox.style.display = 'none';
+    summaryDomain.textContent = '—';
+    summaryIp.textContent = '—';
+};
+
 form.addEventListener('submit', async (e) => {
     e.preventDefault();
 
@@ -71,12 +81,6 @@ form.addEventListener('submit', async (e) => {
         statusDiv.innerHTML = '<strong>❌ Vui lòng xác thực bạn không phải là Robot!</strong>';
         return;
     }
-	
-	// --- Pre-flight summary ---
-	// 👉 ĐẶT SAU TURNSTILE CHECK
-	const summaryBox = document.getElementById('preflightSummary');
-	const summaryDomain = document.getElementById('summaryDomain');
-	const summaryIp = document.getElementById('summaryIp');
 
 	summaryDomain.textContent = cleanDomain;
 	summaryIp.textContent = serverIp;
@@ -91,9 +95,14 @@ form.addEventListener('submit', async (e) => {
         turnstileToken: turnstileToken
     };      
 
-    // UI Loading
-    btn.disabled = true;
-    btn.innerHTML = "⏳ Đang kết nối API Cloudflare...";
+	// UI Loading
+	btn.disabled = true;
+	btn.innerHTML = "⏳ Đang kết nối API Cloudflare...";
+
+	// 🔒 Freeze form – summary lúc này là snapshot sẽ được commit
+	form.querySelectorAll('input:not([name="cf-turnstile-response"])')
+		.forEach(i => i.disabled = true);
+
     statusDiv.style.display = 'block';
     statusDiv.className = 'loading';
     statusDiv.innerText = "Đang gửi lệnh cấu hình...";
@@ -120,13 +129,13 @@ form.addEventListener('submit', async (e) => {
                 </ul>
                 <p style="margin-bottom: 0; margin-top: 10px;">Hãy vào Cloudflare Dashboard kiểm tra lại nhé!</p>
             `;
-            form.reset();
-            if (window.turnstile) turnstile.reset();
 			
-			// Reset pre-flight summary
-			summaryBox.style.display = 'none';
-			summaryDomain.textContent = '—';
-			summaryIp.textContent = '—';
+			// 👉 CHỈ reset + hide summary SAU KHI status đã render
+			setTimeout(() => {
+				form.reset();
+				if (window.turnstile) turnstile.reset();
+				resetSummary();
+			}, 1500);
         } else {
             throw new Error(result.message || "Lỗi không xác định từ Cloudflare.");
         }
@@ -138,13 +147,15 @@ form.addEventListener('submit', async (e) => {
             <em>Kiểm tra lại Zone ID, Token hoặc quyền hạn của Token.</em>
         `;
 		// Ẩn summary vì chưa commit được
-		summaryBox.style.display = 'none';
+		resetSummary();
 		
         if (window.turnstile) turnstile.reset(); 
     } finally {
-        btn.disabled = false;
-        btn.innerText = "🚀 Triển khai & Ghi đè Rules";
-    }
+		btn.disabled = false;
+		btn.innerText = "🚀 Triển khai & Ghi đè Rules";
+
+		form.querySelectorAll('input').forEach(i => i.disabled = false);
+}
 });
 
 document.addEventListener('DOMContentLoaded', function() {
