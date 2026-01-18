@@ -10,6 +10,16 @@ và dự án này tuân thủ [Semantic Versioning](https://semver.org/spec/v2.0
 - Thêm cơ chế kiểm tra trước các quy tắc (rules) có sẵn trong Zone định chỉnh sửa.
 - Hiển thị thông báo cảnh báo để người dùng biết trước khi thao tác.
 
+## [1.0.20] - 2026-01-18
+
+### Changed
+- Chỉnh sửa thông báo để người dùng khỏi hiểu nhầm không thành công là thành công.
+- Chuyển ngày giờ về cuối tên để tránh hiều nhầm
+
+### Fixed
+- Chỉnh giao diện index.html, chuyển 'Thành công rực rỡ!' thành 'Hoàn thành xuất sắc nhiệm vụ!'
+- Chỉnh worker.js để nó chuyển thời điểm về cuối tên để không che mất tên rules ở giao diện.
+
 ## [1.0.19] - 2026-01-18
 
 ### Changed
@@ -38,4 +48,5 @@ và dự án này tuân thủ [Semantic Versioning](https://semver.org/spec/v2.0
 
 ### Added
 - Thêm 2 quy tắc chặn file (file blocking rules) vào bộ quy tắc bảo mật số 2.
+
 
