@@ -18,7 +18,7 @@ và dự án này tuân thủ [Semantic Versioning](https://semver.org/spec/v2.0
 
 ### Fixed
 - Chỉnh giao script.js để tăng thời gian từ 1500ms lên 3000ms
-- Chỉnh style.css để box thông báo lỗi rõ ràng, thu hút hơn.
+- Chỉnh style.css để box thông báo lỗi (class .error) rõ ràng, thu hút hơn.
 
 ## [1.0.20] - 2026-01-18
 
@@ -58,6 +58,7 @@ và dự án này tuân thủ [Semantic Versioning](https://semver.org/spec/v2.0
 
 ### Added
 - Thêm 2 quy tắc chặn file (file blocking rules) vào bộ quy tắc bảo mật số 2.
+
 
 
 
