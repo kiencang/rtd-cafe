@@ -131,6 +131,16 @@ input:focus {
 .help-link { font-size: 0.8rem; color: var(--primary); text-decoration: none; float: right; font-weight: 500;}
 .help-link:hover { text-decoration: underline; }
 
+.cf-turnstile {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 1rem;
+}
+
+.cf-turnstile iframe {
+    max-width: 100%;
+}
+
 /* --- Button (Juicy Button) --- */
 button {
   width: 100%; padding: 1rem;
@@ -180,3 +190,13 @@ button:disabled {
 .footer { text-align: center; margin-top: 2.5rem; font-size: 0.85rem; color: #a0aec0; border-top: 1px solid #edf2f7; padding-top: 1.5rem;}
 .footer a { color: #718096; text-decoration: none; transition: color 0.2s; }
 .footer a:hover { color: var(--primary); }
+
+@media (max-width: 480px) {
+  .container {
+    padding: 1.5rem; /* Giảm khoảng cách đệm trên mobile */
+  }
+  
+  .header h1 {
+    font-size: 1.5rem; /* Giảm cỡ chữ tiêu đề chút xíu */
+  }
+}
