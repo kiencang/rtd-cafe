@@ -16,8 +16,8 @@
 // Cache ở phía Edge cho rule 1 có thể tăng thêm thành 3 ngày hoặc 1 tuần nếu có plugin xóa cache tự động.
 // Cache phía trình duyệt cho html ở rule chỉ nên để trong khoảng từ 1 - 5 phút, không nên hơn.
 // =========================================================================
-const RTD_CAFE_VERSION = "v1.0.19"; // Phiên bản của script
-const DEPLOYED_AT = "2026-01-18 21:20"; // Mốc thời gian của mã này khi được build
+const RTD_CAFE_VERSION = "v1.0.20"; // Phiên bản của script
+const DEPLOYED_AT = "2026-01-18 21:48"; // Mốc thời gian của mã này khi được build
 
 const MY_CACHE_RULES = [
 // --------------------------------------------------------------------------------------------------------------------------------
