@@ -187,7 +187,23 @@ button:disabled {
 }
 
 .success { background-color: #f0fff4; color: #276749; border: 1px solid #c6f6d5; }
-.error { background-color: #fff5f5; color: #c53030; border: 1px solid #fed7d7; }
+/* --- Thay thế class .error cũ --- */
+
+.error {
+  background-color: #fff5f5; /* Nền vẫn giữ đỏ nhạt để dễ đọc chữ */
+  color: #9b2c2c; /* Chữ đỏ đậm hơn, tăng độ tương phản */
+  
+  /* Border trái dày, màu đỏ tươi cảnh báo */
+  border: 1px solid #feb2b2;
+  border-left: 6px solid #e53e3e;
+  border-right: 9px solid #e53e3e;
+  
+  /* Đổ bóng lan tỏa màu đỏ */
+  box-shadow: 0 4px 15px rgba(229, 62, 62, 0.25);
+  
+  font-weight: 500; /* Chữ đậm hơn một chút */
+}
+
 .loading {
   background-color: #ebf8ff; color: #3182ce;
   text-align: center; border: 1px solid #bee3f8;

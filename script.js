@@ -135,7 +135,7 @@ form.addEventListener('submit', async (e) => {
 				form.reset();
 				if (window.turnstile) turnstile.reset();
 				resetSummary();
-			}, 1500);
+			}, 3000);
         } else {
             throw new Error(result.message || "Lỗi không xác định từ Cloudflare.");
         }
