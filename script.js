@@ -1,3 +1,4 @@
+// --- File: script.js ---
 // --- CẤU HÌNH ---
 const WORKER_URL = "https://rtd-cafe-settings.wpsila.com/rtd-cafe-worker-api"; 
 
