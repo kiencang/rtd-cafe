@@ -90,6 +90,16 @@
             <input type="text" id="server_ip" placeholder="VD: 113.161.x.x" required>
             <div style="font-size: 0.75rem; color: #718096; margin-top: 5px;">Để whitelist tránh tự chặn chính mình.</div>
         </div>
+
+		<!-- Thêm Widget Turnstile -->
+		<div class="form-group">
+			<label>🛡️ Bạn không phải là robot</label>
+			<!-- Thay SITE_KEY của bạn vào bên dưới -->
+			<div class="cf-turnstile" data-sitekey="0x4AAAAAACMsWM_4U2nzK9J3"></div>
+			<div style="font-size: 0.75rem; color: #718096; margin-bottom: 8px; text-align: center;">
+				(Chức năng của cái trên để đảm bảo bạn là người dùng thực)
+			</div>
+		</div>		
 		
         <div class="alert-warning">
             ⚠️ <strong>Lưu ý quan trọng:</strong> Tool sẽ <strong>GHI ĐÈ (Xóa & Thay thế)</strong> toàn bộ Cache Rules, WAF Rules và Rate Limit hiện có trên Zone này. Hãy cân nhắc nếu bạn đang có cấu hình riêng.
@@ -110,12 +120,6 @@
 			  Ghi đè Cache Rules, WAF Rules, Rate Limit
 			</li>
 		  </ul>
-		</div>	
-
-		<!-- Thêm Widget Turnstile -->
-		<div class="form-group">
-			<!-- Thay SITE_KEY của bạn vào bên dưới -->
-			<div class="cf-turnstile" data-sitekey="0x4AAAAAACMsWM_4U2nzK9J3"></div>
 		</div>		
 
         <button type="submit" id="submitBtn">🚀 Triển khai & Ghi đè Rules</button>
@@ -126,7 +130,7 @@
     <div class="footer">
         <p><strong>rtd-cafe</strong> được phát triển bởi <strong>wpsila</strong>.</p>
 		<p>rtd-cafe rất phù hợp khi dùng cùng với <a href="https://blog.wpsila.com/plugin-cache-enabler/" target="_blank"><strong>plugin Cache Enabler</strong></a>.</p>
-        <p><a href="https://github.com/kiencang/rtd-cafe/releases" target="_blank">v1.0.20x</a> • <a href="https://github.com/kiencang/rtd-cafe" target="_blank">Xem mã nguồn (GitHub)</a> • <a href="https://github.com/kiencang/rtd-cafe/issues" target="_blank">Báo lỗi</a></p>
+        <p><a href="https://github.com/kiencang/rtd-cafe/releases" target="_blank">v1.0.20y</a> • <a href="https://github.com/kiencang/rtd-cafe" target="_blank">Xem mã nguồn (GitHub)</a> • <a href="https://github.com/kiencang/rtd-cafe/issues" target="_blank">Báo lỗi</a></p>
 		<p>Open-source • No data stored • Runs on Cloudflare Workers</p>
 		<p>Liên hệ: contact@wpsila.com</p>
     </div>
