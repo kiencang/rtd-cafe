@@ -10,6 +10,12 @@ và dự án này tuân thủ [Semantic Versioning](https://semver.org/spec/v2.0
 - Thêm cơ chế kiểm tra trước các quy tắc (rules) có sẵn trong Zone định chỉnh sửa.
 - Hiển thị thông báo cảnh báo để người dùng biết trước khi thao tác.
 
+## [1.0.20y] - 2026-01-19
+
+### Changed
+- Cho hộp xác thực không phải là robot lên cao thêm và gán nhãn cho nó. Mục đích là để tránh người dùng hiểu nhầm thông tin.
+- Tăng thời gian hiển thị box tóm tắt thông tin lên 4s.
+
 ## [1.0.20x] - 2026-01-18
 
 ### Changed
@@ -58,6 +64,7 @@ và dự án này tuân thủ [Semantic Versioning](https://semver.org/spec/v2.0
 
 ### Added
 - Thêm 2 quy tắc chặn file (file blocking rules) vào bộ quy tắc bảo mật số 2.
+
 
 
 
