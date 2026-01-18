@@ -60,7 +60,7 @@ form.addEventListener('submit', async (e) => {
     // ============================================================
     // 👆 KẾT THÚC PHẦN THÊM MỚI 👆
     // ============================================================	
-    
+	
     // 3. Lấy Token Turnstile
     const formData = new FormData(form);
     const turnstileToken = formData.get('cf-turnstile-response');
@@ -71,6 +71,16 @@ form.addEventListener('submit', async (e) => {
         statusDiv.innerHTML = '<strong>❌ Vui lòng xác thực bạn không phải là Robot!</strong>';
         return;
     }
+	
+	// --- Pre-flight summary ---
+	// 👉 ĐẶT SAU TURNSTILE CHECK
+	const summaryBox = document.getElementById('preflightSummary');
+	const summaryDomain = document.getElementById('summaryDomain');
+	const summaryIp = document.getElementById('summaryIp');
+
+	summaryDomain.textContent = cleanDomain;
+	summaryIp.textContent = serverIp;
+	summaryBox.style.display = 'block';
 
     // 4. Đóng gói data
     const data = {
@@ -112,6 +122,11 @@ form.addEventListener('submit', async (e) => {
             `;
             form.reset();
             if (window.turnstile) turnstile.reset();
+			
+			// Reset pre-flight summary
+			summaryBox.style.display = 'none';
+			summaryDomain.textContent = '—';
+			summaryIp.textContent = '—';
         } else {
             throw new Error(result.message || "Lỗi không xác định từ Cloudflare.");
         }
@@ -122,10 +137,13 @@ form.addEventListener('submit', async (e) => {
             ${error.message}<br><br>
             <em>Kiểm tra lại Zone ID, Token hoặc quyền hạn của Token.</em>
         `;
+		// Ẩn summary vì chưa commit được
+		summaryBox.style.display = 'none';
+		
         if (window.turnstile) turnstile.reset(); 
     } finally {
         btn.disabled = false;
-        btn.innerText = "🚀 Triển khai ngay";
+        btn.innerText = "🚀 Triển khai & Ghi đè Rules";
     }
 });
 
