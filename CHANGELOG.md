@@ -10,6 +10,16 @@ và dự án này tuân thủ [Semantic Versioning](https://semver.org/spec/v2.0
 - Thêm cơ chế kiểm tra trước các quy tắc (rules) có sẵn trong Zone định chỉnh sửa.
 - Hiển thị thông báo cảnh báo để người dùng biết trước khi thao tác.
 
+## [1.0.20x] - 2026-01-18
+
+### Changed
+- Thời gian hiển thị box thông tin người dùng nhập dài hơn.
+- Báo lỗi nhìn thu hút hơn để user tránh hiểu nhầm thông tin.
+
+### Fixed
+- Chỉnh giao script.js để tăng thời gian từ 1500ms lên 3000ms
+- Chỉnh style.css để box thông báo lỗi rõ ràng, thu hút hơn.
+
 ## [1.0.20] - 2026-01-18
 
 ### Changed
@@ -48,5 +58,6 @@ và dự án này tuân thủ [Semantic Versioning](https://semver.org/spec/v2.0
 
 ### Added
 - Thêm 2 quy tắc chặn file (file blocking rules) vào bộ quy tắc bảo mật số 2.
+
 
 
