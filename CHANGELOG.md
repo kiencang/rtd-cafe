@@ -10,6 +10,16 @@ và dự án này tuân thủ [Semantic Versioning](https://semver.org/spec/v2.0
 - Thêm cơ chế kiểm tra trước các quy tắc (rules) có sẵn trong Zone định chỉnh sửa.
 - Hiển thị thông báo cảnh báo để người dùng biết trước khi thao tác.
 
+## [1.0.19] - 2026-01-18
+
+### Changed
+- Cập nhật giao diện để nó phản hồi chính xác hơn các cảnh báo.
+- Đặt tên rule chính xác hơn để phản ánh phiên bản và thời điểm tạo phiên bản.
+
+### Fixed
+- Chỉnh file CSS, JS, index để các phản hồi trong giao diện chính xác hơn.
+- Chỉnh worker.js để nó đặt tên các rule theo phiên bản và thời điểm triển khai.
+
 ## [1.0.18] - 2026-01-18
 
 ### Changed
@@ -28,3 +38,4 @@ và dự án này tuân thủ [Semantic Versioning](https://semver.org/spec/v2.0
 
 ### Added
 - Thêm 2 quy tắc chặn file (file blocking rules) vào bộ quy tắc bảo mật số 2.
+
