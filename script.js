@@ -119,7 +119,7 @@ form.addEventListener('submit', async (e) => {
         if (response.ok && result.success) {
             statusDiv.className = 'success';
             statusDiv.innerHTML = `
-                <h3>✅ Thành công rực rỡ!</h3>
+                <h3>✅ Hoàn thành xuất sắc nhiệm vụ!</h3>
                 <p>Website <strong>${data.domain}</strong> đã được tối ưu:</p>
                 <ul style="text-align: left; margin-bottom: 0;">
                     <li>Đã tạo 6 Cache Rules (chuẩn Blog & tăng tốc Admin).</li>
