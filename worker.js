@@ -30,7 +30,7 @@ const MY_CACHE_RULES = [
       "edge_ttl": { "default": 28800, "mode": "override_origin" }, // Cache ở phía Edge (Cloudflare) 8 tiếng
       "browser_ttl": { "default": 180, "mode": "override_origin" } // Cache ở phía trình duyệt người dùng 3 phút
     },
-    "description": `Cache rules 1 [rtd-cafe-${RTD_CAFE_VERSION}] [deployed: ${DEPLOYED_AT}]: Quy tắc cache chung (HTML cache)`, // Đặt tên cho quy tắc // phiên bản của rule
+    "description": `Cache rules 1 [rtd-cafe-${RTD_CAFE_VERSION}]: Quy tắc cache chung (HTML cache) [deployed: ${DEPLOYED_AT}]`, // Đặt tên cho quy tắc // phiên bản của rule
     "enabled": true, // Bật tính năng này
     // Loại trừ các file tĩnh (để Rule 2,3 xử lý) và trang đăng nhập
     "expression": "(not http.request.uri.path contains \"/wp-login.php\" and not http.request.uri.path contains \"/wp-admin\" and not http.cookie contains \"wordpress_logged_in_\" and not http.request.uri.path.extension in {\"css\" \"js\" \"woff\" \"woff2\" \"ttf\" \"otf\" \"eot\" \"map\" \"jpg\" \"png\" \"jpeg\" \"webp\" \"avif\" \"ico\" \"svg\" \"gif\" \"pdf\" \"mp3\" \"mp4\" \"webm\"})"
@@ -46,7 +46,7 @@ const MY_CACHE_RULES = [
       "edge_ttl": { "default": 2592000, "mode": "override_origin" }, // 1 tháng
       "browser_ttl": { "default": 604800, "mode": "override_origin" } // 7 ngày
     },
-    "description": `Cache rules 2 [rtd-cafe-${RTD_CAFE_VERSION}] [deployed: ${DEPLOYED_AT}]: Cache CSS, JS và font`,
+    "description": `Cache rules 2 [rtd-cafe-${RTD_CAFE_VERSION}]: Cache CSS, JS và font [deployed: ${DEPLOYED_AT}]`,
     "enabled": true,
     "expression": "(http.request.uri.path.extension in {\"css\" \"js\" \"woff\" \"woff2\" \"ttf\" \"otf\" \"eot\" \"map\"})"
   },
@@ -61,7 +61,7 @@ const MY_CACHE_RULES = [
       "edge_ttl": { "default": 31536000, "mode": "override_origin" }, // 1 năm
       "browser_ttl": { "default": 2592000, "mode": "override_origin" } // 1 tháng
     },
-    "description": `Cache rules 3 [rtd-cafe-${RTD_CAFE_VERSION}] [deployed: ${DEPLOYED_AT}]: Cache ảnh, PDF, media`,
+    "description": `Cache rules 3 [rtd-cafe-${RTD_CAFE_VERSION}]: Cache ảnh, PDF, media [deployed: ${DEPLOYED_AT}]`,
     "enabled": true,
     "expression": "(http.request.uri.path.extension in {\"jpg\" \"jpeg\" \"png\" \"ico\" \"svg\" \"gif\" \"webp\" \"avif\" \"pdf\" \"mp3\" \"mp4\" \"webm\"})"
   },
@@ -75,7 +75,7 @@ const MY_CACHE_RULES = [
       "edge_ttl": { "default": 28800, "mode": "override_origin" }, // 8 tiếng
       "browser_ttl": { "default": 28800, "mode": "override_origin" } // 8 tiếng
     },
-    "description": `Cache rules 4 [rtd-cafe-${RTD_CAFE_VERSION}] [deployed: ${DEPLOYED_AT}]: Cache ngắn cho Sitemap & Feed`,
+    "description": `Cache rules 4 [rtd-cafe-${RTD_CAFE_VERSION}]: Cache ngắn cho Sitemap & Feed [deployed: ${DEPLOYED_AT}]`,
     "enabled": true,
     "expression": "(http.request.uri.path contains \"sitemap\") or (http.request.uri.path contains \"/feed/\")"
   },
@@ -90,7 +90,7 @@ const MY_CACHE_RULES = [
       "edge_ttl": { "default": 604800, "mode": "override_origin" }, // 7 ngày
       "browser_ttl": { "default": 14400, "mode": "override_origin" } // 4 tiếng
     },
-    "description": `Cache rules 5 [rtd-cafe-${RTD_CAFE_VERSION}] [deployed: ${DEPLOYED_AT}]: Cache cho trang Admin (chỉ CSS, JS và font)`,
+    "description": `Cache rules 5 [rtd-cafe-${RTD_CAFE_VERSION}]: Cache cho trang Admin (chỉ CSS, JS và font) [deployed: ${DEPLOYED_AT}]`,
     "enabled": true,
     "expression": "(http.request.uri.path contains \"/wp-admin\" and http.request.uri.path.extension in {\"css\" \"js\" \"woff\" \"woff2\" \"ttf\" \"otf\" \"eot\"})"
   },
@@ -101,7 +101,7 @@ const MY_CACHE_RULES = [
   {
     "action": "set_cache_settings",
     "action_parameters": { "cache": false },
-    "description": `Cache rules 6 [rtd-cafe-${RTD_CAFE_VERSION}] [deployed: ${DEPLOYED_AT}]: Bỏ qua không cache (Admin, Login, API)`,
+    "description": `Cache rules 6 [rtd-cafe-${RTD_CAFE_VERSION}]: Bỏ qua không cache (Admin, Login, API) [deployed: ${DEPLOYED_AT}]`,
     "enabled": true,
     "expression": "(http.request.uri.path contains \"/wp-admin\" and not http.request.uri.path.extension in {\"css\" \"js\" \"woff\" \"woff2\" \"ttf\" \"otf\" \"eot\"}) or (http.request.uri.path contains \"/wp-login.php\") or (http.request.uri.path contains \"/robots.txt\") or (http.request.uri.path contains \"/wp-json/\") or (http.request.uri.query contains \"rest_route=\") or (http.request.uri.path contains \"/xmlrpc.php\") or (http.request.uri.path contains \"/wp-cron.php\") or (http.request.uri.query contains \"doing_wp_cron=\") or (http.cookie contains \"wordpress_logged_in_\") or (http.cookie contains \"wp-postpass_\") or (http.cookie contains \"wordpress_sec_\") or (http.cookie contains \"comment_author_\") or (http.request.uri.query contains \"replytocom=\") or (http.request.uri.query contains \"unapproved=\") or (http.request.uri.query contains \"moderation-hash=\") or (http.request.uri.query contains \"preview=\") or (http.request.uri.query contains \"preview_id=\") or (http.request.uri.query contains \"preview_nonce=\") or (http.request.uri.query contains \"customize_changeset_uuid\") or (http.request.uri.query contains \"customize_preview=\") or (http.request.uri.query contains \"customize=\") or (http.request.uri.query contains \"_wpnonce\") or (http.request.uri.query contains \"s=\") or (http.request.uri.query contains \"action=\") or (http.request.uri.query contains \"elementor-preview\") or (http.request.uri.query contains \"fl_builder\") or (http.request.uri.query contains \"et_fb\") or (http.request.uri.query contains \"vc_editable\") or (http.request.uri.query contains \"bricks=\") or (http.request.uri.query contains \"tve=\") or (http.request.uri.query contains \"brizy-edit\") or (http.request.uri.path contains \"/wp-signup.php\") or (http.request.uri.path contains \"/wp-activate.php\") or (http.request.uri.path contains \"/wp-reset-password.php\") or (http.request.uri.query contains \"nocache\")"
   }
@@ -119,7 +119,7 @@ const MY_TRANSFORM_RULES = [
   {
     "action": "rewrite",
     "action_parameters": { "uri": { "query": { "value": "" } } },
-    "description": `Transform rules 1 [rtd-cafe-${RTD_CAFE_VERSION}] [deployed: ${DEPLOYED_AT}]: Xóa các query tracking phổ biến (fbclid, utm...)`,
+    "description": `Transform rules 1 [rtd-cafe-${RTD_CAFE_VERSION}]: Xóa các query tracking phổ biến (fbclid, utm...) [deployed: ${DEPLOYED_AT}]`,
     "enabled": true,
     "expression": "(http.request.uri.query contains \"fbclid\") or (http.request.uri.query contains \"utm_\") or (http.request.uri.query contains \"gclid\") or (http.request.uri.query contains \"ttclid\") or (http.request.uri.query contains \"wbraid\") or (http.request.uri.query contains \"gbraid\") or (http.request.uri.query contains \"msclkid\") or (http.request.uri.query contains \"yclid\") or (http.request.uri.query contains \"mc_cid\") or (http.request.uri.query contains \"_hsenc\") or (http.request.uri.query contains \"dclid\")"
   }
@@ -144,7 +144,7 @@ const MY_RATE_LIMIT_RULES = [
       "requests_per_period": 5, // Tối đa 5 lần
       "mitigation_timeout": 10 // Chặn 10 giây
     },
-    "description": `Rate limit [rtd-cafe-${RTD_CAFE_VERSION}] [deployed: ${DEPLOYED_AT}]: Giới hạn số lần vào trang đăng nhập`,
+    "description": `Rate limit [rtd-cafe-${RTD_CAFE_VERSION}]: Giới hạn số lần vào trang đăng nhập [deployed: ${DEPLOYED_AT}]`,
     "enabled": true,
     "expression": "(http.request.uri.path contains \"/wp-login.php\")"
   }
@@ -163,7 +163,7 @@ const getWafRules = (domain, vpsIP) => [
   {
     "action": "skip",
     "action_parameters": { "ruleset": "current" },
-    "description": `Security rules 1 [rtd-cafe-${RTD_CAFE_VERSION}] [deployed: ${DEPLOYED_AT}]: Không chặn chính mình (IP của VPS)`,
+    "description": `Security rules 1 [rtd-cafe-${RTD_CAFE_VERSION}]: Không chặn chính mình (IP của VPS) [deployed: ${DEPLOYED_AT}]`,
     "enabled": true,
     "expression": `(ip.src eq ${vpsIP})` // Không có nháy kép ở đây, IP của VPS là số
   },
@@ -172,7 +172,7 @@ const getWafRules = (domain, vpsIP) => [
   // Một danh sách dài các file chứa thông tin quan trọng không được để lộ ra ngoài.
   {
     "action": "block",
-    "description": `Security rules 2 [rtd-cafe-${RTD_CAFE_VERSION}] [deployed: ${DEPLOYED_AT}]: Chặn truy cập các file nhạy cảm`,
+    "description": `Security rules 2 [rtd-cafe-${RTD_CAFE_VERSION}]: Chặn truy cập các file nhạy cảm [deployed: ${DEPLOYED_AT}]`,
     "enabled": true,
 	"expression": "(http.request.uri.path contains \"/xmlrpc.php\") or (http.request.uri.path contains \"/wp-config.php\") or (http.request.uri.path contains \".htaccess\") or (http.request.uri.path contains \"/.env\") or (http.request.uri.path contains \"composer.json\") or (http.request.uri.path contains \"package.json\") or (http.request.uri.path contains \"/.git/\") or (http.request.uri.path contains \"/wp-includes/wlwmanifest.xml\") or (ends_with(http.request.uri.path, \".log\")) or (ends_with(http.request.uri.path, \".sql\")) or (ends_with(http.request.uri.path, \".bak\")) or (ends_with(http.request.uri.path, \".old\")) or (ends_with(http.request.uri.path, \"readme.html\")) or (ends_with(http.request.uri.path, \"license.txt\")) or (ends_with(http.request.uri.path, \".git\")) or (http.request.uri.path contains \"/wp-content/uploads/\" and http.request.uri.path contains \".php\")"
   },
@@ -181,7 +181,7 @@ const getWafRules = (domain, vpsIP) => [
   // Thử thách bằng managed_challenge, một trong các giải pháp rất mạnh để hạn chế bot.
   {
     "action": "managed_challenge",
-    "description": `Security rules 3 [rtd-cafe-${RTD_CAFE_VERSION}] [deployed: ${DEPLOYED_AT}]: Hạn chế bot vào trang login và admin`,
+    "description": `Security rules 3 [rtd-cafe-${RTD_CAFE_VERSION}]: Hạn chế bot vào trang login và admin [deployed: ${DEPLOYED_AT}]`,
     "enabled": true,
     "expression": "(http.request.uri.path contains \"/wp-login.php\") or (http.request.uri.path contains \"/wp-admin\" and not http.request.uri.path contains \"/wp-admin/admin-ajax.php\" and not http.request.uri.path contains \"/wp-admin/css/\" and not http.request.uri.path contains \"/wp-admin/js/\" and not http.request.uri.path contains \"/wp-admin/images/\")"
   },
@@ -191,7 +191,7 @@ const getWafRules = (domain, vpsIP) => [
   // Điều kiện quan trọng là bot đó phải không thuộc nhóm bot lành tính trong danh sách cf.client.bot
   {
     "action": "managed_challenge",
-    "description": `Security rules 4 [rtd-cafe-${RTD_CAFE_VERSION}] [deployed: ${DEPLOYED_AT}]: Hạn chế bot rác`,
+    "description": `Security rules 4 [rtd-cafe-${RTD_CAFE_VERSION}]: Hạn chế bot rác [deployed: ${DEPLOYED_AT}]`,
     "enabled": true,
     "expression": "(http.user_agent eq \"\" and not cf.client.bot) or (http.user_agent contains \"go-http\" and not cf.client.bot) or (http.user_agent contains \"axios\" and not cf.client.bot) or (http.user_agent contains \"wpscan\" and not cf.client.bot) or (http.user_agent contains \"sqlmap\" and not cf.client.bot) or (http.user_agent contains \"nmap\" and not cf.client.bot) or (http.user_agent contains \"headless\" and not cf.client.bot) or (http.user_agent contains \"selenium\" and not cf.client.bot) or (http.request.method eq \"POST\" and http.referer eq \"\" and not cf.client.bot)"
   },
@@ -200,7 +200,7 @@ const getWafRules = (domain, vpsIP) => [
   // Thử thách bằng managed_challenge
   {
     "action": "managed_challenge",
-    "description": `Security rules 5 [rtd-cafe-${RTD_CAFE_VERSION}] [deployed: ${DEPLOYED_AT}]: Hạn chế spam bình luận`,
+    "description": `Security rules 5 [rtd-cafe-${RTD_CAFE_VERSION}]: Hạn chế spam bình luận [deployed: ${DEPLOYED_AT}]`,
     "enabled": true,
     "expression": `(http.request.uri.path eq "/wp-comments-post.php" and http.request.method eq "POST" and not http.referer contains "${domain}")`
   }
