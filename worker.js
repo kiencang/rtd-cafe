@@ -27,7 +27,7 @@ const MY_CACHE_RULES = [
       "edge_ttl": { "default": 28800, "mode": "override_origin" }, // Cache ở phía Edge (Cloudflare) 8 tiếng
       "browser_ttl": { "default": 180, "mode": "override_origin" } // Cache ở phía trình duyệt người dùng 3 phút
     },
-    "description": "Cache rules 1 [rtd-cafe-v1.0.17]: Quy tắc cache chung (HTML cache)", // Đặt tên cho quy tắc // phiên bản của rule
+    "description": "Cache rules 1 [rtd-cafe-v1.0.18]: Quy tắc cache chung (HTML cache)", // Đặt tên cho quy tắc // phiên bản của rule
     "enabled": true, // Bật tính năng này
     // Loại trừ các file tĩnh (để Rule 2,3 xử lý) và trang đăng nhập
     "expression": "(not http.request.uri.path contains \"/wp-login.php\" and not http.request.uri.path contains \"/wp-admin\" and not http.cookie contains \"wordpress_logged_in_\" and not http.request.uri.path.extension in {\"css\" \"js\" \"woff\" \"woff2\" \"ttf\" \"otf\" \"eot\" \"map\" \"jpg\" \"png\" \"jpeg\" \"webp\" \"avif\" \"ico\" \"svg\" \"gif\" \"pdf\" \"mp3\" \"mp4\" \"webm\"})"
@@ -250,7 +250,7 @@ export default {
     }
 	
     // 1x. Handle CORS Preflight
-    if (request.method === "OPTIONS") return new Response(null, { headers: corsHeaders });
+    if (request.method === "OPTIONS") return new Response(null, { status: 204, headers: corsHeaders });
 	
 	// =================================================================
     // [CẢI TIẾN] BẢO MẬT: KHÓA CHẶT ORIGIN
@@ -293,10 +293,11 @@ export default {
       formData.append('remoteip', ip);
 
       const turnstileUrl = 'https://challenges.cloudflare.com/turnstile/v0/siteverify';
-      const turnstileResult = await fetch(turnstileUrl, {
-        body: formData,
-        method: 'POST',
-      });
+	  const turnstileResult = await fetch(turnstileUrl, {
+		  body: formData,
+		  method: 'POST',
+		  signal: AbortSignal.timeout(10000)  // 10 giây
+	  });
 
       const outcome = await turnstileResult.json();
 
@@ -309,13 +310,34 @@ export default {
       // TOKEN HỢP LỆ -> CHẠY LOGIC CHÍNH
       // =========================================================
 
-      // Validate Input (xác thực đầu vào)
-      if (!zoneId || !token) {
-        return new Response(JSON.stringify({ success: false, message: "Thiếu Zone ID hoặc Token" }), { status: 400, headers: corsHeaders });
+      // =========================================================
+      // VALIDATE DỮ LIỆU ĐẦU VÀO (CHẶT CHẼ HƠN)
+      // =========================================================
+      
+      // Kiểm tra tất cả các trường bắt buộc
+      // Nếu thiếu bất kỳ trường nào trong 4 trường này -> Báo lỗi và Dừng ngay lập tức
+      if (!zoneId || !token || !domain || !server_ip) {
+        
+        // Tạo thông báo lỗi cụ thể để biết thiếu cái gì (tuỳ chọn, giúp debug dễ hơn)
+        let missingFields = [];
+        if (!zoneId) missingFields.push("Zone ID");
+        if (!token) missingFields.push("Token");
+        if (!domain) missingFields.push("Domain");
+        if (!server_ip) missingFields.push("Server IP");
+
+        return new Response(JSON.stringify({ 
+            success: false, 
+            message: `Thiếu dữ liệu bắt buộc: ${missingFields.join(", ")}` 
+        }), { 
+            status: 400, 
+            headers: corsHeaders 
+        });
       }
 
-      const targetDomain = domain || "yourdomain.com";
-      const targetIp = server_ip || "1.1.1.1";
+      // Khi đã qua được cửa ải if ở trên, nghĩa là dữ liệu đã đầy đủ.
+      // Gán trực tiếp giá trị thực, không dùng fallback ảo nữa.
+      const targetDomain = domain;
+      const targetIp = server_ip;
 
       const commonHeaders = {
         "Authorization": `Bearer ${token}`,
@@ -334,19 +356,23 @@ export default {
       const tasks = [
         // Task 1: Update Cache Rules
         fetch(`${BASE_API}/http_request_cache_settings/entrypoint`, {
-          method: "PUT", headers: commonHeaders, body: JSON.stringify({ rules: MY_CACHE_RULES })
+          method: "PUT", headers: commonHeaders, body: JSON.stringify({ rules: MY_CACHE_RULES }),
+		  signal: AbortSignal.timeout(10000)  // 10 giây
         }),
         // Task 2: Update Transform Rules
         fetch(`${BASE_API}/http_request_transform/entrypoint`, {
-          method: "PUT", headers: commonHeaders, body: JSON.stringify({ rules: MY_TRANSFORM_RULES })
+          method: "PUT", headers: commonHeaders, body: JSON.stringify({ rules: MY_TRANSFORM_RULES }),
+		  signal: AbortSignal.timeout(10000)  // 10 giây
         }),
         // Task 3: Update WAF Custom Rules
         fetch(`${BASE_API}/http_request_firewall_custom/entrypoint`, {
-          method: "PUT", headers: commonHeaders, body: JSON.stringify({ rules: wafRules })
+          method: "PUT", headers: commonHeaders, body: JSON.stringify({ rules: wafRules }),
+		  signal: AbortSignal.timeout(10000)  // 10 giây
         }),
         // Task 4: Update Rate Limiting
         fetch(`${BASE_API}/http_ratelimit/entrypoint`, {
-          method: "PUT", headers: commonHeaders, body: JSON.stringify({ rules: MY_RATE_LIMIT_RULES })
+          method: "PUT", headers: commonHeaders, body: JSON.stringify({ rules: MY_RATE_LIMIT_RULES }),
+		  signal: AbortSignal.timeout(10000)  // 10 giây
         })
       ];
 
