@@ -86,12 +86,6 @@ body {
 }
 .alert-info { background-color: #ebf8ff; border-color: #bee3f8; color: #2c5282; }
 .alert-info a { color: #2b6cb0; text-decoration: underline; }
-.alert-info.subtle {
-  background-color: #f7fafc;
-  border-color: #e2e8f0;
-  color: #4a5568;
-  font-size: 0.85rem;
-}
 
 .alert-warning { background-color: #fffaf0; border-color: #fbd38d; color: #9c4221; border-left: 4px solid #dd6b20;}
 

@@ -6,16 +6,6 @@ const form = document.getElementById('cfForm');
 const statusDiv = document.getElementById('status');
 const btn = document.getElementById('submitBtn');
 
-const summaryBox = document.getElementById('preflightSummary');
-const summaryDomain = document.getElementById('summaryDomain');
-const summaryIp = document.getElementById('summaryIp');
-
-const resetSummary = () => {
-    summaryBox.style.display = 'none';
-    summaryDomain.textContent = '—';
-    summaryIp.textContent = '—';
-};
-
 form.addEventListener('submit', async (e) => {
     e.preventDefault();
 
@@ -82,10 +72,6 @@ form.addEventListener('submit', async (e) => {
         return;
     }
 
-	summaryDomain.textContent = cleanDomain;
-	summaryIp.textContent = serverIp;
-	summaryBox.style.display = 'block';
-
     // 4. Đóng gói data
     const data = {
         zoneId: document.getElementById('zoneId').value.trim(),
@@ -120,7 +106,7 @@ form.addEventListener('submit', async (e) => {
             statusDiv.className = 'success';
             statusDiv.innerHTML = `
                 <h3>✅ Hoàn thành xuất sắc nhiệm vụ!</h3>
-                <p>Website <strong>${data.domain}</strong> đã được tối ưu:</p>
+                <p>Website <strong>${data.domain}</strong> (IP: ${data.server_ip}) đã được tối ưu:</p>
                 <ul style="text-align: left; margin-bottom: 0;">
                     <li>Đã tạo 6 Cache Rules (chuẩn Blog & tăng tốc Admin).</li>
                     <li>Đã kích hoạt chặn Bot & Bảo mật Login.</li>
@@ -130,12 +116,8 @@ form.addEventListener('submit', async (e) => {
                 <p style="margin-bottom: 0; margin-top: 10px;">Hãy vào Cloudflare Dashboard kiểm tra lại nhé!</p>
             `;
 			
-			// 👉 CHỈ reset + hide summary SAU KHI status đã render
-			setTimeout(() => {
-				form.reset();
-				if (window.turnstile) turnstile.reset();
-				resetSummary();
-			}, 4000);
+			form.reset();
+			if (window.turnstile) turnstile.reset();
         } else {
             throw new Error(result.message || "Lỗi không xác định từ Cloudflare.");
         }
@@ -146,9 +128,6 @@ form.addEventListener('submit', async (e) => {
             ${error.message}<br><br>
             <em>Kiểm tra lại Zone ID, Token hoặc quyền hạn của Token.</em>
         `;
-		// Ẩn summary vì chưa commit được
-		resetSummary();
-		
         if (window.turnstile) turnstile.reset(); 
     } finally {
 		btn.disabled = false;
