@@ -5,7 +5,7 @@ Tài liệu này nhằm làm rõ phạm vi sử dụng và giới hạn của **
 
 ---
 
-## 1. rtd-cafe KHÔNG dành cho mọi người
+## 1. rtd-cafe KHÔNG phải công cụ dành cho tất cả mọi người
 **rtd-cafe không phải là công cụ:**
 
 ❌ Dành cho người mới làm quen với Cloudflare.
@@ -97,4 +97,5 @@ Sau khi chạy rtd-cafe:
 ---
 
 **Nếu bạn đã đọc đến đây và vẫn thấy rtd-cafe phù hợp, xin chúc mừng! Bạn chính là đối tượng người dùng mà công cụ này hướng tới.** 🚀
+
 
