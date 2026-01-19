@@ -68,6 +68,13 @@ body {
   letter-spacing: -0.5px;
   color: #2d3748;
 }
+.brand-text {
+    background: linear-gradient(90deg, #f6821f, #fab916); /* Cam Cloudflare sang cam đậm */
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    font-weight: 900; /* Đậm nhất có thể */
+}
 .header p { color: var(--text-muted); font-size: 0.95rem; margin-top: 5px;}
 
 .badge {

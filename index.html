@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>rtd-cafe: WP Cloudflare Optimizer - Cấu hình 1 click</title>
+    <title>rtd-cafe: WP Cloudflare Optimizer - Cấu hình nhanh, một click</title>
     <meta name="description" content="rtd-cafe: Công cụ tự động cấu hình Cloudflare Cache, WAF, Security cho WordPress Blog. An toàn, Nhanh chóng, Miễn phí.">
 	
 	<link rel="canonical" href="https://rtd-cafe.wpsila.com">
@@ -35,7 +35,7 @@
 <div class="container">
     <div class="header">
         <span style="font-size: 3rem;">⚡</span>
-        <h1>rtd-cafe: WP Cloudflare Optimizer</h1>
+        <h1><span class="brand-text">rtd-cafe</span>: WP Cloudflare Optimizer</h1>
         <div class="badge">Dành cho WordPress dạng Blog & Tin tức</div>
         <p>Triển khai nhanh cấu hình Cache & Bảo mật của Cloudflare.</p>
     </div>
@@ -54,12 +54,12 @@
 
     <form id="cfForm">
         <div class="form-group">
-            <label for="zoneId">Zone ID <a href="https://blog.wpsila.com/zone-id-cloudflare/" target="_blank" class="help-link">Lấy Zone ID ở đâu?</a></label>
+            <label for="zoneId">🏡 Zone ID <a href="https://blog.wpsila.com/zone-id-cloudflare/" target="_blank" class="help-link">Lấy Zone ID ở đâu?</a></label>
             <input type="text" id="zoneId" placeholder="VD: 023e105f4ecef8ad9ca31..." required autocomplete="off">
         </div>
 
         <div class="form-group">
-            <label for="token">API Token <a href="https://blog.wpsila.com/api-token-cloudflare/" target="_blank" class="help-link">Cách tạo API Token?</a></label>
+            <label for="token">🔑 API Token <a href="https://blog.wpsila.com/api-token-cloudflare/" target="_blank" class="help-link">Cách tạo API Token?</a></label>
             <!-- Bắt đầu phần sửa đổi -->
 			<div class="password-wrapper">
 				<input type="password" id="token" placeholder="VD: Ym9-ExAmPleToKeN..." required autocomplete="new-password">
@@ -80,13 +80,13 @@
         </div>
 
         <div class="form-group">
-            <label for="domain">Tên miền (domain) của bạn</label>
+            <label for="domain">🌐 Tên miền (domain) của bạn</label>
             <input type="text" id="domain" placeholder="VD: example.com" required>
 			<div style="font-size: 0.75rem; color: #718096; margin-top: 5px;">Đảm bảo tên miền của bạn đang bật đám mây vàng (proxied) trên DNS Cloudflare thì các rule này mới có tác dụng.</div>
         </div>
 
         <div class="form-group">
-            <label for="server_ip">IP của VPS (nên copy paste thay vì gõ thủ công)</label>
+            <label for="server_ip">🔢 IP của VPS (nên copy paste thay vì gõ thủ công)</label>
             <input type="text" id="server_ip" placeholder="VD: 113.161.x.x" required>
             <div style="font-size: 0.75rem; color: #718096; margin-top: 5px;">Để whitelist tránh tự chặn chính mình.</div>
         </div>
@@ -113,7 +113,7 @@
     <div class="footer">
         <p><strong>rtd-cafe</strong> được phát triển bởi <strong>wpsila</strong>.</p>
 		<p>rtd-cafe rất phù hợp khi dùng cùng với <a href="https://blog.wpsila.com/plugin-cache-enabler/" target="_blank"><strong>plugin Cache Enabler</strong></a>.</p>
-        <p><a href="https://github.com/kiencang/rtd-cafe/releases" target="_blank">v1.0.21</a> • <a href="https://github.com/kiencang/rtd-cafe" target="_blank">Xem mã nguồn (GitHub)</a> • <a href="https://github.com/kiencang/rtd-cafe/issues" target="_blank">Báo lỗi</a></p>
+        <p><a href="https://github.com/kiencang/rtd-cafe/releases" target="_blank">v1.0.21x</a> • <a href="https://github.com/kiencang/rtd-cafe" target="_blank">Xem mã nguồn (GitHub)</a> • <a href="https://github.com/kiencang/rtd-cafe/issues" target="_blank">Báo lỗi</a></p>
 		<p>Open-source • No data stored • Runs on Cloudflare Workers</p>
 		<p>Liên hệ: contact@wpsila.com</p>
     </div>
