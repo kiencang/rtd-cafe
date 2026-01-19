@@ -12,8 +12,8 @@ và dự án này tuân thủ [Semantic Versioning](https://semver.org/spec/v2.0
 
 ## [1.0.21] - 2026-01-19
 
-### Added
-- Thêm tính năng ngày giờ khởi tạo theo thời gian thực (VN) vào tên các Rules. 
+### Fixed
+- Sửa tính năng ngày giờ khởi tạo theo thời gian thực (VN) vào tên các Rules. 
 
 ## [1.0.20z] - 2026-01-19
 
@@ -73,8 +73,9 @@ và dự án này tuân thủ [Semantic Versioning](https://semver.org/spec/v2.0
 
 - Cập nhật cấu hình bảo mật để tăng cường an toàn hệ thống (liên quan đến các quy tắc chặn file mới).
 
-### Added
+### Fixed
 - Thêm 2 quy tắc chặn file (file blocking rules) vào bộ quy tắc bảo mật số 2.
+
 
 
 
