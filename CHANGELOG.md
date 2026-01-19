@@ -10,6 +10,11 @@ và dự án này tuân thủ [Semantic Versioning](https://semver.org/spec/v2.0
 - Thêm cơ chế kiểm tra trước các quy tắc (rules) có sẵn trong Zone định chỉnh sửa.
 - Hiển thị thông báo cảnh báo để người dùng biết trước khi thao tác.
 
+## [1.0.21] - 2026-01-19
+
+### Added
+- Thêm tính năng ngày giờ khởi tạo theo thời gian thực (VN) vào tên các Rules. 
+
 ## [1.0.20z] - 2026-01-19
 
 ### Removed
@@ -70,6 +75,7 @@ và dự án này tuân thủ [Semantic Versioning](https://semver.org/spec/v2.0
 
 ### Added
 - Thêm 2 quy tắc chặn file (file blocking rules) vào bộ quy tắc bảo mật số 2.
+
 
 
 
