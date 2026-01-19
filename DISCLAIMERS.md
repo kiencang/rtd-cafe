@@ -27,9 +27,11 @@ Tài liệu này nhằm làm rõ phạm vi sử dụng và giới hạn của **
 ## 2. Tool sẽ GHI ĐÈ toàn bộ rule hiện có
 rtd-cafe sẽ **XÓA VÀ THAY THẾ** các Cache Rules, WAF Rules, Transform Rules hiện có trên Zone được áp dụng.
 
-*   ⛔ **Không merge** (gộp rule cũ và mới).
-*   ⛔ **Không giữ lại** bất kỳ rule cũ nào trong các phase tương ứng.
-*   ⛔ **Không backup** tự động.
+⛔ **Không merge** (gộp rule cũ và mới).
+
+⛔ **Không giữ lại** bất kỳ rule cũ nào trong các phase tương ứng.
+
+⛔ **Không backup** tự động.
 
 > 👉 **Lời khuyên:** Nếu bạn đang có cấu hình Cloudflare phức tạp hoặc tùy biến sâu, hãy cân nhắc kỹ và backup thủ công (chụp ảnh hoặc export Terraform) trước khi dùng.
 
@@ -94,5 +96,5 @@ Sau khi chạy rtd-cafe:
 
 ---
 
-
 **Nếu bạn đã đọc đến đây và vẫn thấy rtd-cafe phù hợp, xin chúc mừng! Bạn chính là đối tượng người dùng mà công cụ này hướng tới.** 🚀
+
