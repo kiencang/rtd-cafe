@@ -23,7 +23,7 @@ và dự án này tuân thủ [Semantic Versioning](https://semver.org/spec/v2.0
 
 ## [1.0.20y] - 2026-01-19
 
-### Changed
+### Fixed
 - Cho hộp xác thực không phải là robot lên cao thêm và gán nhãn cho nó. Mục đích là để tránh người dùng hiểu nhầm thông tin.
 - Tăng thời gian hiển thị box tóm tắt thông tin lên 4s.
 
@@ -75,6 +75,7 @@ và dự án này tuân thủ [Semantic Versioning](https://semver.org/spec/v2.0
 
 ### Fixed
 - Thêm 2 quy tắc chặn file (file blocking rules) vào bộ quy tắc bảo mật số 2.
+
 
 
 
