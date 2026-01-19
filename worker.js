@@ -16,10 +16,9 @@
 // Cache ở phía Edge cho rule 1 có thể tăng thêm thành 3 ngày hoặc 1 tuần nếu có plugin xóa cache tự động.
 // Cache phía trình duyệt cho html ở rule chỉ nên để trong khoảng từ 1 - 5 phút, không nên hơn.
 // =========================================================================
-const RTD_CAFE_VERSION = "v1.0.20"; // Phiên bản của script
-const DEPLOYED_AT = "2026-01-18 21:48"; // Mốc thời gian của mã này khi được build
+const RTD_CAFE_VERSION = "v1.0.21"; // Phiên bản của script
 
-const MY_CACHE_RULES = [
+const get_MY_CACHE_RULES = (DEPLOYED_AT) => [
 // --------------------------------------------------------------------------------------------------------------------------------
   // Rule 1: Cache chung cho HTML (Bài viết, Trang chủ, Tag, Category...)
   {
@@ -115,7 +114,7 @@ const MY_CACHE_RULES = [
 // 2. CẤU HÌNH TRANSFORM RULES (URL REWRITE)
 // Đảm bảo vẫn duy trì được hiệu suất cao khi trang được chia sẻ trên các nền tảng mạng xã hội
 // =========================================================================
-const MY_TRANSFORM_RULES = [
+const get_MY_TRANSFORM_RULES = (DEPLOYED_AT) => [
   {
     "action": "rewrite",
     "action_parameters": { "uri": { "query": { "value": "" } } },
@@ -134,7 +133,7 @@ const MY_TRANSFORM_RULES = [
 // Chống việc bị tấn công vào trang login của WordPress (wp-login.php)
 // Có thể mở rộng thêm các trang khác bằng cú pháp OR trong khi điều chỉnh rule thủ công.
 // =========================================================================
-const MY_RATE_LIMIT_RULES = [
+const get_MY_RATE_LIMIT_RULES = (DEPLOYED_AT) => [
   {
     "action": "block",
     "ratelimit": {
@@ -157,7 +156,7 @@ const MY_RATE_LIMIT_RULES = [
 // =========================================================================
 // 4. HÀM TẠO WAF RULES (BẢO MẬT) - CẦN IP & DOMAIN
 // =========================================================================
-const getWafRules = (domain, vpsIP) => [
+const get_MY_WAF_RULES = (domain, vpsIP, DEPLOYED_AT) => [
   // Bảo mật 1: Whitelist IP VPS
   // Rule quan trọng để tránh chặn chính mình khi bản thân WordPress thực thi một số tác vụ quay về chính VPS.
   {
@@ -336,6 +335,18 @@ export default {
             headers: corsHeaders 
         });
       }
+	  
+    // 1. TẠO THỜI GIAN THỰC (Real-time)
+    // Code này chạy mỗi lần request được gọi
+    const currentTime = new Date().toLocaleString('sv-SE', {
+        timeZone: 'Asia/Ho_Chi_Minh',
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit',
+        hour: '2-digit',
+        minute: '2-digit'
+    }); 
+    // currentTime lúc này sẽ là: "2026-01-19 07:15" (Ví dụ)	  
 
       // Khi đã qua được cửa ải if ở trên, nghĩa là dữ liệu đã đầy đủ.
       // Gán trực tiếp giá trị thực, không dùng fallback ảo nữa.
@@ -351,7 +362,10 @@ export default {
       // --- EXECUTE UPDATES (CHẠY SONG SONG VỚI PROMISE.ALL) ---
       
       // Tạo danh sách các task cần chạy (chưa await vội)
-      const wafRules = getWafRules(targetDomain, targetIp);
+      const MY_WAF_RULES = get_MY_WAF_RULES(targetDomain, targetIp, currentTime);
+	  const MY_CACHE_RULES = get_MY_CACHE_RULES(currentTime);
+	  const MY_TRANSFORM_RULES = get_MY_TRANSFORM_RULES(currentTime);
+	  const MY_RATE_LIMIT_RULES = get_MY_RATE_LIMIT_RULES(currentTime);
 	  
 	  // Tạo biến hằng số cho Base URL.
       const BASE_API = `https://api.cloudflare.com/client/v4/zones/${zoneId}/rulesets/phases`;
@@ -369,7 +383,7 @@ export default {
         }),
         // Task 3: Update WAF Custom Rules
         fetch(`${BASE_API}/http_request_firewall_custom/entrypoint`, {
-          method: "PUT", headers: commonHeaders, body: JSON.stringify({ rules: wafRules }),
+          method: "PUT", headers: commonHeaders, body: JSON.stringify({ rules: MY_WAF_RULES }),
 		  signal: AbortSignal.timeout(10000)  // 10 giây
         }),
         // Task 4: Update Rate Limiting
