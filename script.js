@@ -156,7 +156,8 @@ form.addEventListener('submit', async (e) => {
                 </ul>
                 <p style="margin-bottom: 0; margin-top: 10px;">Hãy vào Cloudflare Dashboard kiểm tra lại nhé!</p>
             `;
-			
+			// Scroll xuống thông báo để người dùng thấy đã thành công
+			statusDiv.scrollIntoView({ behavior: 'smooth', block: 'center' });	
 			form.reset();
 			if (window.turnstile) turnstile.reset();
         } else {
