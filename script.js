@@ -8,6 +8,43 @@ const btn = document.getElementById('submitBtn');
 
 form.addEventListener('submit', async (e) => {
     e.preventDefault();
+	
+	// --- CLEAN INPUT & UPDATE UI ---
+    // Lấy element
+    const zoneIdEl = document.getElementById('zoneId');
+    const tokenEl = document.getElementById('token');
+    
+    // Logic: Trim xong gán ngược lại vào value để người dùng thấy nó đã được làm sạch
+    zoneIdEl.value = zoneIdEl.value.trim(); 
+    tokenEl.value = tokenEl.value.trim();
+
+    // Lấy giá trị đã sạch để dùng
+	let clean_zoneId = zoneIdEl.value; 
+	let clean_token = tokenEl.value;
+	
+    // 0. VALIDATE ZONE ID (Kiểm tra chặt chẽ sau khi đã làm sạch)
+    // Regex: Chỉ chấp nhận 32 ký tự, gồm số 0-9 và chữ a-f (không phân biệt hoa thường)
+    const zoneIdRegex = /^[a-f0-9]{32}$/i;
+
+    if (!zoneIdRegex.test(clean_zoneId)) {
+        statusDiv.style.display = 'block';
+        statusDiv.className = 'error';
+        
+        // Kiểm tra xem người dùng có nhập nhầm cái gì đó quá ngắn hoặc quá dài không
+        let extraMsg = "";
+        if (clean_zoneId.length < 32) extraMsg = "(Quá ngắn, có vẻ bạn copy thiếu)";
+        else if (clean_zoneId.length > 32) extraMsg = "(Quá dài, có vẻ bạn copy thừa ký tự lạ)";
+
+        statusDiv.innerHTML = `
+            <strong>❌ Zone ID không hợp lệ:</strong><br>
+            Giá trị bạn nhập: "<em>${clean_zoneId}</em>" <br>
+            Zone ID bắt buộc phải là chuỗi <strong>32 ký tự</strong> (gồm số và chữ cái a-f).<br>
+            ${extraMsg}
+        `;
+        // Scroll xuống thông báo lỗi để người dùng thấy
+        statusDiv.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        return; 
+    }	
 
     // 1. Lấy và làm sạch tên miền trước
     let rawDomain = document.getElementById('domain').value.trim();
@@ -25,6 +62,8 @@ form.addEventListener('submit', async (e) => {
             Bạn nhập: "<em>${rawDomain}</em>"<br>
             Vui lòng nhập đúng định dạng (VD: example.com, wpsila.com). Đừng bao gồm http:// hay đường dẫn con.
         `;
+        // Scroll xuống thông báo lỗi để người dùng thấy
+        statusDiv.scrollIntoView({ behavior: 'smooth', block: 'center' });		
         return; 
     }
 	
@@ -55,6 +94,8 @@ form.addEventListener('submit', async (e) => {
             Vui lòng chỉ nhập địa chỉ IP (VD: 113.161.x.x hoặc IPv6).<br>
             Tuyệt đối không nhập tên miền hay URL vào ô này.
         `;
+        // Scroll xuống thông báo lỗi để người dùng thấy
+        statusDiv.scrollIntoView({ behavior: 'smooth', block: 'center' });		
         return; // Dừng lại, không gửi request
     }
     // ============================================================
@@ -74,8 +115,8 @@ form.addEventListener('submit', async (e) => {
 
     // 4. Đóng gói data
     const data = {
-        zoneId: document.getElementById('zoneId').value.trim(),
-        token: document.getElementById('token').value.trim(),
+        zoneId: clean_zoneId,
+        token: clean_token,
         domain: cleanDomain,
         server_ip: serverIp,
         turnstileToken: turnstileToken
