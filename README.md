@@ -26,7 +26,7 @@ Truy cập giao diện web để cấu hình nhanh mà không cần động vào
 Bạn chỉ cần biết cách tạo API token trên Cloudflare là sử dụng được tool này để tăng tốc & bảo mật cho blog WordPress.
 
 ### Cách 2: Tự triển khai
-Cách này phức tạp hơn vì bạn phải tự triển khai công cụ.
+Cách này phức tạp hơn nhiều vì bạn phải tự triển khai công cụ.
 
 **Lý do chính**: Nếu bạn muốn tự chạy mã trên tài khoản Cloudflare của riêng bạn để đảm bảo quyền riêng tư tuyệt đối (để không phải gửi API token qua giao diện web của tôi):
 
@@ -52,8 +52,8 @@ Cách này phức tạp hơn vì bạn phải tự triển khai công cụ.
 - **Hạ tầng:** Website WordPress chạy trên VPS/Server riêng.
 - **API Token:** Tạo token tại Cloudflare Dashboard với đúng **3 quyền** sau:
   - `Zone`.`Cache Rules`: **Edit**
-  - `Zone`.`WAF`: **Edit**
   - `Zone`.`Transform Rules`: **Edit**
+  - `Zone`.`WAF`: **Edit**
 
 ---
 
@@ -73,7 +73,7 @@ Tool sẽ tự động thiết lập các quy tắc sau dựa trên [lý thuyế
 - 🔄 **Bypass thông minh:** Tự động bỏ qua Cache khi phát hiện:
   - Admin đăng nhập (`wordpress_logged_in_*`)
   - WP-Cron, XMLRPC, WP-JSON API
-  - Và một số logic khác
+  - Và một số logic khác.
 
 ### C. Tối ưu (Transform Rules)
 - 🧹 **Query String Cleaning:** Tự động loại bỏ các query rác (`fbclid`, `utm_source`, `gclid`...) để tăng tỷ lệ HIT cache.
