@@ -10,6 +10,12 @@ và dự án này tuân thủ [Semantic Versioning](https://semver.org/spec/v2.0
 - Thêm cơ chế kiểm tra trước các quy tắc (rules) có sẵn trong Zone định chỉnh sửa.
 - Hiển thị thông báo cảnh báo để người dùng biết trước khi thao tác.
 
+## [1.0.22] - 2026-01-19
+
+### Fixed
+- Validate chặt hơn cho Zone ID.
+- Thông báo lỗi mượt hơn bằng cách chuyển đến vùng báo lỗi khi có thông báo (người dùng không cần lăn chuột đế thấy). 
+
 ## [1.0.21x] - 2026-01-19
 
 ### Fixed
@@ -80,6 +86,7 @@ và dự án này tuân thủ [Semantic Versioning](https://semver.org/spec/v2.0
 
 ### Fixed
 - Thêm 2 quy tắc chặn file (file blocking rules) vào bộ quy tắc bảo mật số 2.
+
 
 
 
