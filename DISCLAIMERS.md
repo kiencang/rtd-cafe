@@ -7,13 +7,19 @@ Tài liệu này nhằm làm rõ phạm vi sử dụng và giới hạn của **
 
 ## 1. rtd-cafe KHÔNG dành cho mọi người
 **rtd-cafe không phải là công cụ:**
+
 ❌ Dành cho người mới làm quen với Cloudflare.
+
 ❌ Dành cho người không hiểu Cache Rules, WAF, Rate Limit là gì.
+
 ❌ Dành cho ai muốn “bấm đại cho xong rồi sửa sau”.
 
 **Công cụ này giả định rằng người dùng:**
+
 ✅ Hiểu mình đang làm gì.
+
 ✅ Hiểu hậu quả của việc overwrite (ghi đè) rule.
+
 ✅ Có khả năng tự rollback hoặc chỉnh sửa thủ công nếu cần.
 
 ---
@@ -87,5 +93,6 @@ Sau khi chạy rtd-cafe:
 *   rtd-cafe không giữ quyền kiểm soát, chỉ hỗ trợ khởi tạo cấu hình ban đầu.
 
 ---
+
 
 **Nếu bạn đã đọc đến đây và vẫn thấy rtd-cafe phù hợp, xin chúc mừng! Bạn chính là đối tượng người dùng mà công cụ này hướng tới.** 🚀
