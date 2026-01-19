@@ -176,7 +176,8 @@ form.addEventListener('submit', async (e) => {
     } finally {
 		btn.disabled = false;
 		btn.innerText = "🚀 Triển khai & Ghi đè Rules";
-
+		
+		// Gỡ vô hiệu hóa các trường nhập liệu
 		form.querySelectorAll('input').forEach(i => i.disabled = false);
 }
 });
