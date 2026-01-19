@@ -170,6 +170,8 @@ form.addEventListener('submit', async (e) => {
             ${error.message}<br><br>
             <em>Kiểm tra lại Zone ID, Token hoặc quyền hạn của Token.</em>
         `;
+		// Scroll xuống thông báo lỗi để người dùng thấy
+        statusDiv.scrollIntoView({ behavior: 'smooth', block: 'center' });	
         if (window.turnstile) turnstile.reset(); 
     } finally {
 		btn.disabled = false;
