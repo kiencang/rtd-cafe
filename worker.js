@@ -16,7 +16,7 @@
 // Cache ở phía Edge cho rule 1 có thể tăng thêm thành 3 ngày hoặc 1 tuần nếu có plugin xóa cache tự động.
 // Cache phía trình duyệt cho html ở rule chỉ nên để trong khoảng từ 1 - 5 phút, không nên hơn.
 // =========================================================================
-const RTD_CAFE_VERSION = "v1.0.22"; // Phiên bản của script
+const RTD_CAFE_VERSION = "v1.0.23"; // Phiên bản của script
 
 const get_MY_CACHE_RULES = (DEPLOYED_AT) => [
 // --------------------------------------------------------------------------------------------------------------------------------
@@ -120,7 +120,9 @@ const get_MY_TRANSFORM_RULES = (DEPLOYED_AT) => [
     "action_parameters": { "uri": { "query": { "value": "" } } },
     "description": `Transform rules 1 [rtd-cafe-${RTD_CAFE_VERSION}]: Xóa các query tracking phổ biến (fbclid, utm...) [deployed: ${DEPLOYED_AT}]`,
     "enabled": true,
-    "expression": "(http.request.uri.query contains \"fbclid\") or (http.request.uri.query contains \"utm_\") or (http.request.uri.query contains \"gclid\") or (http.request.uri.query contains \"ttclid\") or (http.request.uri.query contains \"wbraid\") or (http.request.uri.query contains \"gbraid\") or (http.request.uri.query contains \"msclkid\") or (http.request.uri.query contains \"yclid\") or (http.request.uri.query contains \"mc_cid\") or (http.request.uri.query contains \"_hsenc\") or (http.request.uri.query contains \"dclid\")"
+	// Đã thêm dấu = vào sau các ID để chính xác tuyệt đối. Riêng utm_ giữ nguyên.
+	// Điều kiện not http.request.uri.query contains & là để đảm bảo chỉ xóa toàn bộ query nếu nó có duy nhất một query tương ứng, tránh xóa toàn bộ query trong trường hợp như ?search=iphone&fbclid=123
+    "expression": "(starts_with(http.request.uri.query, \"fbclid=\") and not http.request.uri.query contains \"&\") or (starts_with(http.request.uri.query, \"utm_\") and not http.request.uri.query contains \"&\") or (starts_with(http.request.uri.query, \"gclid=\") and not http.request.uri.query contains \"&\") or (starts_with(http.request.uri.query, \"ttclid=\") and not http.request.uri.query contains \"&\") or (starts_with(http.request.uri.query, \"wbraid=\") and not http.request.uri.query contains \"&\") or (starts_with(http.request.uri.query, \"gbraid=\") and not http.request.uri.query contains \"&\") or (starts_with(http.request.uri.query, \"msclkid=\") and not http.request.uri.query contains \"&\") or (starts_with(http.request.uri.query, \"yclid=\") and not http.request.uri.query contains \"&\") or (starts_with(http.request.uri.query, \"mc_cid=\") and not http.request.uri.query contains \"&\") or (starts_with(http.request.uri.query, \"_hsenc=\") and not http.request.uri.query contains \"&\") or (starts_with(http.request.uri.query, \"dclid=\") and not http.request.uri.query contains \"&\")"
   }
 ];
 // --------------------------------------------------------------------------------------------------------------------------------
@@ -164,7 +166,7 @@ const get_MY_WAF_RULES = (domain, vpsIP, DEPLOYED_AT) => [
     "action_parameters": { "ruleset": "current" },
     "description": `Security rules 1 [rtd-cafe-${RTD_CAFE_VERSION}]: Không chặn chính mình (IP của VPS) [deployed: ${DEPLOYED_AT}]`,
     "enabled": true,
-    "expression": `(ip.src eq ${vpsIP})` // Không có nháy kép ở đây, IP của VPS là số
+    "expression": `(ip.src eq ${vpsIP})` // Cho dấu nháy kép sẽ bị lỗi
   },
 // --------------------------------------------------------------------------------------------------------------------------------  
   // Bảo mật 2: Chặn file nhạy cảm
