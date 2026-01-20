@@ -10,6 +10,11 @@ và dự án này tuân thủ [Semantic Versioning](https://semver.org/spec/v2.0
 - Thêm cơ chế kiểm tra trước các quy tắc (rules) có sẵn trong Zone định chỉnh sửa.
 - Hiển thị thông báo cảnh báo để người dùng biết trước khi thao tác.
 
+## [1.0.23] - 2026-01-20
+
+### Fixed
+- Chỉnh sửa để phần xóa query tracking chính xác hơn, không xóa nhầm toàn bộ khi có thêm query phụ.
+
 ## [1.0.22x] - 2026-01-19
 
 ### Fixed
@@ -91,6 +96,7 @@ và dự án này tuân thủ [Semantic Versioning](https://semver.org/spec/v2.0
 
 ### Fixed
 - Thêm 2 quy tắc chặn file (file blocking rules) vào bộ quy tắc bảo mật số 2.
+
 
 
 
