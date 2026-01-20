@@ -55,14 +55,14 @@
     <form id="cfForm">
         <div class="form-group">
             <label for="zoneId">🏡 Zone ID <a href="https://blog.wpsila.com/zone-id-cloudflare/" target="_blank" class="help-link">Lấy Zone ID ở đâu?</a></label>
-            <input type="text" id="zoneId" placeholder="VD: 023e105f4ecef8ad9ca31..." required autocomplete="off">
+            <input type="text" id="zoneId" placeholder="VD: 023e105f4ecef8ad9ca31..." required autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false">
         </div>
 
         <div class="form-group">
             <label for="token">🔑 API Token <a href="https://blog.wpsila.com/api-token-cloudflare/" target="_blank" class="help-link">Cách tạo API Token?</a></label>
             <!-- Bắt đầu phần sửa đổi -->
 			<div class="password-wrapper">
-				<input type="password" id="token" placeholder="VD: Ym9-ExAmPleToKeN..." required autocomplete="new-password">
+				<input type="password" id="token" placeholder="VD: Ym9-ExAmPleToKeN..." required autocomplete="new-password" autocapitalize="off" autocorrect="off" spellcheck="false">
 				
 				<!-- Nút icon con mắt (Dùng SVG inline để không phải load thư viện) -->
 				<span id="toggleToken" class="eye-icon" title="Hiện/Ẩn Token">
@@ -81,13 +81,13 @@
 
         <div class="form-group">
             <label for="domain">🌐 Tên miền (domain) của bạn</label>
-            <input type="text" id="domain" placeholder="VD: example.com" required>
+            <input type="text" id="domain" placeholder="VD: example.com" required autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false">
 			<div style="font-size: 0.75rem; color: #718096; margin-top: 5px;">Đảm bảo tên miền của bạn đang bật đám mây vàng (proxied) trên DNS Cloudflare thì các rule này mới có tác dụng.</div>
         </div>
 
         <div class="form-group">
             <label for="server_ip">🔢 IP của VPS (nên copy paste thay vì gõ thủ công)</label>
-            <input type="text" id="server_ip" placeholder="VD: 113.161.x.x" required>
+            <input type="text" id="server_ip" placeholder="VD: 113.161.x.x" required autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false">
             <div style="font-size: 0.75rem; color: #718096; margin-top: 5px;">Để whitelist tránh tự chặn chính mình.</div>
         </div>
 
@@ -113,7 +113,7 @@
     <div class="footer">
         <p><strong>rtd-cafe</strong> được phát triển bởi <strong>wpsila</strong>.</p>
 		<p>rtd-cafe rất phù hợp khi dùng cùng với <a href="https://blog.wpsila.com/plugin-cache-enabler/" target="_blank"><strong>plugin Cache Enabler</strong></a>.</p>
-        <p><a href="https://github.com/kiencang/rtd-cafe/releases" target="_blank">v1.0.23</a> • <a href="https://github.com/kiencang/rtd-cafe" target="_blank">Xem mã nguồn (GitHub)</a> • <a href="https://github.com/kiencang/rtd-cafe/issues" target="_blank">Báo lỗi</a></p>
+        <p><a href="https://github.com/kiencang/rtd-cafe/releases" target="_blank">v1.0.23x</a> • <a href="https://github.com/kiencang/rtd-cafe" target="_blank">Xem mã nguồn (GitHub)</a> • <a href="https://github.com/kiencang/rtd-cafe/issues" target="_blank">Báo lỗi</a></p>
 		<p>Open-source • No data stored • Runs on Cloudflare Workers</p>
 		<p>Liên hệ: contact@wpsila.com</p>
     </div>
