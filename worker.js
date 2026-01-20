@@ -16,7 +16,7 @@
 // Cache ở phía Edge cho rule 1 có thể tăng thêm thành 3 ngày hoặc 1 tuần nếu có plugin xóa cache tự động.
 // Cache phía trình duyệt cho html ở rule chỉ nên để trong khoảng từ 1 - 5 phút, không nên hơn.
 // =========================================================================
-const RTD_CAFE_VERSION = "v1.0.23"; // Phiên bản của script
+const RTD_CAFE_VERSION = "v1.0.24"; // Phiên bản của script
 
 const get_MY_CACHE_RULES = (DEPLOYED_AT) => [
 // --------------------------------------------------------------------------------------------------------------------------------
@@ -199,11 +199,12 @@ const get_MY_WAF_RULES = (domain, vpsIP, DEPLOYED_AT) => [
 // --------------------------------------------------------------------------------------------------------------------------------  
   // Bảo mật 5: Hạn chế Spam Comment
   // Thử thách bằng managed_challenge
+  // Bổ sung danh sách IP 10 quốc gia thường là nguồn tấn công hoặc spam
   {
     "action": "managed_challenge",
     "description": `Security rules 5 [rtd-cafe-${RTD_CAFE_VERSION}]: Hạn chế spam bình luận [deployed: ${DEPLOYED_AT}]`,
     "enabled": true,
-    "expression": `(http.request.uri.path eq "/wp-comments-post.php" and http.request.method eq "POST" and not http.referer contains "${domain}")`
+    "expression": `(http.request.uri.path eq "/wp-comments-post.php" and http.request.method eq "POST" and not http.referer contains "${domain}") or (http.request.uri.path eq "/wp-comments-post.php" and http.request.method eq "POST" and ip.src.country in {"CN" "RU" "UA" "IN" "ID" "PK" "BD" "BR" "TR" "IR"})`
   }
 ];
 // --------------------------------------------------------------------------------------------------------------------------------
