@@ -59,8 +59,6 @@ Cách này phức tạp hơn nhiều vì bạn phải tự triển khai công c�
 
 ## 🛠️ Các tính năng kỹ thuật
 
-Tool sẽ tự động thiết lập các quy tắc sau dựa trên [lý thuyết tối ưu của wpsila](https://blog.wpsila.com/cache-rules-trong-cloudflare/):
-
 ### A. Bảo mật (WAF & Security)
 - 🛡️ **Whitelist Server IP:** Ngăn chặn việc tự chặn chính mình (Self-blocking).
 - 🔒 **Sensitive Files:** Chặn truy cập trực tiếp vào `.log`, `.sql`, `.env`, `.git`...
