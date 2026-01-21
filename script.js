@@ -1,4 +1,18 @@
 // --- File: script.js ---
+// 1. Hàm bảo mật: Escape HTML để chống XSS
+// Bất cứ khi nào hiển thị input của người dùng ra màn hình, phải dùng hàm này.
+const escapeHTML = (str) => {
+    if (!str) return "";
+    return str.replace(/[&<>'"]/g, 
+        tag => ({
+            '&': '&amp;',
+            '<': '&lt;',
+            '>': '&gt;',
+            "'": '&#39;',
+            '"': '&quot;'
+        }[tag]));
+};
+
 // --- CẤU HÌNH ---
 const WORKER_URL = "https://rtd-cafe-settings.wpsila.com/rtd-cafe-worker-api"; 
 
@@ -32,12 +46,12 @@ form.addEventListener('submit', async (e) => {
         
         // Kiểm tra xem người dùng có nhập nhầm cái gì đó quá ngắn hoặc quá dài không
         let extraMsg = "";
-        if (clean_zoneId.length < 32) extraMsg = "(Quá ngắn, có vẻ bạn copy thiếu)";
-        else if (clean_zoneId.length > 32) extraMsg = "(Quá dài, có vẻ bạn copy thừa ký tự lạ)";
+        if (clean_zoneId.length < 32) extraMsg = "[Quá ngắn, có vẻ bạn copy thiếu]";
+        else if (clean_zoneId.length > 32) extraMsg = "[Quá dài, có vẻ bạn copy thừa ký tự lạ]";
 
         statusDiv.innerHTML = `
             <strong>❌ Zone ID không hợp lệ:</strong><br>
-            Giá trị bạn nhập: "<em>${clean_zoneId}</em>" <br>
+            Giá trị bạn nhập: "<em>${escapeHTML(clean_zoneId)}</em>" <br>
             Zone ID bắt buộc phải là chuỗi <strong>32 ký tự</strong> (gồm số và chữ cái a-f).<br>
             ${extraMsg}
         `;
@@ -59,8 +73,8 @@ form.addEventListener('submit', async (e) => {
         statusDiv.className = 'error';
         statusDiv.innerHTML = `
             <strong>❌ Tên miền không hợp lệ:</strong><br>
-            Bạn nhập: "<em>${rawDomain}</em>"<br>
-            Vui lòng nhập đúng định dạng (VD: example.com, wpsila.com). Đừng bao gồm http:// hay đường dẫn con.
+            Bạn nhập: "<em>${escapeHTML(rawDomain)}</em>"<br>
+            Vui lòng nhập đúng định dạng (VD: example.com, blog.wpsila.com). Đừng bao gồm http:// hay đường dẫn con.
         `;
         // Scroll xuống thông báo lỗi để người dùng thấy
         statusDiv.scrollIntoView({ behavior: 'smooth', block: 'center' });		
@@ -90,7 +104,7 @@ form.addEventListener('submit', async (e) => {
         statusDiv.className = 'error';
         statusDiv.innerHTML = `
             <strong>❌ IP Máy chủ không hợp lệ:</strong><br>
-            Bạn nhập: "<em>${serverIp}</em>"<br>
+            Bạn nhập: "<em>${escapeHTML(serverIp)}</em>"<br>
             Vui lòng chỉ nhập địa chỉ IP (VD: 113.161.x.x hoặc IPv6).<br>
             Tuyệt đối không nhập tên miền hay URL vào ô này.
         `;
@@ -147,7 +161,7 @@ form.addEventListener('submit', async (e) => {
             statusDiv.className = 'success';
             statusDiv.innerHTML = `
                 <h3>✅ Hoàn thành xuất sắc nhiệm vụ!</h3>
-                <p>Website <strong>${data.domain}</strong> (IP: ${data.server_ip}) đã được tối ưu:</p>
+                <p>Website <strong>${escapeHTML(data.domain)}</strong> (IP: <strong>${escapeHTML(data.server_ip)}</strong>) đã được tối ưu:</p>
                 <ul style="text-align: left; margin-bottom: 0;">
                     <li>Đã tạo 6 Cache Rules (chuẩn Blog & tăng tốc Admin).</li>
                     <li>Đã kích hoạt chặn Bot & Bảo mật Login.</li>
@@ -167,8 +181,8 @@ form.addEventListener('submit', async (e) => {
         statusDiv.className = 'error';
         statusDiv.innerHTML = `
             <strong>❌ Có lỗi xảy ra:</strong><br>
-            ${error.message}<br><br>
-            <em>Kiểm tra lại Zone ID, Token hoặc quyền hạn của Token.</em>
+            ${escapeHTML(error.message)}<br><br>
+            <em>Kiểm tra lại Zone ID, API Token (có chính xác không?) hoặc quyền hạn của Token (đã đúng 3 Zone cần dùng hay chưa, có đúng quyền Edit cho các Zone hay chưa?).</em>
         `;
 		// Scroll xuống thông báo lỗi để người dùng thấy
         statusDiv.scrollIntoView({ behavior: 'smooth', block: 'center' });	

@@ -8,7 +8,7 @@
  * Tác giả: wpsila - Nguyễn Đức Anh
  */
  // -------------------------------------------------------------------------------------------------------------------------------- 
-const RTD_CAFE_VERSION = "v1.0.25"; // Phiên bản của script
+const RTD_CAFE_VERSION = "v1.0.26"; // Phiên bản của script
 // -------------------------------------------------------------------------------------------------------------------------------- 
 
 // +++
@@ -236,7 +236,7 @@ export default {
     // Kiểm tra xem đã cấu hình Secret Key chưa
     if (!TURNSTILE_SECRET) {
       return new Response("Lỗi: Chưa cấu hình TURNSTILE_SECRET_KEY trong Worker Settings", { status: 500 });
-    }  
+    }
   
 	// --------------------------------------------------------------------------------------------------------------------------------
 	const corsHeaders = {
@@ -342,6 +342,23 @@ export default {
             headers: corsHeaders 
         });
       }
+	  
+	// 1. Validate Zone ID (32 ký tự hex)
+	if (!/^[a-f0-9]{32}$/i.test(zoneId)) {
+		return new Response(JSON.stringify({ success: false, message: "Zone ID không hợp lệ (Backend check)" }), { status: 400, headers: corsHeaders });
+	}
+
+	// 2. Validate IP (Sơ bộ)
+	// Kiểm tra không chứa ký tự lạ ngoài số, chấm, hai chấm (cho IPv6)
+	if (!/^[0-9a-fA-F:.]+$/.test(server_ip)) {
+		 return new Response(JSON.stringify({ success: false, message: "IP không hợp lệ (Backend check)" }), { status: 400, headers: corsHeaders });
+	}
+
+	// 3. Validate Domain (Không được chứa http, /, ký tự lạ)
+	// Regex đơn giản để chống injection ký tự đặc biệt như " hoặc )
+	if (!/^[a-z0-9.-]+$/.test(domain)) {
+		return new Response(JSON.stringify({ success: false, message: "Domain không hợp lệ (Backend check)" }), { status: 400, headers: corsHeaders });
+	}	  
 	  
     // 1. TẠO THỜI GIAN THỰC (Real-time)
     // Code này chạy mỗi lần request được gọi
