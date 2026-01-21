@@ -10,6 +10,11 @@ và dự án này tuân thủ [Semantic Versioning](https://semver.org/spec/v2.0
 - Thêm cơ chế kiểm tra trước các quy tắc (rules) có sẵn trong Zone định chỉnh sửa.
 - Hiển thị thông báo cảnh báo để người dùng biết trước khi thao tác.
 
+## [1.0.26x] - 2026-01-22
+
+### Fixed
+- Chỉnh thêm Content-Security-Policy để chống nhúng iframe, và một số nguyên tắc cơ bản khác.
+
 ## [1.0.26] - 2026-01-21
 
 ### Fixed
@@ -114,6 +119,7 @@ và dự án này tuân thủ [Semantic Versioning](https://semver.org/spec/v2.0
 
 ### Fixed
 - Thêm 2 quy tắc chặn file (file blocking rules) vào bộ quy tắc bảo mật số 2.
+
 
 
 
