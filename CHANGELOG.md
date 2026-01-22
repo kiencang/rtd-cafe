@@ -5,6 +5,10 @@ Tất cả những thay đổi đáng chú ý của dự án rtd-cafe sẽ đư�
 Định dạng dựa trên [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 và dự án này tuân thủ [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+Riêng chỉ sửa nhỏ giao diện mà không động đến worker.js sẽ sử dụng thêm giá trị f1, f2, f3,... đằng sau.
+
+Ví dụ 1.0.26.f1 nghĩa là phiên bản này có lõi (worker.js) giống y phiên bản 1.0.26, chỉ có fontend là chỉnh sửa nhỏ.
+
 ## [Unreleased]
 ### Added
 - Thêm cơ chế kiểm tra trước các quy tắc (rules) có sẵn trong Zone định chỉnh sửa.
@@ -119,6 +123,7 @@ và dự án này tuân thủ [Semantic Versioning](https://semver.org/spec/v2.0
 
 ### Fixed
 - Thêm 2 quy tắc chặn file (file blocking rules) vào bộ quy tắc bảo mật số 2.
+
 
 
 
