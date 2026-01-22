@@ -94,7 +94,9 @@ body {
 .alert-info { background-color: #ebf8ff; border-color: #bee3f8; color: #2c5282; }
 .alert-info a { color: #2b6cb0; text-decoration: underline; }
 
-.alert-warning { background-color: #fffaf0; border-color: #fbd38d; color: #9c4221; border-left: 4px solid #dd6b20;}
+.alert-warning { background-color: #fffaf0; border-color: #fbd38d; color: #9c4221; border-left: 4px solid #dd6b20; }
+
+.inline-images { vertical-align: middle; }
 
 /* --- Forms & Inputs --- */
 .form-group { margin-bottom: 1.5rem; position: relative; }
