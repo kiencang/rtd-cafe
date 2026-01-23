@@ -17,10 +17,9 @@ Ví dụ 1.0.26.f1 nghĩa là phiên bản này có lõi (worker.js) giống y p
 ## [1.0.27] - 2026-01-23
 
 ### Fixed
-- Thông báo lỗi chuẩn xác hơn.
+Thông báo lỗi chuẩn xác hơn. Mục đích là để người dùng cuối rõ lỗi hơn, và biết khắc phục chỗ nào.
 - Nếu sai API Token hoặc Zone ID thì thông báo lỗi này.
-- Nếu đúng API Token và Zone ID nhưng thiếu quyền (ví dụ vẫn để read chứ không phải edit).
-- Mục đích là để người dùng cuối rõ lỗi hơn, và biết khắc phục chỗ nào.
+- Nếu đã đúng API Token và Zone ID nhưng thiếu quyền (ví dụ vẫn để read chứ không phải edit) thì phải thông báo lỗi cụ thể này.
 
 ## [1.0.26x] - 2026-01-22
 
@@ -131,6 +130,7 @@ Ví dụ 1.0.26.f1 nghĩa là phiên bản này có lõi (worker.js) giống y p
 
 ### Fixed
 - Thêm 2 quy tắc chặn file (file blocking rules) vào bộ quy tắc bảo mật số 2.
+
 
 
 
