@@ -497,14 +497,14 @@ export default {
       // [3] --- ĐOẠN ĐÃ SỬA LỖI TYPE (FIXED) ---
       let userFriendlyMessage = null; // Biến này chứa thông báo tiếng Việt cho người dùng
 
-      if (!success) {
+      if (!success) { // Nếu không thành công thì cần báo lỗi, chủ yếu là do thiếu quyền.
          // Chuyển object errors thành chuỗi để kiểm tra từ khóa
          const errorString = JSON.stringify(errors);
          
          // Gộp cứng thông báo: Lời khuyên về quyền hạn + Chi tiết lỗi kỹ thuật
          userFriendlyMessage = "❌ LỖI QUYỀN HẠN (Permissions):\n" +
-             "Token và Zone ID đều ĐÚNG (đã qua bước kiểm tra), nhưng Token này có thể đang thiếu quyền 'Edit' (Ghi).\n" +
-             "=> Có thể bạn đang để quyền 'Read' (Xem). Hãy cấp quyền Edit cho: Cache Rules, Transform Rules, WAF.\n\n" +
+             "Token và Zone ID đều ĐÚNG (đã qua bước kiểm tra), nhưng Token này có thể đang thiếu quyền 'Edit' (Ghi) cho mục nào đó.\n" +
+             "=> Có thể bạn đang để quyền 'Read' (Xem). Hãy cấp quyền Edit đủ cho cả 3 mục: Cache Rules, Transform Rules, WAF.\n\n" +
              "Chi tiết lỗi kỹ thuật từ Cloudflare:\n\n" + errorString;
       }
 
