@@ -1,6 +1,9 @@
 // --- File: script.js ---
 // 1. Hàm bảo mật: Escape HTML để chống XSS
 // Bất cứ khi nào hiển thị input của người dùng ra màn hình, phải dùng hàm này.
+// Nó thay thế các mã lệnh bằng văn bản thường. Các mã lệnh được thay thế bao gồm:
+// $, <, >, ', "
+// Điều đó giúp vô hiệu hóa các câu lệnh lừa người dùng nhập vào để ăn trộm cookie
 const escapeHTML = (str) => {
     if (!str) return "";
     return str.replace(/[&<>'"]/g, 
@@ -45,7 +48,9 @@ form.addEventListener('submit', async (e) => {
         statusDiv.className = 'error';
         
         // Kiểm tra xem người dùng có nhập nhầm cái gì đó quá ngắn hoặc quá dài không
-        let extraMsg = "";
+        let extraMsg = ""; // biến, thông tin thay đổi tùy theo kết quả kiểm tra.
+		
+		// Cơ sở của điều này là chúng ta đã biết chắc chắn rằng Zone ID của Cloudflare tạo ra chỉ có 32 ký tự.
         if (clean_zoneId.length < 32) extraMsg = "[Quá ngắn, có vẻ bạn copy thiếu]";
         else if (clean_zoneId.length > 32) extraMsg = "[Quá dài, có vẻ bạn copy thừa ký tự lạ]";
 
@@ -62,6 +67,7 @@ form.addEventListener('submit', async (e) => {
 
     // 1. Lấy và làm sạch tên miền trước
     let rawDomain = document.getElementById('domain').value.trim();
+	
     // Loại bỏ protocol (http, https) và dấu / ở cuối, chuyển về chữ thường
     let cleanDomain = rawDomain.replace(/^https?:\/\//, '').replace(/\/$/, '').toLowerCase();
 
