@@ -14,6 +14,14 @@ Ví dụ 1.0.26.f1 nghĩa là phiên bản này có lõi (worker.js) giống y p
 - Thêm cơ chế kiểm tra trước các quy tắc (rules) có sẵn trong Zone định chỉnh sửa.
 - Hiển thị thông báo cảnh báo để người dùng biết trước khi thao tác.
 
+## [1.0.27] - 2026-01-23
+
+### Fixed
+- Thông báo lỗi chuẩn xác hơn.
+- Nếu sai API Token hoặc Zone ID thì thông báo lỗi này.
+- Nếu đúng API Token và Zone ID nhưng thiếu quyền (ví dụ vẫn để read chứ không phải edit).
+- Mục đích là để người dùng cuối rõ lỗi hơn, và biết khắc phục chỗ nào.
+
 ## [1.0.26x] - 2026-01-22
 
 ### Fixed
@@ -123,6 +131,7 @@ Ví dụ 1.0.26.f1 nghĩa là phiên bản này có lõi (worker.js) giống y p
 
 ### Fixed
 - Thêm 2 quy tắc chặn file (file blocking rules) vào bộ quy tắc bảo mật số 2.
+
 
 
 
