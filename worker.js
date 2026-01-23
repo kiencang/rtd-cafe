@@ -504,8 +504,8 @@ export default {
          // Gộp cứng thông báo: Lời khuyên về quyền hạn + Chi tiết lỗi kỹ thuật
          userFriendlyMessage = "❌ LỖI QUYỀN HẠN (Permissions):\n" +
              "Token và Zone ID đều ĐÚNG (đã qua bước kiểm tra), nhưng Token này có thể đang thiếu quyền 'Edit' (Ghi).\n" +
-             "-> Có thể bạn đang để quyền 'Read' (Xem). Hãy cấp quyền Edit cho: Cache Rules, Transform Rules, WAF.\n\n" +
-             "Chi tiết lỗi kỹ thuật từ Cloudflare:\n" + errorString;
+             "=> Có thể bạn đang để quyền 'Read' (Xem). Hãy cấp quyền Edit cho: Cache Rules, Transform Rules, WAF.\n\n" +
+             "Chi tiết lỗi kỹ thuật từ Cloudflare:\n\n" + errorString;
       }
 
       return new Response(JSON.stringify({ 
