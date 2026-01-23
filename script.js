@@ -187,8 +187,7 @@ form.addEventListener('submit', async (e) => {
         statusDiv.className = 'error';
         statusDiv.innerHTML = `
             <strong>❌ Có lỗi xảy ra:</strong><br>
-            ${escapeHTML(error.message)}<br><br>
-            <em>Kiểm tra lại Zone ID, API Token (có chính xác không?) hoặc quyền hạn của Token (đã đúng 3 Zone cần dùng hay chưa, có đúng quyền Edit cho các Zone hay chưa?).</em>
+            ${escapeHTML(error.message)}
         `;
 		// Scroll xuống thông báo lỗi để người dùng thấy
         statusDiv.scrollIntoView({ behavior: 'smooth', block: 'center' });	

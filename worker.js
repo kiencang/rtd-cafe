@@ -8,7 +8,49 @@
  * Tác giả: wpsila - Nguyễn Đức Anh
  */
  // -------------------------------------------------------------------------------------------------------------------------------- 
-const RTD_CAFE_VERSION = "v1.0.26"; // Phiên bản của script
+const RTD_CAFE_VERSION = "v1.0.27"; // Phiên bản của script
+// -------------------------------------------------------------------------------------------------------------------------------- 
+
+// +++
+
+// --------------------------------------------------------------------------------------------------------------------------------
+// [1] --- BẮT ĐẦU ĐOẠN MÃ MỚI: HÀM KIỂM TRA KẾT NỐI (FINAL FIXED) ---
+async function validateCloudflareConnection(zoneId, token) {
+  const headers = {
+    "Authorization": `Bearer ${token}`,
+    "Content-Type": "application/json"
+  };
+
+  // Thay vì check thông tin Zone (cần quyền Zone:Read), ta check thẳng vào Cache Rules (cần quyền Cache:Edit/Read).
+  // Vì Token của bạn chắc chắn có quyền Cache Rules, nên cách này sẽ hoạt động 100%.
+  
+  // Endpoint này lấy thông tin cấu hình Cache Rules hiện tại
+  const testUrl = `https://api.cloudflare.com/client/v4/zones/${zoneId}/rulesets/phases/http_request_cache_settings/entrypoint`;
+
+  try {
+    const resp = await fetch(testUrl, {
+        method: "GET", headers: headers
+    });
+    const json = await resp.json();
+
+    // Nếu Cloudflare trả về lỗi (4xx, 5xx) hoặc success: false
+    if (!resp.ok || !json.success) {
+      // Logic phân tích lỗi
+      let reason = "Nguyên nhân có thể do:\n1. Zone ID không chính xác.\n2. API Token sai hoặc hết hạn.\n3. Token chưa được cấp quyền vào Zone này.";
+
+      return { 
+        ok: false, 
+        message: `❌ Kết nối thất bại!\n${reason}\n-> Hãy kiểm tra lại Zone ID và Token.` 
+      };
+    }
+  } catch (e) {
+     return { ok: false, message: "Lỗi kết nối mạng khi kiểm tra API (Network Error)." };
+  }
+
+  // Nếu gọi được vào Cache Rules -> Chứng tỏ Token Sống + Zone ID Đúng + Có quyền truy cập.
+  return { ok: true };
+}
+// [1] --- KẾT THÚC ĐOẠN MÃ MỚI ---
 // -------------------------------------------------------------------------------------------------------------------------------- 
 
 // +++
@@ -358,7 +400,20 @@ export default {
 	// Regex đơn giản để chống injection ký tự đặc biệt như " hoặc )
 	if (!/^[a-z0-9.-]+$/.test(domain)) {
 		return new Response(JSON.stringify({ success: false, message: "Domain không hợp lệ (Backend check)" }), { status: 400, headers: corsHeaders });
-	}	  
+	}
+
+      // [2] --- BẮT ĐẦU ĐOẠN MÃ MỚI: GỌI HÀM KIỂM TRA ---
+      // Thực hiện kiểm tra kỹ trước khi chạy lệnh
+      const validation = await validateCloudflareConnection(zoneId, token);
+      
+      if (!validation.ok) {
+         // Nếu kiểm tra thất bại, trả về lỗi ngay lập tức
+         return new Response(JSON.stringify({ 
+             success: false, 
+             message: validation.message 
+         }), { status: 400, headers: corsHeaders });
+      }
+      // [2] --- KẾT THÚC ĐOẠN MÃ MỚI ---	
 	  
     // 1. TẠO THỜI GIAN THỰC (Real-time)
     // Code này chạy mỗi lần request được gọi
@@ -439,20 +494,40 @@ export default {
       // Chỉ thành công khi không có lỗi nào ở cả 4 task
       const success = !errors.cache && !errors.transform && !errors.waf && !errors.rate_limit;
 
-      // Trả về kèm danh sách lỗi chi tiết (nếu có)
+      // [3] --- ĐOẠN ĐÃ SỬA LỖI TYPE (FIXED) ---
+      let userFriendlyMessage = null; // Biến này chứa thông báo tiếng Việt cho người dùng
+
+      if (!success) {
+         // Chuyển object errors thành chuỗi để kiểm tra từ khóa
+         const errorString = JSON.stringify(errors);
+         
+         // Gộp cứng thông báo: Lời khuyên về quyền hạn + Chi tiết lỗi kỹ thuật
+         userFriendlyMessage = "❌ LỖI QUYỀN HẠN (Permissions):\n" +
+             "Token và Zone ID đều ĐÚNG (đã qua bước kiểm tra), nhưng Token này có thể đang thiếu quyền 'Edit' (Ghi).\n" +
+             "-> Có thể bạn đang để quyền 'Read' (Xem). Hãy cấp quyền Edit cho: Cache Rules, Transform Rules, WAF.\n\n" +
+             "Chi tiết lỗi kỹ thuật từ Cloudflare:\n" + errorString;
+      }
+
       return new Response(JSON.stringify({ 
           success, 
+          // QUAN TRỌNG: Frontend sẽ đọc dòng 'message' này để hiện popup lỗi
+          message: success ? "Thành công" : userFriendlyMessage, 
+          
           details: { 
             cache: cacheJson.success, 
             transform: transformJson.success, 
             waf: wafJson.success, 
             rate_limit: rateLimitJson.success 
           },
-          errors: success ? null : errors // Client sẽ đọc được dòng này để biết lỗi gì
+          
+          // SỬA Ở ĐÂY: Giữ nguyên object errors gốc (để debug) hoặc null. 
+          // Không gán string vào đây nữa để tránh lỗi Type.
+          errors: success ? null : errors 
       }), {
         status: success ? 200 : 400,
         headers: { ...corsHeaders, "Content-Type": "application/json" }
       });
+      // [3] --- KẾT THÚC ĐOẠN ĐÃ SỬA ---
 // --------------------------------------------------------------------------------------------------------------------------------
     } catch (err) {
       return new Response(JSON.stringify({ success: false, message: err.message }), {
