@@ -38,7 +38,7 @@ async function validateCloudflareConnection(zoneId, token) {
     // Nếu Cloudflare trả về lỗi (4xx, 5xx) hoặc success: false
     if (!resp.ok || !json.success) {
       // Logic phân tích lỗi
-      let reason = "Nguyên nhân có thể do:\n1. Zone ID không chính xác (bạn có copy nhầm Zone ID của tên miền khác không?).\n2. API Token sai, đã đổi mới hoặc hết hạn.\n3. Token chưa được cấp quyền vào Zone này (khi tạo Token bạn có chỉ định chính xác Zone tương ứng với tên miền không?).";
+      let reason = "Nguyên nhân có thể do:\n1. Zone ID không chính xác (bạn có copy nhầm Zone ID của tên miền khác không?).\n2. API Token sai, đã đổi mới hoặc hết hạn.\n3. Token chưa được cấp quyền vào Zone này (khi tạo API Token bạn có chỉ định chính xác Zone tương ứng với tên miền không?).";
 
       return { 
         ok: false, 
@@ -506,7 +506,9 @@ export default {
          // Gộp cứng thông báo: Lời khuyên về quyền hạn + Chi tiết lỗi kỹ thuật
          userFriendlyMessage = "❌ LỖI QUYỀN HẠN (Permissions):\n" +
              "Token và Zone ID đều ĐÚNG (đã qua bước kiểm tra), nhưng Token này có thể đang thiếu quyền 'Edit' (Ghi) cho mục nào đó.\n" +
-             "=> Có thể bạn đang để quyền 'Read' (Xem). Hãy cấp quyền Edit đủ cho cả 3 mục: Cache Rules, Transform Rules, WAF.\n\n" +
+             "=> Khả năng cao là do bạn đang để quyền 'Read' (Xem). \n\n" +
+			 "Hãy cấp đủ quyền Edit cho cả 3 mục: Cache Rules, Transform Rules, WAF.\n\n" +
+			 "Xem lại hướng dẫn Cách lấy Zone ID & Tạo API Token. \n\n" +
              "Chi tiết lỗi kỹ thuật từ Cloudflare:\n\n" + errorString;
       }
 
