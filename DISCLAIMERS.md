@@ -81,7 +81,7 @@ Triết lý của rtd-cafe là:
 
 Nếu bạn tìm một tool:
 *   Có hàng tá checkbox.
-*   Tự động hóa mọi thứ (magic).
+*   Tự động hóa mọi thứ.
 *   Che giấu logic phía sau một giao diện đẹp đẽ.
 
 → **rtd-cafe không phải lựa chọn phù hợp.**
@@ -92,10 +92,11 @@ Nếu bạn tìm một tool:
 Sau khi chạy rtd-cafe:
 *   Bạn hoàn toàn có thể chỉnh sửa, thêm, xóa rule trực tiếp trong Cloudflare Dashboard.
 *   Tool không khóa, không can thiệp, không theo dõi (tracking).
-*   rtd-cafe không giữ quyền kiểm soát, chỉ hỗ trợ khởi tạo cấu hình ban đầu.
+*   rtd-cafe không giữ quyền kiểm soát, nó chỉ hỗ trợ khởi tạo cấu hình ban đầu.
 
 ---
 
 **Nếu bạn đã đọc đến đây và vẫn thấy rtd-cafe phù hợp, xin chúc mừng! Bạn chính là đối tượng người dùng mà công cụ này hướng tới.** 🚀
+
 
 
