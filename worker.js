@@ -15,6 +15,8 @@ const RTD_CAFE_VERSION = "v1.0.27"; // Phiên bản của script
 
 // --------------------------------------------------------------------------------------------------------------------------------
 // [1] --- BẮT ĐẦU ĐOẠN MÃ MỚI: HÀM KIỂM TRA KẾT NỐI (FINAL FIXED) ---
+// Kiểm tra sớm Zone ID và API Token có hợp lệ không, mục đích để thông báo sớm lỗi cho user.
+// Lỗi nhập sai Zone ID và API Token có khả năng dễ xảy ra khi người dùng mới thiết lập lần đầu.
 async function validateCloudflareConnection(zoneId, token) {
   const headers = {
     "Authorization": `Bearer ${token}`,
@@ -36,7 +38,7 @@ async function validateCloudflareConnection(zoneId, token) {
     // Nếu Cloudflare trả về lỗi (4xx, 5xx) hoặc success: false
     if (!resp.ok || !json.success) {
       // Logic phân tích lỗi
-      let reason = "Nguyên nhân có thể do:\n1. Zone ID không chính xác.\n2. API Token sai hoặc hết hạn.\n3. Token chưa được cấp quyền vào Zone này.";
+      let reason = "Nguyên nhân có thể do:\n1. Zone ID không chính xác (bạn có copy nhầm Zone ID của tên miền khác không?).\n2. API Token sai, đã đổi mới hoặc hết hạn.\n3. Token chưa được cấp quyền vào Zone này (khi tạo Token bạn có chỉ định chính xác Zone tương ứng với tên miền không?).";
 
       return { 
         ok: false, 
