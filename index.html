@@ -13,6 +13,7 @@
 	  connect-src 'self'
 		https://rtd-cafe-settings.wpsila.com
 		https://challenges.cloudflare.com
+		https://static.cloudflareinsights.com
 		https://api.cloudflare.com;
 	  frame-src https://challenges.cloudflare.com;
 	  style-src 'self' 'unsafe-inline';
@@ -81,6 +82,9 @@
         <div class="form-group">
             <label for="zoneId">🏡 Zone ID <a href="https://blog.wpsila.com/zone-id-cloudflare/" target="_blank" rel="noopener noreferrer" class="help-link">Lấy Zone ID ở đâu?</a></label>
             <input type="text" id="zoneId" placeholder="VD: 023e105f4ecef8ad9ca31..." required autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false">
+			<div style="font-size: 0.75rem; color: #718096; margin-top: 5px;">
+                Một số <a href="https://blog.wpsila.com/sai-lam-zone-id/" target="_blank" rel="noopener noreferrer">sai lầm phổ biến khi lấy Zone ID</a> & cách khắc phục.
+            </div>
         </div>
 
         <div class="form-group">
@@ -100,7 +104,7 @@
 			</div>
 			<!-- Kết thúc phần sửa đổi -->
             <div style="font-size: 0.75rem; color: #718096; margin-top: 5px;">
-                Yêu cầu quyền: <em>Zone.Cache Rules (Edit), Zone.Transform Rules (Edit), Zone.WAF (Edit)</em>. Nên <a href="https://blog.wpsila.com/xoa-hoac-doi-api-token/" target="_blank" rel="noopener noreferrer">xóa hoặc đổi API Token</a> sau khi dùng ứng dụng này.
+                Yêu cầu quyền: <em>Zone.Cache Rules (Edit), Zone.Transform Rules (Edit), Zone.WAF (Edit)</em>. Một số <a href="https://blog.wpsila.com/sai-lam-api-token/" target="_blank" rel="noopener noreferrer">sai lầm phổ biến khi tạo API Token</a> & cách khắc phục. Nên <a href="https://blog.wpsila.com/xoa-hoac-doi-api-token/" target="_blank" rel="noopener noreferrer">xóa hoặc đổi API Token</a> sau khi dùng ứng dụng này.
             </div>
         </div>
 
@@ -138,7 +142,7 @@
     <div class="footer">
         <p><strong>rtd-cafe</strong> được phát triển bởi <strong><a href="https://wpsila.com/" target="_blank" rel="noopener noreferrer">wpsila</a></strong>.</p>
 		<p>rtd-cafe rất phù hợp khi dùng cùng với <a href="https://blog.wpsila.com/plugin-cache-enabler/" target="_blank" rel="noopener noreferrer"><strong>plugin Cache Enabler</strong></a>.</p>
-        <p><a href="https://github.com/kiencang/rtd-cafe/releases" target="_blank" rel="noopener noreferrer">v1.0.27.f6</a> • <a href="https://github.com/kiencang/rtd-cafe" target="_blank" rel="noopener noreferrer">Xem mã nguồn (GitHub)</a> • <a href="https://github.com/kiencang/rtd-cafe/issues" target="_blank" rel="noopener noreferrer">Báo lỗi</a> • <a href="https://github.com/kiencang/rtd-cafe/blob/main/DISCLAIMERS.md" target="_blank" rel="noopener noreferrer">Tuyên bố từ chối trách nhiệm</a></p>
+        <p><a href="https://github.com/kiencang/rtd-cafe/releases" target="_blank" rel="noopener noreferrer">v1.0.27.f7</a> • <a href="https://github.com/kiencang/rtd-cafe" target="_blank" rel="noopener noreferrer">Xem mã nguồn (GitHub)</a> • <a href="https://github.com/kiencang/rtd-cafe/issues" target="_blank" rel="noopener noreferrer">Báo lỗi</a> • <a href="https://github.com/kiencang/rtd-cafe/blob/main/DISCLAIMERS.md" target="_blank" rel="noopener noreferrer">Tuyên bố từ chối trách nhiệm</a></p>
 		<p>Mã nguồn mở • Không lưu dữ liệu riêng tư của bạn • Chạy trên Cloudflare Workers</p>
 		<p>Tác giả: Nguyễn Đức Anh • Liên hệ: <strong>contact@wpsila.com</strong></p>
     </div>
