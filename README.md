@@ -12,7 +12,7 @@ rtd-cafe kết hợp rất ổn thỏa với [plugin Cache Enabler](https://blog
 
 Tool này **KHÔNG** dành cho người mới bắt đầu (Newbie).
 
-1.  **Ghi đè cấu hình:** Tool sẽ **XÓA VÀ THAY THẾ** các Cache Rules, WAF Custom Rules và Rate Limiting Rules hiện có trong Zone của bạn.
+1.  **Ghi đè cấu hình:** Tool sẽ **XÓA VÀ THAY THẾ** các Cache Rules, Security (WAF) Rules, Transform Rules và Rate Limiting Rules hiện có trong Zone của bạn.
 2.  **Phạm vi:** Chỉ tối ưu cho Blog/Tin tức. **Không dùng** cho WooCommerce, Membership Site hoặc LMS (web học trực tuyến).
 
 ---
