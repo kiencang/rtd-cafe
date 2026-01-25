@@ -13,6 +13,7 @@ Ví dụ 1.0.26.f1 nghĩa là phiên bản này có lõi (worker.js) giống y p
 ### Added
 - Thêm cơ chế kiểm tra trước các quy tắc (rules) có sẵn trong Zone định chỉnh sửa.
 - Hiển thị thông báo cảnh báo để người dùng biết trước khi thao tác.
+- Bổ sung cái này vào rule 3 (waf) để bảo vệ wp-json 'or (http.request.uri.path contains "/wp-json/" and not http.referer contains "ten-mien-cua-ban.com" and not cf.client.bot)'
 
 ## [1.0.29] - 2026-01-25
 
@@ -143,6 +144,7 @@ Thông báo lỗi chuẩn xác hơn. Mục đích là để người dùng cuố
 
 ### Fixed
 - Thêm 2 quy tắc chặn file (file blocking rules) vào bộ quy tắc bảo mật số 2.
+
 
 
 
