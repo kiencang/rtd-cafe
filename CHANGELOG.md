@@ -18,7 +18,7 @@ Ví dụ 1.0.26.f1 nghĩa là phiên bản này có lõi (worker.js) giống y p
 
 ### Fixed
 - Xóa link không cần thiết trong Content-Security-Policy để đảm bảo an toàn hơn.
-- Bổ sung timeout ở fontend (backend đã có từ trước).
+- Bổ sung timeout ở frontend (backend đã có từ trước).
 - Cập nhật lại rule waf (rule liên quan đến comment và rule vào trang login) để nó mạnh và chính xác hơn.
 
 ## [1.0.27] - 2026-01-23
@@ -137,6 +137,7 @@ Thông báo lỗi chuẩn xác hơn. Mục đích là để người dùng cuố
 
 ### Fixed
 - Thêm 2 quy tắc chặn file (file blocking rules) vào bộ quy tắc bảo mật số 2.
+
 
 
 
