@@ -18,7 +18,7 @@ Ví dụ 1.0.26.f1 nghĩa là phiên bản này có lõi (worker.js) giống y p
 
 ### Fixed
 - Nâng cấp bộ chặn file nhạy cảm (waf).
-- Nâng cấp bộ lọc bot tự đông (waf).
+- Nâng cấp bộ lọc bot tự động (waf).
 
 ## [1.0.28] - 2026-01-25
 
@@ -143,6 +143,7 @@ Thông báo lỗi chuẩn xác hơn. Mục đích là để người dùng cuố
 
 ### Fixed
 - Thêm 2 quy tắc chặn file (file blocking rules) vào bộ quy tắc bảo mật số 2.
+
 
 
 
