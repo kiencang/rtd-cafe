@@ -89,7 +89,7 @@ const get_MY_WAF_RULES = (domain, vpsIP, DEPLOYED_AT) => [
   // Thử thách bằng managed_challenge, một trong các giải pháp rất mạnh để hạn chế bot.
   {
     "action": "managed_challenge",
-    "description": `Security rules 3 [rtd-cafe-${RTD_CAFE_VERSION}]: Hạn chế bot vào trang login và admin [deployed: ${DEPLOYED_AT}]`,
+    "description": `Security rules 3 [rtd-cafe-${RTD_CAFE_VERSION}]: Hạn chế bot vào trang login, admin và wp-json [deployed: ${DEPLOYED_AT}]`,
     "enabled": true,
     "expression": `(http.request.uri.path contains "/wp-login.php" and not cf.client.bot) or (starts_with(http.request.uri.path, "/wp-admin/") and not http.request.uri.path contains "/wp-admin/admin-ajax.php" and not http.request.uri.path contains "/wp-admin/css/" and not http.request.uri.path contains "/wp-admin/js/" and not http.request.uri.path contains "/wp-admin/images/") or (http.request.uri.path contains "/wp-json/" and not http.referer contains "${domain}" and not cf.client.bot)`
   },
