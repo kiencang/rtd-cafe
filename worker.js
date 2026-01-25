@@ -8,7 +8,7 @@
  * Tác giả: wpsila - Nguyễn Đức Anh
  */
  // -------------------------------------------------------------------------------------------------------------------------------- 
-const RTD_CAFE_VERSION = "v1.0.28"; // Phiên bản của script
+const RTD_CAFE_VERSION = "v1.0.29"; // Phiên bản của script
 // -------------------------------------------------------------------------------------------------------------------------------- 
 
 // +++
@@ -82,7 +82,7 @@ const get_MY_WAF_RULES = (domain, vpsIP, DEPLOYED_AT) => [
     "action": "block",
     "description": `Security rules 2 [rtd-cafe-${RTD_CAFE_VERSION}]: Chặn truy cập các file nhạy cảm [deployed: ${DEPLOYED_AT}]`,
     "enabled": true,
-	"expression": `(http.request.uri.path contains "/xmlrpc.php") or (http.request.uri.path contains "/wp-config.php") or (http.request.uri.path contains ".htaccess") or (http.request.uri.path contains "/.env") or (http.request.uri.path contains "composer.json") or (http.request.uri.path contains "package.json") or (http.request.uri.path contains "/.git/") or (http.request.uri.path contains "/wp-includes/wlwmanifest.xml") or (ends_with(http.request.uri.path, ".log")) or (ends_with(http.request.uri.path, ".sql")) or (ends_with(http.request.uri.path, ".bak")) or (ends_with(http.request.uri.path, ".old")) or (ends_with(http.request.uri.path, "readme.html")) or (ends_with(http.request.uri.path, "license.txt")) or (ends_with(http.request.uri.path, ".git")) or (http.request.uri.path contains "/wp-content/uploads/" and http.request.uri.path contains ".php")`
+	"expression": `(http.request.uri.path contains "/xmlrpc.php") or (http.request.uri.path contains "/wp-config.php") or (http.request.uri.path contains ".htaccess") or (http.request.uri.path contains "/.env") or (http.request.uri.path contains "composer.json") or (http.request.uri.path contains "composer.lock") or (http.request.uri.path contains "package.json") or (http.request.uri.path contains "package-lock.json") or (http.request.uri.path contains "yarn.lock") or (http.request.uri.path contains "/.git/") or (http.request.uri.path contains ".DS_Store") or (http.request.uri.path contains "/wp-includes/wlwmanifest.xml") or (ends_with(http.request.uri.path, ".log")) or (ends_with(http.request.uri.path, "error_log")) or (ends_with(http.request.uri.path, ".sql")) or (ends_with(http.request.uri.path, ".bak")) or (ends_with(http.request.uri.path, ".old")) or (ends_with(http.request.uri.path, ".save")) or (ends_with(http.request.uri.path, ".ini")) or (ends_with(http.request.uri.path, ".conf")) or (ends_with(http.request.uri.path, ".yaml")) or (ends_with(http.request.uri.path, ".yml")) or (ends_with(http.request.uri.path, "readme.html")) or (ends_with(http.request.uri.path, "license.txt")) or (ends_with(http.request.uri.path, ".git")) or (http.request.uri.path contains "/wp-content/uploads/" and http.request.uri.path contains ".php")`
   },
 // --------------------------------------------------------------------------------------------------------------------------------  
   // Bảo mật 3: Bảo vệ Login & Admin
@@ -101,7 +101,7 @@ const get_MY_WAF_RULES = (domain, vpsIP, DEPLOYED_AT) => [
     "action": "managed_challenge",
     "description": `Security rules 4 [rtd-cafe-${RTD_CAFE_VERSION}]: Hạn chế bot rác [deployed: ${DEPLOYED_AT}]`,
     "enabled": true,
-    "expression": `(http.user_agent eq "" and not cf.client.bot) or (http.user_agent contains "go-http" and not cf.client.bot) or (http.user_agent contains "axios" and not cf.client.bot) or (http.user_agent contains "wpscan" and not cf.client.bot) or (http.user_agent contains "sqlmap" and not cf.client.bot) or (http.user_agent contains "nmap" and not cf.client.bot) or (http.user_agent contains "headless" and not cf.client.bot) or (http.user_agent contains "selenium" and not cf.client.bot) or (http.request.method eq "POST" and http.referer eq "" and not cf.client.bot)`
+    "expression": `(http.user_agent eq "" and not cf.client.bot) or (http.user_agent contains "go-http" and not cf.client.bot) or (http.user_agent contains "axios" and not cf.client.bot) or (http.user_agent contains "wpscan" and not cf.client.bot) or (http.user_agent contains "sqlmap" and not cf.client.bot) or (http.user_agent contains "nmap" and not cf.client.bot) or (http.user_agent contains "headless" and not cf.client.bot) or (http.user_agent contains "selenium" and not cf.client.bot) or (http.user_agent contains "python" and not cf.client.bot) or (http.user_agent contains "libwww-perl" and not cf.client.bot) or (http.user_agent contains "java" and not cf.client.bot) or (http.user_agent contains "wget" and not cf.client.bot) or (http.user_agent contains "curl" and not cf.client.bot) or (http.user_agent contains "WinHttp" and not cf.client.bot) or (http.user_agent contains "HTTrack" and not cf.client.bot) or (http.user_agent contains "Indy Library" and not cf.client.bot) or (http.request.method eq "POST" and http.referer eq "" and not cf.client.bot)`
   },
 // --------------------------------------------------------------------------------------------------------------------------------  
   // Bảo mật 5: Hạn chế Spam Comment
