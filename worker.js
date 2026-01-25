@@ -8,7 +8,7 @@
  * Tác giả: wpsila - Nguyễn Đức Anh
  */
  // -------------------------------------------------------------------------------------------------------------------------------- 
-const RTD_CAFE_VERSION = "v1.0.27"; // Phiên bản của script
+const RTD_CAFE_VERSION = "v1.0.28"; // Phiên bản của script
 // -------------------------------------------------------------------------------------------------------------------------------- 
 
 // +++
@@ -91,7 +91,7 @@ const get_MY_WAF_RULES = (domain, vpsIP, DEPLOYED_AT) => [
     "action": "managed_challenge",
     "description": `Security rules 3 [rtd-cafe-${RTD_CAFE_VERSION}]: Hạn chế bot vào trang login và admin [deployed: ${DEPLOYED_AT}]`,
     "enabled": true,
-    "expression": `(http.request.uri.path contains "/wp-login.php") or (http.request.uri.path contains "/wp-admin" and not http.request.uri.path contains "/wp-admin/admin-ajax.php" and not http.request.uri.path contains "/wp-admin/css/" and not http.request.uri.path contains "/wp-admin/js/" and not http.request.uri.path contains "/wp-admin/images/")`
+    "expression": `(http.request.uri.path contains "/wp-login.php" and not cf.client.bot) or (starts_with(http.request.uri.path, "/wp-admin/") and not http.request.uri.path contains "/wp-admin/admin-ajax.php" and not http.request.uri.path contains "/wp-admin/css/" and not http.request.uri.path contains "/wp-admin/js/" and not http.request.uri.path contains "/wp-admin/images/")`
   },
 // --------------------------------------------------------------------------------------------------------------------------------  
   // Bảo mật 4: Hạn chế Bot rác
@@ -111,7 +111,7 @@ const get_MY_WAF_RULES = (domain, vpsIP, DEPLOYED_AT) => [
     "action": "managed_challenge",
     "description": `Security rules 5 [rtd-cafe-${RTD_CAFE_VERSION}]: Hạn chế spam bình luận [deployed: ${DEPLOYED_AT}]`,
     "enabled": true,
-    "expression": `(http.request.uri.path eq "/wp-comments-post.php" and http.request.method eq "POST" and not http.referer contains "${domain}") or (http.request.uri.path eq "/wp-comments-post.php" and http.request.method eq "POST" and ip.src.country in {"CN" "RU" "UA" "IN" "ID" "PK" "BD" "BR" "TR" "IR"})`
+    "expression": `(http.request.uri.path eq "/wp-comments-post.php" and http.request.method eq "POST" and not cf.client.bot and not http.referer contains "${domain}") or (http.request.uri.path eq "/wp-comments-post.php" and http.request.method eq "POST" and not cf.client.bot and ip.src.country in {"CN" "RU" "UA" "IN" "ID" "PK" "BD" "BR" "TR" "IR"}) or (http.request.uri.path eq "/wp-comments-post.php" and http.request.method eq "POST" and not cf.client.bot and http.user_agent eq "") or (http.request.uri.path eq "/wp-comments-post.php" and http.request.method eq "POST" and not cf.client.bot and http.request.version eq "HTTP/1.0")`
   }
 ];
 // --------------------------------------------------------------------------------------------------------------------------------

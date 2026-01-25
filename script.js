@@ -153,13 +153,21 @@ form.addEventListener('submit', async (e) => {
     statusDiv.style.display = 'block';
     statusDiv.className = 'loading';
     statusDiv.innerText = "Đang gửi lệnh cấu hình...";
+	
+    // 5. Setup Timeout 30 giây
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 30000); // 30 giây timeout
 
     try {
         const response = await fetch(WORKER_URL, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(data)
+            body: JSON.stringify(data), 
+            signal: controller.signal
         });
+
+        // Xóa timeout ngay khi nhận được phản hồi từ server
+        clearTimeout(timeoutId);
 
         const result = await response.json();
 
@@ -176,21 +184,31 @@ form.addEventListener('submit', async (e) => {
                 </ul>
                 <p style="margin-bottom: 0; margin-top: 10px;">Hãy vào Cloudflare Dashboard kiểm tra lại nhé!</p>
             `;
-			// Scroll xuống thông báo để người dùng thấy đã thành công
-			statusDiv.scrollIntoView({ behavior: 'smooth', block: 'center' });	
-			form.reset();
-			if (window.turnstile) turnstile.reset();
+			// Scroll xuống thông báo lỗi để người dùng thấy
+            statusDiv.scrollIntoView({ behavior: 'smooth', block: 'center' });    
+            form.reset();
+            if (window.turnstile) turnstile.reset();
         } else {
             throw new Error(result.message || "Lỗi không xác định từ Cloudflare.");
         }
     } catch (error) {
         statusDiv.className = 'error';
-        statusDiv.innerHTML = `
-            <strong>❌ Có lỗi xảy ra:</strong><br>
-            ${escapeHTML(error.message)}
-        `;
-		// Scroll xuống thông báo lỗi để người dùng thấy
-        statusDiv.scrollIntoView({ behavior: 'smooth', block: 'center' });	
+        
+        // ✅ Xử lý riêng lỗi Timeout để thông báo thân thiện hơn
+        if (error.name === 'AbortError') {
+            statusDiv.innerHTML = `
+                <strong>❌ Quá thời gian chờ (Timeout):</strong><br>
+                Hệ thống không phản hồi sau 30 giây. Có thể mạng bị nghẽn hoặc Cloudflare đang xử lý chậm.<br>
+                Vui lòng thử lại sau ít phút.
+            `;
+        } else {
+            statusDiv.innerHTML = `
+                <strong>❌ Có lỗi xảy ra:</strong><br>
+                ${escapeHTML(error.message)}
+            `;
+        }
+        // Scroll xuống thông báo lỗi để người dùng thấy
+        statusDiv.scrollIntoView({ behavior: 'smooth', block: 'center' });    
         if (window.turnstile) turnstile.reset(); 
     } finally {
 		btn.disabled = false;
