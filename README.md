@@ -83,6 +83,8 @@ Các rule này được xây dựng dựa trên kinh nghiệm vận hành thực
 *   [Bảo mật WordPress với Cloudflare](https://wpsila.com/bao-mat-wp/)
 *   [Cache Rules cho WordPress trên Cloudflare](https://blog.wpsila.com/cache-rules-trong-cloudflare/)
 
+Thông tin ở 2 bài trên là phần lõi chính của rule. Nó có thể được cập nhật thêm ở chương trình thực tế sau này, cách chính xác nhất để biết các rule cụ thể là gì là bạn đọc file worker.js
+
 ---
 
 ## ⚖️ Tuyên bố từ chối trách nhiệm (Disclaimer)
