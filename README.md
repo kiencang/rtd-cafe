@@ -6,6 +6,8 @@
 
 rtd-cafe kết hợp rất ổn thỏa với [plugin Cache Enabler](https://blog.wpsila.com/plugin-cache-enabler/) để cải thiện hiệu suất hơn nữa. Cache Enabler lo phần cache phía server, còn rtd-cafe cài đặt cache cho bạn ở phía Cloudflare. Có hai lớp đệm cache này trang web của bạn có khả năng chịu được lưu lượng truy cập cao hơn rất nhiều.
 
+Nếu bạn muốn rtd-cafe đem lại hiệu quả hơn nữa, nên phối hợp nó với [plugin Simple Cafe Purge](https://simple-cafe-purge.wpsila.com/) (cũng do tôi phát triển), plugin rất nhỏ gọn này sẽ giúp kéo dài thời gian cache HTML đồng thời đảm bảo bài viết được cập nhật ngay lập tức thay vì phải đợi thời gian sống của cache hết hiệu lực.
+
 ---
 
 ## ⚠️ Cảnh báo quan trọng
