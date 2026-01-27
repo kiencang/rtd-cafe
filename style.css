@@ -196,6 +196,8 @@ button:disabled {
   margin-top: 1.5rem; border-radius: var(--radius);
   padding: 1.25rem; display: none;
   animation: fadeIn 0.4s ease-out;
+  white-space: pre-wrap; /* Để trình duyệt hiển thị các dấu xuống dòng từ Worker */
+  word-break: break-word; /* Tránh việc các chuỗi JSON lỗi quá dài làm vỡ layout */
 }
 
 @keyframes fadeIn {
