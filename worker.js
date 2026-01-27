@@ -8,7 +8,7 @@
  * Tác giả: wpsila - Nguyễn Đức Anh
  */
  // -------------------------------------------------------------------------------------------------------------------------------- 
-const RTD_CAFE_VERSION = "v1.0.31"; // Phiên bản của script
+const RTD_CAFE_VERSION = "v1.0.32"; // Phiên bản của script
 // -------------------------------------------------------------------------------------------------------------------------------- 
 
 // +++
@@ -87,21 +87,23 @@ const get_MY_WAF_RULES = (domain, vpsIP, DEPLOYED_AT) => [
 // --------------------------------------------------------------------------------------------------------------------------------  
   // Bảo mật 3: Bảo vệ Login & Admin & JSON
   // Thử thách bằng managed_challenge, một trong các giải pháp rất mạnh để hạn chế bot.
+  // Đã thêm: .woff, .woff2, .ttf, .eot vào danh sách ngoại lệ
   {
     "action": "managed_challenge",
     "description": `Security rules 3 [rtd-cafe-${RTD_CAFE_VERSION}]: Hạn chế bot vào trang login, admin và wp-json [deployed: ${DEPLOYED_AT}]`,
     "enabled": true,
-    "expression": `(http.request.uri.path contains "/wp-login.php" and not cf.client.bot) or (starts_with(http.request.uri.path, "/wp-admin/") and not http.request.uri.path contains "/wp-admin/admin-ajax.php" and not http.request.uri.path contains "/wp-admin/css/" and not http.request.uri.path contains "/wp-admin/js/" and not http.request.uri.path contains "/wp-admin/images/" and not cf.client.bot) or (http.request.uri.path contains "/wp-json/" and http.request.method in {"POST" "PUT" "DELETE"} and not http.referer contains "${domain}" and not cf.client.bot)`
+    "expression": `(http.request.uri.path contains "/wp-login.php" and not cf.client.bot) or (starts_with(http.request.uri.path, "/wp-admin/") and not http.request.uri.path contains "/wp-admin/admin-ajax.php" and not http.request.uri.path contains "/wp-admin/admin-post.php" and not http.request.uri.path contains "/wp-admin/load-scripts.php" and not http.request.uri.path contains "/wp-admin/load-styles.php" and not http.request.uri.path contains "/wp-admin/css/" and not http.request.uri.path contains "/wp-admin/js/" and not http.request.uri.path contains "/wp-admin/images/" and not http.request.uri.path contains ".woff" and not http.request.uri.path contains ".woff2" and not http.request.uri.path contains ".ttf" and not http.request.uri.path contains ".eot" and not cf.client.bot) or (http.request.uri.path contains "/wp-json/" and http.request.method in {"POST" "PUT" "DELETE"} and not http.referer contains "${domain}" and not cf.client.bot)`
   },
 // --------------------------------------------------------------------------------------------------------------------------------  
-  // Bảo mật 4: Hạn chế Bot rác
+  // Bảo mật 4: Hạn chế Bot rác & query dò user
   // Thử thách bằng managed_challenge
   // Điều kiện quan trọng là bot đó phải không thuộc nhóm bot lành tính trong danh sách cf.client.bot
+  // Đã thêm: Bytespider
   {
     "action": "managed_challenge",
-    "description": `Security rules 4 [rtd-cafe-${RTD_CAFE_VERSION}]: Hạn chế bot rác [deployed: ${DEPLOYED_AT}]`,
+    "description": `Security rules 4 [rtd-cafe-${RTD_CAFE_VERSION}]: Hạn chế bot rác & query dò user [deployed: ${DEPLOYED_AT}]`,
     "enabled": true,
-    "expression": `(http.user_agent eq "" and not cf.client.bot) or (http.user_agent contains "go-http" and not cf.client.bot) or (http.user_agent contains "axios" and not cf.client.bot) or (http.user_agent contains "wpscan" and not cf.client.bot) or (http.user_agent contains "sqlmap" and not cf.client.bot) or (http.user_agent contains "nmap" and not cf.client.bot) or (http.user_agent contains "headless" and not cf.client.bot) or (http.user_agent contains "selenium" and not cf.client.bot) or (http.user_agent contains "python" and not cf.client.bot) or (http.user_agent contains "libwww-perl" and not cf.client.bot) or (http.user_agent contains "java" and not cf.client.bot) or (http.user_agent contains "wget" and not cf.client.bot) or (http.user_agent contains "curl" and not cf.client.bot) or (http.user_agent contains "WinHttp" and not cf.client.bot) or (http.user_agent contains "HTTrack" and not cf.client.bot) or (http.user_agent contains "Indy Library" and not cf.client.bot) or (http.request.method eq "POST" and http.referer eq "" and not cf.client.bot)`
+    "expression": `(http.user_agent eq "" and not cf.client.bot) or (http.user_agent contains "go-http" and not cf.client.bot) or (http.user_agent contains "axios" and not cf.client.bot) or (http.user_agent contains "wpscan" and not cf.client.bot) or (http.user_agent contains "sqlmap" and not cf.client.bot) or (http.user_agent contains "nmap" and not cf.client.bot) or (http.user_agent contains "headless" and not cf.client.bot) or (http.user_agent contains "selenium" and not cf.client.bot) or (http.user_agent contains "python" and not cf.client.bot) or (http.user_agent contains "libwww-perl" and not cf.client.bot) or (http.user_agent contains "java" and not cf.client.bot) or (http.user_agent contains "wget" and not cf.client.bot) or (http.user_agent contains "curl" and not cf.client.bot) or (http.user_agent contains "WinHttp" and not cf.client.bot) or (http.user_agent contains "HTTrack" and not cf.client.bot) or (http.user_agent contains "Indy Library" and not cf.client.bot) or (http.user_agent contains "Bytespider" and not cf.client.bot) or (http.request.method eq "POST" and http.referer eq "" and not cf.client.bot) or (http.request.uri.query contains "author=" and not http.request.uri.path contains "/wp-admin/")`
   },
 // --------------------------------------------------------------------------------------------------------------------------------  
   // Bảo mật 5: Hạn chế Spam Comment
