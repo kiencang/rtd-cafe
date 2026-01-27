@@ -8,7 +8,7 @@
  * Tác giả: wpsila - Nguyễn Đức Anh
  */
  // -------------------------------------------------------------------------------------------------------------------------------- 
-const RTD_CAFE_VERSION = "v1.0.30"; // Phiên bản của script
+const RTD_CAFE_VERSION = "v1.0.31"; // Phiên bản của script
 // -------------------------------------------------------------------------------------------------------------------------------- 
 
 // +++
@@ -82,7 +82,7 @@ const get_MY_WAF_RULES = (domain, vpsIP, DEPLOYED_AT) => [
     "action": "block",
     "description": `Security rules 2 [rtd-cafe-${RTD_CAFE_VERSION}]: Chặn truy cập các file nhạy cảm [deployed: ${DEPLOYED_AT}]`,
     "enabled": true,
-	"expression": `(http.request.uri.path contains "/xmlrpc.php") or (http.request.uri.path contains "/wp-config.php") or (http.request.uri.path contains ".htaccess") or (http.request.uri.path contains "/.env") or (http.request.uri.path contains "composer.json") or (http.request.uri.path contains "composer.lock") or (http.request.uri.path contains "package.json") or (http.request.uri.path contains "package-lock.json") or (http.request.uri.path contains "yarn.lock") or (http.request.uri.path contains "/.git/") or (http.request.uri.path contains ".DS_Store") or (http.request.uri.path contains "/wp-includes/wlwmanifest.xml") or (ends_with(http.request.uri.path, ".log")) or (ends_with(http.request.uri.path, "error_log")) or (ends_with(http.request.uri.path, ".sql")) or (ends_with(http.request.uri.path, ".bak")) or (ends_with(http.request.uri.path, ".old")) or (ends_with(http.request.uri.path, ".save")) or (ends_with(http.request.uri.path, ".ini")) or (ends_with(http.request.uri.path, ".conf")) or (ends_with(http.request.uri.path, ".yaml")) or (ends_with(http.request.uri.path, ".yml")) or (ends_with(http.request.uri.path, "readme.html")) or (ends_with(http.request.uri.path, "license.txt")) or (ends_with(http.request.uri.path, ".git")) or (http.request.uri.path contains "/wp-content/uploads/" and http.request.uri.path contains ".php")`
+	"expression": `(http.request.uri.path contains "/xmlrpc.php") or (http.request.uri.path contains "/wp-config.php") or (http.request.uri.path contains ".htaccess") or (http.request.uri.path contains "/.env") or (ends_with(http.request.uri.path, ".git")) or (http.request.uri.path contains "/.git/") or (http.request.uri.path contains ".DS_Store") or (http.request.uri.path contains "/wp-content/uploads/" and http.request.uri.path contains ".php") or (ends_with(http.request.uri.path, "/composer.json")) or (ends_with(http.request.uri.path, "/composer.lock")) or (ends_with(http.request.uri.path, "/package.json")) or (ends_with(http.request.uri.path, "/package-lock.json")) or (ends_with(http.request.uri.path, "/yarn.lock")) or (http.request.uri.path contains "/wp-includes/wlwmanifest.xml") or (ends_with(http.request.uri.path, ".log")) or (ends_with(http.request.uri.path, "/error_log")) or (ends_with(http.request.uri.path, ".sql")) or (ends_with(http.request.uri.path, ".bak")) or (ends_with(http.request.uri.path, ".old")) or (ends_with(http.request.uri.path, ".save")) or (ends_with(http.request.uri.path, ".ini")) or (ends_with(http.request.uri.path, ".conf")) or (ends_with(http.request.uri.path, ".yaml")) or (ends_with(http.request.uri.path, ".yml")) or (ends_with(http.request.uri.path, "readme.html")) or (ends_with(http.request.uri.path, "license.txt"))`
   },
 // --------------------------------------------------------------------------------------------------------------------------------  
   // Bảo mật 3: Bảo vệ Login & Admin & JSON
@@ -91,7 +91,7 @@ const get_MY_WAF_RULES = (domain, vpsIP, DEPLOYED_AT) => [
     "action": "managed_challenge",
     "description": `Security rules 3 [rtd-cafe-${RTD_CAFE_VERSION}]: Hạn chế bot vào trang login, admin và wp-json [deployed: ${DEPLOYED_AT}]`,
     "enabled": true,
-    "expression": `(http.request.uri.path contains "/wp-login.php" and not cf.client.bot) or (starts_with(http.request.uri.path, "/wp-admin/") and not http.request.uri.path contains "/wp-admin/admin-ajax.php" and not http.request.uri.path contains "/wp-admin/css/" and not http.request.uri.path contains "/wp-admin/js/" and not http.request.uri.path contains "/wp-admin/images/") or (http.request.uri.path contains "/wp-json/" and not http.referer contains "${domain}" and not cf.client.bot)`
+    "expression": `(http.request.uri.path contains "/wp-login.php" and not cf.client.bot) or (starts_with(http.request.uri.path, "/wp-admin/") and not http.request.uri.path contains "/wp-admin/admin-ajax.php" and not http.request.uri.path contains "/wp-admin/css/" and not http.request.uri.path contains "/wp-admin/js/" and not http.request.uri.path contains "/wp-admin/images/" and not cf.client.bot) or (http.request.uri.path contains "/wp-json/" and http.request.method in {"POST" "PUT" "DELETE"} and not http.referer contains "${domain}" and not cf.client.bot)`
   },
 // --------------------------------------------------------------------------------------------------------------------------------  
   // Bảo mật 4: Hạn chế Bot rác
