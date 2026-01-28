@@ -89,6 +89,15 @@ body {
     color: transparent;
     font-weight: 900; /* Đậm nhất có thể */
 }
+
+.eye-text {
+    background: linear-gradient(90deg, #fab916, #f6821f); /* Cam Cloudflare sang cam đậm */
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    font-weight: 900; /* Đậm nhất có thể */
+}
+
 .header p { color: var(--text-muted); font-size: 0.95rem; margin-top: 5px;}
 
 .badge {
