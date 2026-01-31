@@ -8,13 +8,13 @@
  * Tác giả: wpsila - Nguyễn Đức Anh
  */
  // -------------------------------------------------------------------------------------------------------------------------------- 
-const RTD_CAFE_VERSION = "v1.0.32"; // Phiên bản của script
+const RTD_CAFE_VERSION = "v1.0.33"; // Phiên bản của script
 // -------------------------------------------------------------------------------------------------------------------------------- 
 
 // +++
 
 // --------------------------------------------------------------------------------------------------------------------------------
-// [1] --- BẮT ĐẦU ĐOẠN MÃ MỚI: HÀM KIỂM TRA KẾT NỐI (FINAL FIXED) ---
+// [0] --- HÀM KIỂM TRA KẾT NỐI (FINAL FIXED) ---
 // Kiểm tra sớm Zone ID và API Token có hợp lệ không, mục đích để thông báo sớm lỗi cho user.
 // Lỗi nhập sai Zone ID và API Token có khả năng dễ xảy ra khi người dùng mới thiết lập lần đầu.
 async function validateCloudflareConnection(zoneId, token) {
@@ -24,7 +24,7 @@ async function validateCloudflareConnection(zoneId, token) {
   };
 
   // Thay vì check thông tin Zone (cần quyền Zone:Read), ta check thẳng vào Cache Rules (cần quyền Cache:Edit/Read).
-  // Vì Token của bạn chắc chắn có quyền Cache Rules, nên cách này sẽ hoạt động 100%.
+  // Vì Token chắc chắn cần quyền Cache Rules, nên cách này sẽ hoạt động 100%.
   
   // Endpoint này lấy thông tin cấu hình Cache Rules hiện tại
   const testUrl = `https://api.cloudflare.com/client/v4/zones/${zoneId}/rulesets/phases/http_request_cache_settings/entrypoint`;
@@ -37,8 +37,8 @@ async function validateCloudflareConnection(zoneId, token) {
 
     // Nếu Cloudflare trả về lỗi (4xx, 5xx) hoặc success: false
     if (!resp.ok || !json.success) {
-      // Logic phân tích lỗi
-      let reason = "Nguyên nhân có thể do:\n1. Zone ID không chính xác (bạn có copy nhầm Zone ID của tên miền khác không?).\n2. API Token sai, đã đổi mới hoặc hết hạn.\n3. Token chưa được cấp quyền vào Zone này (khi tạo API Token bạn có chỉ định chính xác Zone tương ứng với tên miền không?).";
+      // Logic phân tích lỗi, thông báo cho người dùng
+      let reason = "Nguyên nhân có thể do: #1. Zone ID không chính xác (bạn có copy nhầm Zone ID của tên miền khác không?). #2. API Token sai, đã đổi mới hoặc hết hạn. #3. Token chưa được cấp quyền vào Zone này (khi tạo API Token bạn có chỉ định chính xác Zone tương ứng với tên miền không?).";
 
       return { 
         ok: false, 
@@ -52,7 +52,7 @@ async function validateCloudflareConnection(zoneId, token) {
   // Nếu gọi được vào Cache Rules -> Chứng tỏ Token Sống + Zone ID Đúng + Có quyền truy cập.
   return { ok: true };
 }
-// [1] --- KẾT THÚC ĐOẠN MÃ MỚI ---
+// [0] --- KẾT THÚC KIỂM TRA KẾT NỐI ---
 // -------------------------------------------------------------------------------------------------------------------------------- 
 
 // +++
@@ -61,10 +61,11 @@ async function validateCloudflareConnection(zoneId, token) {
 // 1. HÀM TẠO WAF RULES (BẢO MẬT) - CẦN IP & DOMAIN
 // =========================================================================
 // Lưu ý ở trong expression, các dấu nháy " được bổ sung thành \" để không lỗi cú pháp.
-// Nếu dùng `` cho expression thì không cần \" cho dấu nháy kép.
+// Nếu dùng `` cho expression thì không cần \" cho dấu nháy kép. Lợi ích là dễ copy rule hơn.
 // domain: biến tên miền
-// vpsIP: biến IP của VPS, dùng làm whitelist
-// DEPLOYED_AT là thời gian chạy lệnh, được gắn vào tên rule 
+// vpsIP: biến IP của VPS, dùng làm whitelist, tránh tự chặn chính mình.
+// DEPLOYED_AT là thời gian chạy lệnh, được gắn vào tên rule.
+
 const get_MY_WAF_RULES = (domain, vpsIP, DEPLOYED_AT) => [
   // Bảo mật 1: Whitelist IP VPS
   // Rule quan trọng để tránh chặn chính mình khi bản thân WordPress thực thi một số tác vụ quay về chính VPS.
@@ -125,6 +126,8 @@ const get_MY_WAF_RULES = (domain, vpsIP, DEPLOYED_AT) => [
 // 2. CẤU HÌNH RATE LIMITING (GIỚI HẠN TỐC ĐỘ)
 // Chống việc bị tấn công vào trang login của WordPress (wp-login.php).
 // Có thể mở rộng thêm các trang khác bằng cú pháp OR trong khi điều chỉnh rule thủ công.
+// Biến đầu vào DEPLOYED_AT là thời gian tạo rule.
+// Thời gian chặn không thay đổi được (10s) ở gói miễn phí.
 // =========================================================================
 const get_MY_RATE_LIMIT_RULES = (DEPLOYED_AT) => [
   {
@@ -148,7 +151,10 @@ const get_MY_RATE_LIMIT_RULES = (DEPLOYED_AT) => [
 // --------------------------------------------------------------------------------------------------------------------------------
 // =========================================================================
 // 3. CẤU HÌNH TRANSFORM RULES (URL REWRITE)
-// Đảm bảo vẫn duy trì được hiệu suất cao khi trang được chia sẻ trên các nền tảng mạng xã hội
+// Đảm bảo vẫn duy trì được hiệu suất cao khi trang được chia sẻ trên các nền tảng mạng xã hội.
+// Biến đầu vào DEPLOYED_AT là thời gian tạo rule.
+// Việc chuyển đổi query chỉ diễn ra khi có duy nhất một query mạng xã hội.
+// Điều này giúp tránh việc xóa bỏ toàn bộ query làm hỏng các tham số trước đó.
 // =========================================================================
 const get_MY_TRANSFORM_RULES = (DEPLOYED_AT) => [
   {
@@ -167,8 +173,10 @@ const get_MY_TRANSFORM_RULES = (DEPLOYED_AT) => [
 
 // =========================================================================
 // 4. CẤU HÌNH CACHE RULES (6 RULES)
-// Cache ở phía Edge cho rule 1 có thể tăng thêm thành 3 ngày hoặc 1 tuần nếu có plugin xóa cache tự động.
+// Cache ở phía Edge cho rule 1 có thể tăng thêm thành 1 tuần hoặc 1 tháng nếu có plugin xóa cache tự động.
+// Đã có plugin hỗ trợ nhiệm vụ này Simple Cafe Purge (https://simple-cafe-purge.wpsila.com/).
 // Cache phía trình duyệt cho html ở rule chỉ nên để trong khoảng từ 1 - 5 phút, không nên hơn.
+// rtd-cafe đang thiết lập cache trình duyệt cho HTML là 3 phút.
 // =========================================================================
 const get_MY_CACHE_RULES = (DEPLOYED_AT) => [
 // --------------------------------------------------------------------------------------------------------------------------------
@@ -262,11 +270,11 @@ const get_MY_CACHE_RULES = (DEPLOYED_AT) => [
 
 // +++
 
+// --------------------------------------------------------------------------------------------------------------------------------
 // =========================================================================
 // 5. MAIN LOGIC (WORKER API)
 // Bắt đầu các logic tương tác với Cloudflare để đẩy các rule vào zone (tên miền) tương ứng.
 // =========================================================================
-
 // --------------------------------------------------------------------------------------------------------------------------------
 export default {
   // Thêm tham số 'env' vào hàm fetch
@@ -276,34 +284,38 @@ export default {
     // Nếu quên đặt trong cài đặt, nó sẽ lấy giá trị mặc định sau dấu ||
 	// TURNSTILE_SECRET_KEY thì bắt buộc phải thiết lập, không được quên
 	// Biến môi trường cài đặt trong phần worker tương ứng chạy file này, phải đặt đúng tên
-    const TURNSTILE_SECRET = env.TURNSTILE_SECRET_KEY; 
-    const ALLOWED_ORIGIN = env.ALLOWED_ORIGIN || "https://rtd-cafe.wpsila.com";
+    const TURNSTILE_SECRET = env.TURNSTILE_SECRET_KEY; // Thiết lập trên worker
+    const ALLOWED_ORIGIN = env.ALLOWED_ORIGIN || "https://rtd-cafe.wpsila.com"; // Thiết lập trên worker
 
     // Kiểm tra xem đã cấu hình Secret Key chưa
     if (!TURNSTILE_SECRET) {
       return new Response("Lỗi: Chưa cấu hình TURNSTILE_SECRET_KEY trong Worker Settings", { status: 500 });
     }
   
-	// --------------------------------------------------------------------------------------------------------------------------------
+// --------------------------------------------------------------------------------------------------------------------------------
 	const corsHeaders = {
-	  "Access-Control-Allow-Origin": ALLOWED_ORIGIN,
-	  "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
-	  "Access-Control-Allow-Headers": "Content-Type",
+	  "Access-Control-Allow-Origin": ALLOWED_ORIGIN, // [1] Ai được phép vào, ngăn woker bị gọi vô tội vạ.
+	  "Access-Control-Allow-Methods": "POST, GET, OPTIONS", // [2] Được làm những gì? 
+	  "Access-Control-Allow-Headers": "Content-Type", // [3] Được mang theo thông tin gì?
 	};
-	// --------------------------------------------------------------------------------------------------------------------------------
+	// [2] Ở đây POST (để gửi dữ liệu cấu hình), GET (để kiểm tra worker sống hay chết), và OPTIONS (để kiểm tra kết nối trước khi gửi thật).
+	// [3] Cho phép Frontend gửi kèm header Content-Type (để báo rằng dữ liệu gửi lên là JSON).
+// --------------------------------------------------------------------------------------------------------------------------------
 	
+// -------------------------------------------------------------------------------------------------------------------------------- 	
     // =========================================================================
     // 1. KIỂM TRA ĐƯỜNG DẪN
     // =========================================================================
     const url = new URL(request.url);
-    
-    // Nếu đường dẫn KHÔNG phải là "/rtd-cafe-worker-api" thì trả về 404 luôn
-	// Chuyển worker thành /rtd-cafe-worker-api để có thể giới hạn tần suất truy cập worker này
+   
+    // Nếu đường dẫn KHÔNG phải là "/rtd-cafe-worker-api" thì trả về 404 luôn.
+	// Chuyển worker thành /rtd-cafe-worker-api để có thể giới hạn tần suất truy cập worker này.
+	// Giới hạn tần suất là phần của dev xử lý riêng cho đường dẫn này.
     if (url.pathname !== "/rtd-cafe-worker-api") {
       // Trả về lỗi 404 Not Found
       return new Response("Trang không tồn tại", { status: 404 });
     }
-	
+// --------------------------------------------------------------------------------------------------------------------------------	
     // 1x. Handle CORS Preflight
     if (request.method === "OPTIONS") return new Response(null, { status: 204, headers: corsHeaders });
 	
@@ -314,7 +326,9 @@ export default {
     
     if (ALLOWED_ORIGIN !== "*") {
       // Nếu không có Origin (truy cập ẩn danh từ script) HOẶC Origin không khớp thì từ chối luôn
+	  // Orgin không khớp nghĩa là nó khác ALLOWED_ORIGIN.
       if (!origin || origin !== ALLOWED_ORIGIN) {
+		// Thông báo từ chối.
         return new Response("Forbidden: Direct or Unauthorized Access Not Allowed", { 
           status: 403, 
           headers: corsHeaders 
@@ -322,13 +336,18 @@ export default {
       }
     }
     // =================================================================
-    
+	
+// --------------------------------------------------------------------------------------------------------------------------------     
     // 2. Health Check
     if (request.method === "GET") return new Response("✅ Worker hoạt động tốt!", { status: 200, headers: corsHeaders });
     
     // 3. Method Check
     if (request.method !== "POST") return new Response("Method Not Allowed", { status: 405, headers: corsHeaders });
+// -------------------------------------------------------------------------------------------------------------------------------- 
 
+// +++
+
+// -------------------------------------------------------------------------------------------------------------------------------- 
     try {
       // Nhận thêm turnstileToken
       const { zoneId, token, domain, server_ip, turnstileToken } = await request.json();
@@ -336,16 +355,17 @@ export default {
       // =========================================================
       // [QUAN TRỌNG] XÁC THỰC TURNSTILE
       // =========================================================
+	  // Kiểm tra xem Token có được gửi lên hay không?
       if (!turnstileToken) {
          return new Response(JSON.stringify({ success: false, message: "Thiếu mã xác thực Turnstile" }), { status: 403, headers: corsHeaders });
       }
 
       // Xác thực token với Cloudflare
-      const ip = request.headers.get('CF-Connecting-IP');
+      const ip = request.headers.get('CF-Connecting-IP'); // Lấy IP thật của người dùng
       const formData = new FormData();
-      formData.append('secret', TURNSTILE_SECRET);
-      formData.append('response', turnstileToken);
-      formData.append('remoteip', ip);
+      formData.append('secret', TURNSTILE_SECRET); // Chìa khóa bí mật của Server
+      formData.append('response', turnstileToken); // Token người dùng gửi lên
+      formData.append('remoteip', ip); // IP của người dùng
 
       const turnstileUrl = 'https://challenges.cloudflare.com/turnstile/v0/siteverify';
 	  const turnstileResult = await fetch(turnstileUrl, {
@@ -360,7 +380,7 @@ export default {
       if (!outcome.success) {
         return new Response(JSON.stringify({ success: false, message: "Xác thực Captcha thất bại. Vui lòng thử lại." }), { status: 403, headers: corsHeaders });
       }
-      
+// --------------------------------------------------------------------------------------------------------------------------------      
       // =========================================================
       // TOKEN HỢP LỆ -> CHẠY LOGIC CHÍNH
       // =========================================================
@@ -368,7 +388,11 @@ export default {
       // =========================================================
       // VALIDATE DỮ LIỆU ĐẦU VÀO (CHẶT CHẼ HƠN)
       // =========================================================
-      
+// --------------------------------------------------------------------------------------------------------------------------------
+
+// +++
+	  
+// --------------------------------------------------------------------------------------------------------------------------------      
       // Kiểm tra tất cả các trường bắt buộc
       // Nếu thiếu bất kỳ trường nào trong 4 trường này -> Báo lỗi và Dừng ngay lập tức
       if (!zoneId || !token || !domain || !server_ip) {
@@ -388,26 +412,41 @@ export default {
             headers: corsHeaders 
         });
       }
+// --------------------------------------------------------------------------------------------------------------------------------	  
+
+// +++
 	  
+// --------------------------------------------------------------------------------------------------------------------------------	  
 	// 1. Validate Zone ID (32 ký tự hex)
 	if (!/^[a-f0-9]{32}$/i.test(zoneId)) {
 		return new Response(JSON.stringify({ success: false, message: "Zone ID không hợp lệ (Backend check)" }), { status: 400, headers: corsHeaders });
 	}
+// --------------------------------------------------------------------------------------------------------------------------------
 
+// +++
+
+// --------------------------------------------------------------------------------------------------------------------------------
 	// 2. Validate IP (Sơ bộ)
 	// Kiểm tra không chứa ký tự lạ ngoài số, chấm, hai chấm (cho IPv6)
 	if (!/^[0-9a-fA-F:.]+$/.test(server_ip)) {
 		 return new Response(JSON.stringify({ success: false, message: "IP không hợp lệ (Backend check)" }), { status: 400, headers: corsHeaders });
 	}
+// --------------------------------------------------------------------------------------------------------------------------------	
 
+// +++
+
+// --------------------------------------------------------------------------------------------------------------------------------
 	// 3. Validate Domain (Không được chứa http, /, ký tự lạ)
 	// Regex đơn giản để chống injection ký tự đặc biệt như " hoặc )
 	if (!/^[a-z0-9.-]+$/.test(domain)) {
 		return new Response(JSON.stringify({ success: false, message: "Domain không hợp lệ (Backend check)" }), { status: 400, headers: corsHeaders });
 	}
+// --------------------------------------------------------------------------------------------------------------------------------
 
-      // [2] --- BẮT ĐẦU ĐOẠN MÃ MỚI: GỌI HÀM KIỂM TRA ---
-      // Thực hiện kiểm tra kỹ trước khi chạy lệnh
+// +++
+
+// --------------------------------------------------------------------------------------------------------------------------------
+      // Thực hiện kiểm tra kỹ trước khi chạy lệnh. Xem ZoneID và Token đã chính xác chưa
       const validation = await validateCloudflareConnection(zoneId, token);
       
       if (!validation.ok) {
@@ -417,10 +456,16 @@ export default {
              message: validation.message 
          }), { status: 400, headers: corsHeaders });
       }
-      // [2] --- KẾT THÚC ĐOẠN MÃ MỚI ---	
-	  
-    // 1. TẠO THỜI GIAN THỰC (Real-time)
-    // Code này chạy mỗi lần request được gọi
+// --------------------------------------------------------------------------------------------------------------------------------
+
+// +++
+
+// --------------------------------------------------------------------------------------------------------------------------------	  
+    // TẠO THỜI GIAN THỰC (Real-time)
+    // Code này chạy mỗi lần request được gọi, để gán thời gian tạo rule và tên của rule.
+	// Điều này có thể giúp user hoặc dev có thêm thông tin hữu ích sau này.
+	// sv-SE là quốc gia có hình thức thời gian mặc định như mong muốn.
+	// Giúp giảm độ phức tạp của code.
     const currentTime = new Date().toLocaleString('sv-SE', {
         timeZone: 'Asia/Ho_Chi_Minh',
         year: 'numeric',
@@ -430,6 +475,7 @@ export default {
         minute: '2-digit'
     }); 
     // currentTime lúc này sẽ là: "2026-01-19 07:15" (Ví dụ)	  
+// --------------------------------------------------------------------------------------------------------------------------------
 
       // Khi đã qua được cửa ải if ở trên, nghĩa là dữ liệu đã đầy đủ.
       // Gán trực tiếp giá trị thực, không dùng fallback ảo nữa.
@@ -444,14 +490,15 @@ export default {
 // --------------------------------------------------------------------------------------------------------------------------------
       // --- EXECUTE UPDATES (CHẠY SONG SONG VỚI PROMISE.ALL) ---
       
-      // Tạo danh sách các task cần chạy (chưa await vội)
-	  // Sắp xếp thứ tự cho logic, tường lửa đầu tiên, cache cuối cùng
-      const MY_WAF_RULES = get_MY_WAF_RULES(targetDomain, targetIp, currentTime); // tường lửa
-	  const MY_RATE_LIMIT_RULES = get_MY_RATE_LIMIT_RULES(currentTime); // giới hạn số lần vào trang đăng nhập
-	  const MY_TRANSFORM_RULES = get_MY_TRANSFORM_RULES(currentTime); // loại bỏ query tracking
-	  const MY_CACHE_RULES = get_MY_CACHE_RULES(currentTime); // cache toàn trang	    
+      // Tạo danh sách các task cần chạy (chưa await vội).
+	  // Sắp xếp thứ tự cho logic, tường lửa đầu tiên, cache cuối cùng.
+	  // Có thiết lập timeout 10s signal: AbortSignal.timeout(10000) để tránh API bị treo và người dùng không thoát ra được.
+      const MY_WAF_RULES = get_MY_WAF_RULES(targetDomain, targetIp, currentTime); // Tường lửa
+	  const MY_RATE_LIMIT_RULES = get_MY_RATE_LIMIT_RULES(currentTime); // Giới hạn số lần vào trang đăng nhập
+	  const MY_TRANSFORM_RULES = get_MY_TRANSFORM_RULES(currentTime); // Loại bỏ query tracking
+	  const MY_CACHE_RULES = get_MY_CACHE_RULES(currentTime); // Cache toàn trang	    
 	  
-	  // Tạo biến hằng số cho Base URL.
+	  // Tạo biến hằng số cho Base URL. Dùng chung cho các lần gọi API.
       const BASE_API = `https://api.cloudflare.com/client/v4/zones/${zoneId}/rulesets/phases`;
 	  
       const tasks = [
@@ -495,7 +542,7 @@ export default {
         rate_limit: getErrors(rateLimitJson)
       };
 
-      // Chỉ thành công khi không có lỗi nào ở cả 4 task
+      // Chỉ xác nhận thành công khi không có lỗi nào ở cả 4 task
       const success = !errors.cache && !errors.transform && !errors.waf && !errors.rate_limit;
 
       // [3] --- ĐOẠN ĐÃ SỬA LỖI TYPE (FIXED) ---
@@ -533,7 +580,6 @@ export default {
         status: success ? 200 : 400,
         headers: { ...corsHeaders, "Content-Type": "application/json" }
       });
-      // [3] --- KẾT THÚC ĐOẠN ĐÃ SỬA ---
 // --------------------------------------------------------------------------------------------------------------------------------
     } catch (err) {
       return new Response(JSON.stringify({ success: false, message: err.message }), {
