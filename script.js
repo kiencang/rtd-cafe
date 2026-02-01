@@ -2,7 +2,7 @@
 // 1. Hàm bảo mật: Escape HTML để chống XSS
 // Bất cứ khi nào hiển thị input của người dùng ra màn hình, phải dùng hàm này.
 // Nó thay thế các mã lệnh bằng văn bản thường. Các mã lệnh được thay thế bao gồm:
-// $, <, >, ', "
+// &, <, >, ', ", `, /
 // Điều đó giúp vô hiệu hóa các câu lệnh lừa người dùng nhập vào để ăn trộm cookie
 const escapeHTML = (str) => {
     if (!str) return "";
