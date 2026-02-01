@@ -8,7 +8,7 @@
  * Tác giả: wpsila - Nguyễn Đức Anh
  */
  // -------------------------------------------------------------------------------------------------------------------------------- 
-const RTD_CAFE_VERSION = "v1.0.33"; // Phiên bản của script
+const RTD_CAFE_VERSION = "v1.0.34"; // Phiên bản của script
 // -------------------------------------------------------------------------------------------------------------------------------- 
 
 // +++
@@ -501,6 +501,7 @@ export default {
 	  // Tạo biến hằng số cho Base URL. Dùng chung cho các lần gọi API.
       const BASE_API = `https://api.cloudflare.com/client/v4/zones/${zoneId}/rulesets/phases`;
 	  
+	  // Gom các nhiệm vụ cần thực hiện vào tasks
       const tasks = [
         // Task 1: Update Cache Rules
         fetch(`${BASE_API}/http_request_cache_settings/entrypoint`, {
@@ -527,14 +528,37 @@ export default {
       // Bắt đầu chạy tất cả cùng lúc và chờ kết quả
       const responses = await Promise.all(tasks);
 
-      // Lấy kết quả JSON
+      // Lấy kết quả JSON, gán theo thứ tự
       const [cacheJson, transformJson, wafJson, rateLimitJson] = await Promise.all(
         responses.map(r => r.json())
       );
 
-      // Hàm gom lỗi từ Cloudflare response
-      const getErrors = (res) => res.success ? null : res.errors.map(e => e.message).join("; ");
+        // Hàm gom lỗi từ Cloudflare response
+	    const getErrors = (response) => {
+			// 1. Kiểm tra xem kết quả có thành công không?
+			// "response.success" là biến do Cloudflare trả về (true/false)
+			if (response.success === true) {
+				return null; // Nếu thành công thì trả về null (nghĩa là không có lỗi)
+			}
 
+			// 2. Nếu thất bại (success = false), ta xử lý danh sách lỗi
+			// Lấy mảng chứa các đối tượng lỗi từ Cloudflare
+			const listErrors = response.errors;
+
+			// 3. Tạo một mảng mới chỉ chứa dòng thông báo (message) của từng lỗi
+			// Thay vì dùng .map() viết tắt, ta có thể hình dung nó hoạt động như sau:
+			const listMessages = listErrors.map((errorItem) => {
+				return errorItem.message; // Chỉ lấy phần chữ, bỏ qua mã số lỗi
+			});
+
+			// 4. Nối tất cả các thông báo lại thành một chuỗi văn bản duy nhất
+			// Ngăn cách nhau bằng dấu chấm phẩy và khoảng trắng
+			const resultString = listMessages.join("; ");
+
+			return resultString; // Trả về chuỗi lỗi cuối cùng
+		};
+		
+	  // Tổng hợp báo cáo lỗi nếu có		
       const errors = {
         cache: getErrors(cacheJson),
         transform: getErrors(transformJson),
@@ -545,27 +569,53 @@ export default {
       // Chỉ xác nhận thành công khi không có lỗi nào ở cả 4 task
       const success = !errors.cache && !errors.transform && !errors.waf && !errors.rate_limit;
 
-      // [3] --- ĐOẠN ĐÃ SỬA LỖI TYPE (FIXED) ---
-      let userFriendlyMessage = null; // Biến này chứa thông báo tiếng Việt cho người dùng
+// [3] --- ĐOẠN ĐÃ SỬA LỖI TYPE & CẢI TIẾN THÔNG BÁO (FIXED & IMPROVED) ---
+// Thông báo lỗi chi tiết hơn, với thông báo cụ thể phần nào đang bị lỗi
+      let userFriendlyMessage = null; 
 
-      if (!success) { // Nếu không thành công thì cần báo lỗi, chủ yếu là do thiếu quyền.
-         // Chuyển object errors thành chuỗi để kiểm tra từ khóa
-         const errorString = JSON.stringify(errors);
-         
-         // Gộp cứng thông báo: Lời khuyên về quyền hạn + Chi tiết lỗi kỹ thuật
-         userFriendlyMessage = "❌ LỖI QUYỀN HẠN (Permissions):\n" +
-             "Token và Zone ID đều ĐÚNG (đã qua bước kiểm tra), nhưng Token này có thể đang thiếu quyền 'Edit' (Ghi) cho mục nào đó.\n" +
-             "=> Khả năng cao là do bạn đang để quyền 'Read' (Xem). \n\n" +
-			 "Hãy cấp đủ quyền Edit cho cả 3 mục: Cache Rules, Transform Rules, WAF.\n\n" +
-			 "Xem lại hướng dẫn Cách lấy Zone ID & Tạo API Token. \n\n" +
-             "Chi tiết lỗi kỹ thuật từ Cloudflare:\n\n" + errorString;
+      if (!success) { 
+         // Tạo một mảng để chứa các thông báo lỗi cụ thể
+         let errorDetails = [];
+
+         // 1. Kiểm tra lỗi Cache
+         if (errors.cache) {
+             errorDetails.push(`🔸 Lỗi tại [Cache Rules]: ${errors.cache}`);
+         }
+
+         // 2. Kiểm tra lỗi Transform
+         if (errors.transform) {
+             errorDetails.push(`🔸 Lỗi tại [Transform Rules]: ${errors.transform}`);
+         }
+
+         // 3. Kiểm tra lỗi WAF & Rate Limit (Gom nhóm thành lỗi Tường lửa/Bảo mật)
+         if (errors.waf || errors.rate_limit) {
+             let wafMsgParts = [];
+             if (errors.waf) wafMsgParts.push(`Custom Rules: ${errors.waf}`);
+             if (errors.rate_limit) wafMsgParts.push(`Rate Limit: ${errors.rate_limit}`);
+             
+             // Nối chuỗi nếu bị cả 2, hoặc chỉ hiện 1 cái
+             errorDetails.push(`🔸 Lỗi tại [WAF/Security]: ${wafMsgParts.join(" & ")}`);
+         }
+
+         // Tạo nội dung thông báo cuối cùng
+         userFriendlyMessage = "❌ CÓ LỖI XẢY RA Ở CÁC MỤC SAU:\n\n" + 
+             errorDetails.join("\n\n") + // Xuống dòng giữa các lỗi cho dễ đọc
+             "💡 NGUYÊN NHÂN & CÁCH KHẮC PHỤC:\n" +
+             "Token và Zone ID của bạn ĐÚNG (đã qua bước kiểm tra kết nối).\n" +
+             "Tuy nhiên có thể API Token đang bị THIẾU QUYỀN 'Edit' (Ghi) ở các mục bị báo lỗi phía trên.\n\n" +
+             "👉 Hãy truy cập Cloudflare: User Profile > API Tokens > Chọn Token đang dùng > Edit.\n" +
+             "👉 Tại phần Permissions, hãy đảm bảo đã cấp quyền 'Edit' cho: Zone WAF, Cache Rules, và Transform Rules." +
+			 "👉 Nên xem lại hướng dẫn Cách tạo API Token.";
       }
 
       return new Response(JSON.stringify({ 
           success, 
-          // QUAN TRỌNG: Frontend sẽ đọc dòng 'message' này để hiện popup lỗi
+          // QUAN TRỌNG: Frontend sẽ đọc dòng 'message' này để hiện popup lỗi.
+		  // Nếu có lỗi sẽ gửi thông điệp userFriendlyMessage.
+		  // Nếu thành công thì gửi Thành công, frontend thực tế sẽ tùy biến thông báo này cho rõ ràng hơn.
           message: success ? "Thành công" : userFriendlyMessage, 
           
+		  // Chi tiết thành công, thất bại của từng phần
           details: { 
             cache: cacheJson.success, 
             transform: transformJson.success, 
@@ -575,15 +625,16 @@ export default {
           
           // SỬA Ở ĐÂY: Giữ nguyên object errors gốc (để debug) hoặc null. 
           // Không gán string vào đây nữa để tránh lỗi Type.
+		  // Thông báo lỗi để debug chính xác, cái userFriendlyMessage chỉ là thông báo cho người dùng thông thường, dev thì xem ở đây nếu có lỗi lạ
           errors: success ? null : errors 
       }), {
         status: success ? 200 : 400,
         headers: { ...corsHeaders, "Content-Type": "application/json" }
       });
 // --------------------------------------------------------------------------------------------------------------------------------
-    } catch (err) {
-      return new Response(JSON.stringify({ success: false, message: err.message }), {
-        status: 500,
+    } catch (err) { // Bắt các lỗi kỹ thuật không lường trước được.
+      return new Response(JSON.stringify({ success: false, message: err.message }), { // err.message là thông báo lỗi cụ thể.
+        status: 500, // Lỗi 500 là lỗi của hệ thống / code, không phải do người dùng.
         headers: { ...corsHeaders, "Content-Type": "application/json" }
       });
     }
