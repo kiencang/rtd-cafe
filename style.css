@@ -147,6 +147,10 @@ input:focus {
   box-shadow: 0 0 0 4px var(--focus-ring); /* Hiệu ứng focus ring lan tỏa */
 }
 
+.help-input-rtd { font-size: 0.75rem; color: #718096; margin-top: 5px; }
+
+#help-captcha { font-size: 0.75rem; color: #718096; margin-bottom: 8px; text-align: center; }
+
 /* Phần wrapper cho icon con mắt & input token */
 .password-wrapper { position: relative; width: 100%; }
 #token { padding-right: 45px; }

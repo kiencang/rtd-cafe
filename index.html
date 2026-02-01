@@ -81,7 +81,7 @@
         <div class="form-group">
             <label for="zoneId">🏡 Zone ID <a href="https://blog.wpsila.com/zone-id-cloudflare/" target="_blank" rel="noopener noreferrer" class="help-link">Lấy Zone ID ở đâu?</a></label>
             <input type="text" id="zoneId" placeholder="VD: 023e105f4ecef8ad9ca31..." required autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false">
-			<div style="font-size: 0.75rem; color: #718096; margin-top: 5px;">
+			<div class="help-input-rtd">
                 Một số <a href="https://blog.wpsila.com/sai-lam-zone-id/" target="_blank" rel="noopener noreferrer">sai lầm phổ biến khi lấy Zone ID</a> & cách khắc phục.
             </div>
         </div>
@@ -102,7 +102,7 @@
 				</span>
 			</div>
 			<!-- Kết thúc phần sửa đổi -->
-            <div style="font-size: 0.75rem; color: #718096; margin-top: 5px;">
+            <div class="help-input-rtd">
                 Yêu cầu quyền: <em>Zone.Cache Rules (Edit), Zone.Transform Rules (Edit), Zone.WAF (Edit)</em>. Một số <a href="https://blog.wpsila.com/sai-lam-api-token/" target="_blank" rel="noopener noreferrer">sai lầm phổ biến khi tạo API Token</a> & cách khắc phục. Nên <a href="https://blog.wpsila.com/xoa-hoac-doi-api-token/" target="_blank" rel="noopener noreferrer">xóa hoặc đổi API Token</a> sau khi dùng ứng dụng này.
             </div>
         </div>
@@ -110,13 +110,13 @@
         <div class="form-group">
             <label for="domain">🌐 Tên miền (domain) của bạn</label>
             <input type="text" id="domain" placeholder="VD: example.com" required autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false">
-			<div style="font-size: 0.75rem; color: #718096; margin-top: 5px;">Đảm bảo tên miền của bạn đang <a href="https://blog.wpsila.com/bat-dam-may-vang/" target="_blank" rel="noopener noreferrer">bật đám mây vàng</a> (proxied) <img src="images/dam-may-vang.png" class="inline-images" alt="đám mây vàng" width="49" height="18"> trên DNS Cloudflare thì các rule này mới có tác dụng.</div>
+			<div class="help-input-rtd">Đảm bảo tên miền của bạn đang <a href="https://blog.wpsila.com/bat-dam-may-vang/" target="_blank" rel="noopener noreferrer">bật đám mây vàng</a> (proxied) <img src="images/dam-may-vang.png" class="inline-images" alt="đám mây vàng" width="49" height="18"> trên DNS Cloudflare thì các rule này mới có tác dụng.</div>
         </div>
 
         <div class="form-group">
             <label for="server_ip">🔢 IP của VPS (nên copy-paste thay vì gõ thủ công)</label>
             <input type="text" id="server_ip" placeholder="VD: 113.161.x.x" required autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false">
-            <div style="font-size: 0.75rem; color: #718096; margin-top: 5px;">Để whitelist tránh tự chặn chính mình. Sau này bạn đổi sang VPS khác thì IP sẽ thay đổi, bạn cần <a href="https://blog.wpsila.com/cap-nhat-ip-vps-rtd-cafe/" target="_blank" rel="noopener noreferrer">nhớ cập nhật thông tin này</a>.</div>
+            <div class="help-input-rtd">Để whitelist tránh tự chặn chính mình. Sau này bạn đổi sang VPS khác thì IP sẽ thay đổi, bạn cần <a href="https://blog.wpsila.com/cap-nhat-ip-vps-rtd-cafe/" target="_blank" rel="noopener noreferrer">nhớ cập nhật thông tin này</a>.</div>
         </div>
 
 		<!-- Thêm Widget Turnstile, có label để người dùng đỡ nhầm lẫn thông báo Thành công! -->
@@ -124,7 +124,7 @@
 			<label>🛡️ Bạn không phải là robot</label>
 			<!-- Thay SITE_KEY của bạn vào bên dưới -->
 			<div class="cf-turnstile" data-sitekey="0x4AAAAAACMsWM_4U2nzK9J3"></div>
-			<div style="font-size: 0.75rem; color: #718096; margin-bottom: 8px; text-align: center;">
+			<div id="help-captcha">
 				[Lưu ý nhỏ: Chức năng của hộp trên chỉ là để đảm bảo bạn là người dùng thực (một dạng CAPTCHA thân thiện), không phải xác nhận là bạn đã cài xong!]
 			</div>
 		</div>		
@@ -143,7 +143,7 @@
 		<p>Nên dùng thêm plugin <strong><a href="https://simple-cafe-purge.wpsila.com/" target="_blank" rel="noopener noreferrer">☕ Simple Cafe Purge</a></strong> để tăng thời gian cache HTML & giúp cập nhật bài ngay lập tức có hiệu lực với người dùng cuối.</p>
 		<p>Ngoài ra rtd-cafe rất phù hợp khi dùng cùng với <strong><a href="https://blog.wpsila.com/plugin-cache-enabler/" target="_blank" rel="noopener noreferrer">plugin Cache Enabler</a></strong></p>
 		<p>Mã nguồn mở • Không lưu dữ liệu riêng tư của bạn • Chạy trên Cloudflare Workers</p>
-        <p><a href="https://github.com/kiencang/rtd-cafe/releases" target="_blank" rel="noopener noreferrer">v1.0.33</a> • <a href="https://github.com/kiencang/rtd-cafe" target="_blank" rel="noopener noreferrer">Xem mã nguồn (GitHub)</a> • <a href="https://github.com/kiencang/rtd-cafe/issues" target="_blank" rel="noopener noreferrer">Báo lỗi</a> • <a href="https://github.com/kiencang/rtd-cafe/blob/main/DISCLAIMERS.md" target="_blank" rel="noopener noreferrer">Tuyên bố từ chối trách nhiệm</a></p>
+        <p><a href="https://github.com/kiencang/rtd-cafe/releases" target="_blank" rel="noopener noreferrer">v1.0.33.f1</a> • <a href="https://github.com/kiencang/rtd-cafe" target="_blank" rel="noopener noreferrer">Xem mã nguồn (GitHub)</a> • <a href="https://github.com/kiencang/rtd-cafe/issues" target="_blank" rel="noopener noreferrer">Báo lỗi</a> • <a href="https://github.com/kiencang/rtd-cafe/blob/main/DISCLAIMERS.md" target="_blank" rel="noopener noreferrer">Tuyên bố từ chối trách nhiệm</a></p>
 		<p>rtd-cafe được phát triển bởi <a href="https://wpsila.com/" target="_blank" rel="noopener noreferrer">wpsila</a></p>
 		<p>Nguyễn Đức Anh • contact@wpsila.com</p>
     </div>

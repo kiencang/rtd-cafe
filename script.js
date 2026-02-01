@@ -6,13 +6,15 @@
 // Điều đó giúp vô hiệu hóa các câu lệnh lừa người dùng nhập vào để ăn trộm cookie
 const escapeHTML = (str) => {
     if (!str) return "";
-    return str.replace(/[&<>'"]/g, 
+    return str.replace(/[&<>'"`\/]/g, // Thêm ` và / vào regex
         tag => ({
             '&': '&amp;',
             '<': '&lt;',
             '>': '&gt;',
             "'": '&#39;',
-            '"': '&quot;'
+            '"': '&quot;',
+            '`': '&#96;',  // Backtick
+            '/': '&#x2F;'  // Forward slash (theo khuyến nghị OWASP)
         }[tag]));
 };
 
