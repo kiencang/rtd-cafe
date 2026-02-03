@@ -8,7 +8,7 @@
  * Tác giả: wpsila - Nguyễn Đức Anh
  */
  // -------------------------------------------------------------------------------------------------------------------------------- 
-const RTD_CAFE_VERSION = "v1.0.35"; // Phiên bản của script
+const RTD_CAFE_VERSION = "v1.0.36"; // Phiên bản của script
 // -------------------------------------------------------------------------------------------------------------------------------- 
 
 // +++
@@ -202,6 +202,9 @@ const get_MY_CACHE_RULES = (DEPLOYED_AT) => [
     "action": "set_cache_settings",
     "action_parameters": {
       "cache": true,
+	  "cache_key": {
+			"cache_deception_armor": true
+		},
       "edge_ttl": { "default": 2592000, "mode": "override_origin" }, // 1 tháng
       "browser_ttl": { "mode": "respect_origin" } // Tôn trọng đề xuất của server gốc
     },
@@ -217,6 +220,9 @@ const get_MY_CACHE_RULES = (DEPLOYED_AT) => [
     "action": "set_cache_settings",
     "action_parameters": {
       "cache": true,
+	  "cache_key": {
+			"cache_deception_armor": true
+		},	  
       "edge_ttl": { "default": 31536000, "mode": "override_origin" }, // 1 năm
       "browser_ttl": { "mode": "respect_origin" } // Tôn trọng đề xuất của server gốc
     },
@@ -233,6 +239,9 @@ const get_MY_CACHE_RULES = (DEPLOYED_AT) => [
     "action": "set_cache_settings",
     "action_parameters": {
       "cache": true,
+	  "cache_key": {
+			"cache_deception_armor": true
+		},	  
       "edge_ttl": { "default": 2592000, "mode": "override_origin" }, // Edge cache 1 tháng (xóa cache trên CF là xong)
       "browser_ttl": { "default": 3600, "mode": "override_origin" } // Browser cache 60 phút, ngắn cho an toàn
     },
@@ -262,6 +271,9 @@ const get_MY_CACHE_RULES = (DEPLOYED_AT) => [
     "action": "set_cache_settings",
     "action_parameters": {
       "cache": true,
+	  "cache_key": {
+			"cache_deception_armor": true
+		},	  
       "edge_ttl": { "default": 604800, "mode": "override_origin" }, // 7 ngày
       "browser_ttl": { "default": 14400, "mode": "override_origin" } // 4 tiếng
     },
