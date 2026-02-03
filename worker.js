@@ -8,7 +8,7 @@
  * Tác giả: wpsila - Nguyễn Đức Anh
  */
  // -------------------------------------------------------------------------------------------------------------------------------- 
-const RTD_CAFE_VERSION = "v1.0.36"; // Phiên bản của script
+const RTD_CAFE_VERSION = "v1.0.37"; // Phiên bản của script
 // -------------------------------------------------------------------------------------------------------------------------------- 
 
 // +++
@@ -172,7 +172,7 @@ const get_MY_TRANSFORM_RULES = (DEPLOYED_AT) => [
 // +++
 
 // =========================================================================
-// 4. CẤU HÌNH CACHE RULES (6 RULES)
+// 4. CẤU HÌNH CACHE RULES (7 RULES)
 // Cache ở phía Edge cho rule 1 có thể tăng thêm thành 1 tuần hoặc 1 tháng nếu có plugin xóa cache tự động.
 // Đã có plugin hỗ trợ nhiệm vụ này Simple Cafe Purge (https://simple-cafe-purge.wpsila.com/).
 // Cache phía trình duyệt cho html ở rule chỉ nên để trong khoảng từ 1 - 5 phút, không nên hơn.
@@ -231,7 +231,7 @@ const get_MY_CACHE_RULES = (DEPLOYED_AT) => [
     "expression": `(http.request.uri.path.extension in {"jpg" "jpeg" "png" "ico" "svg" "gif" "webp" "avif"})`
   },
 // --------------------------------------------------------------------------------------------------------------------------------   
- // Rule 3.5: Cache Tài liệu & Video (PDF, MP3, MP4, DOC, DOCX, PPT, PPTX...)
+ // Rule 4: Cache Tài liệu & Video (PDF, MP3, MP4, DOC, DOCX, PPT, PPTX...)
   // Các file này hay bị ghi đè nội dung (giữ nguyên tên) nên chỉ cache Browser ngắn.
   // QUAN TRỌNG: Caddyfile đang KHÔNG cấu hình cache cho nhóm này, 
   // nên ở đây ta phải dùng "override_origin" để ép trình duyệt cache.
@@ -245,12 +245,12 @@ const get_MY_CACHE_RULES = (DEPLOYED_AT) => [
       "edge_ttl": { "default": 2592000, "mode": "override_origin" }, // Edge cache 1 tháng (xóa cache trên CF là xong)
       "browser_ttl": { "default": 3600, "mode": "override_origin" } // Browser cache 60 phút, ngắn cho an toàn
     },
-    "description": `Cache rules 3.5 [rtd-cafe-${RTD_CAFE_VERSION}]: Cache PDF, nhạc, video, tài liệu (doc, docx, ppt, pptx) [deployed: ${DEPLOYED_AT}]`,
+    "description": `Cache rules 4 [rtd-cafe-${RTD_CAFE_VERSION}]: Cache PDF, nhạc, video, tài liệu (doc, docx, ppt, pptx) [deployed: ${DEPLOYED_AT}]`,
     "enabled": true,
     "expression": `(http.request.uri.path.extension in {"pdf" "mp3" "mp4" "webm" "doc" "docx" "ppt" "pptx"})`
   }, 
 // --------------------------------------------------------------------------------------------------------------------------------  
-  // Rule 4: Cache ngắn cho Sitemap & Feed
+  // Rule 5: Cache ngắn cho Sitemap & Feed
   // sitemap có mức độ cập nhật vừa phải, cache ngắn vừa đảm bảo hiệu suất, vừa không ảnh hưởng đến tính cập nhật
   {
     "action": "set_cache_settings",
@@ -259,12 +259,12 @@ const get_MY_CACHE_RULES = (DEPLOYED_AT) => [
       "edge_ttl": { "default": 28800, "mode": "override_origin" }, // 8 tiếng
       "browser_ttl": { "default": 28800, "mode": "override_origin" } // 8 tiếng
     },
-    "description": `Cache rules 4 [rtd-cafe-${RTD_CAFE_VERSION}]: Cache ngắn cho Sitemap & Feed [deployed: ${DEPLOYED_AT}]`,
+    "description": `Cache rules 5 [rtd-cafe-${RTD_CAFE_VERSION}]: Cache ngắn cho Sitemap & Feed [deployed: ${DEPLOYED_AT}]`,
     "enabled": true,
     "expression": `(http.request.uri.path contains "sitemap") or (http.request.uri.path contains "/feed/")`
   },
 // --------------------------------------------------------------------------------------------------------------------------------  
-  // Rule 5: Cache cho trang Admin (chỉ CSS, JS, font)
+  // Rule 6: Cache cho trang Admin (chỉ CSS, JS, font)
   // Cải tiến này giúp trang admin tải nhanh hơn. CSS & JS của admin luôn có version đi kèm.
   // Tuy vậy để chắc chắn cũng không nên để thời gian cache quá lâu.
   {
@@ -277,18 +277,18 @@ const get_MY_CACHE_RULES = (DEPLOYED_AT) => [
       "edge_ttl": { "default": 604800, "mode": "override_origin" }, // 7 ngày
       "browser_ttl": { "default": 14400, "mode": "override_origin" } // 4 tiếng
     },
-    "description": `Cache rules 5 [rtd-cafe-${RTD_CAFE_VERSION}]: Cache cho trang Admin (chỉ CSS, JS và font) [deployed: ${DEPLOYED_AT}]`,
+    "description": `Cache rules 6 [rtd-cafe-${RTD_CAFE_VERSION}]: Cache cho trang Admin (chỉ CSS, JS và font) [deployed: ${DEPLOYED_AT}]`,
     "enabled": true,
     "expression": `(http.request.uri.path contains "/wp-admin" and http.request.uri.path.extension in {"css" "js" "woff" "woff2" "ttf" "otf" "eot"})`
   },
 // --------------------------------------------------------------------------------------------------------------------------------  
-  // Rule 6: BYPASS CACHE (Quan trọng nhất - nằm cuối để ghi đè)
+  // Rule 7: BYPASS CACHE (Quan trọng nhất - nằm cuối để ghi đè)
   // Danh sách này đặc biệt quan trọng để tránh cache lỗi. Tôn chỉ: Thà bỏ sót cache, còn hơn là cache nhầm.
   // Có thể cần bổ sung tùy theo trường hợp cụ thể của blog, hoặc có sự thay đổi của WordPress sau này (ít thường xuyên).
   {
     "action": "set_cache_settings",
     "action_parameters": { "cache": false },
-    "description": `Cache rules 6 [rtd-cafe-${RTD_CAFE_VERSION}]: Bỏ qua không cache (Admin, Login, API) [deployed: ${DEPLOYED_AT}]`,
+    "description": `Cache rules 7 [rtd-cafe-${RTD_CAFE_VERSION}]: Bỏ qua không cache (Admin, Login, API) [deployed: ${DEPLOYED_AT}]`,
     "enabled": true,
     "expression": `(http.request.uri.path contains "/wp-admin" and not http.request.uri.path.extension in {"css" "js" "woff" "woff2" "ttf" "otf" "eot"}) or (http.request.uri.path contains "/wp-login.php") or (http.request.uri.path contains "/robots.txt") or (http.request.uri.path contains "/wp-json/") or (http.request.uri.query contains "rest_route=") or (http.request.uri.path contains "/xmlrpc.php") or (http.request.uri.path contains "/wp-cron.php") or (http.request.uri.query contains "doing_wp_cron=") or (http.cookie contains "wordpress_logged_in_") or (http.cookie contains "wp-postpass_") or (http.cookie contains "wordpress_sec_") or (http.cookie contains "comment_author_") or (http.request.uri.query contains "replytocom=") or (http.request.uri.query contains "unapproved=") or (http.request.uri.query contains "moderation-hash=") or (http.request.uri.query contains "preview=") or (http.request.uri.query contains "preview_id=") or (http.request.uri.query contains "preview_nonce=") or (http.request.uri.query contains "customize_changeset_uuid") or (http.request.uri.query contains "customize_preview=") or (http.request.uri.query contains "customize=") or (http.request.uri.query contains "_wpnonce") or (http.request.uri.query contains "s=") or (http.request.uri.query contains "action=") or (http.request.uri.query contains "elementor-preview") or (http.request.uri.query contains "fl_builder") or (http.request.uri.query contains "et_fb") or (http.request.uri.query contains "vc_editable") or (http.request.uri.query contains "bricks=") or (http.request.uri.query contains "tve=") or (http.request.uri.query contains "brizy-edit") or (http.request.uri.path contains "/wp-signup.php") or (http.request.uri.path contains "/wp-activate.php") or (http.request.uri.path contains "/wp-reset-password.php") or (http.request.uri.query contains "nocache")`
   }
