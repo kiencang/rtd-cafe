@@ -8,7 +8,7 @@
  * Tác giả: wpsila - Nguyễn Đức Anh
  */
  // -------------------------------------------------------------------------------------------------------------------------------- 
-const RTD_CAFE_VERSION = "v1.0.34"; // Phiên bản của script
+const RTD_CAFE_VERSION = "v1.0.35"; // Phiên bản của script
 // -------------------------------------------------------------------------------------------------------------------------------- 
 
 // +++
@@ -192,7 +192,7 @@ const get_MY_CACHE_RULES = (DEPLOYED_AT) => [
     "description": `Cache rules 1 [rtd-cafe-${RTD_CAFE_VERSION}]: Quy tắc cache chung (HTML cache) [deployed: ${DEPLOYED_AT}]`, // Đặt tên cho quy tắc // phiên bản của rule
     "enabled": true, // Bật tính năng này
     // Loại trừ các file tĩnh (để Rule 2, 3 xử lý) và trang đăng nhập
-    "expression": `(not http.request.uri.path contains "/wp-login.php" and not http.request.uri.path contains "/wp-admin" and not http.cookie contains "wordpress_logged_in_" and not http.request.uri.path.extension in {"css" "js" "woff" "woff2" "ttf" "otf" "eot" "map" "jpg" "png" "jpeg" "webp" "avif" "ico" "svg" "gif" "pdf" "mp3" "mp4" "webm"})`
+    "expression": `(not http.request.uri.path contains "/wp-login.php" and not http.request.uri.path contains "/wp-admin" and not http.cookie contains "wordpress_logged_in_" and not http.request.uri.path.extension in {"css" "js" "woff" "woff2" "ttf" "otf" "eot" "map" "jpg" "png" "jpeg" "webp" "avif" "ico" "svg" "gif" "pdf" "mp3" "mp4" "webm" "doc" "docx" "ppt" "pptx"})`
   },
 // --------------------------------------------------------------------------------------------------------------------------------  
   // Rule 2: Cache CSS, JS, Font
@@ -203,27 +203,43 @@ const get_MY_CACHE_RULES = (DEPLOYED_AT) => [
     "action_parameters": {
       "cache": true,
       "edge_ttl": { "default": 2592000, "mode": "override_origin" }, // 1 tháng
-      "browser_ttl": { "default": 604800, "mode": "override_origin" } // 7 ngày
+      "browser_ttl": { "mode": "respect_origin" } // Tôn trọng đề xuất của server gốc
     },
     "description": `Cache rules 2 [rtd-cafe-${RTD_CAFE_VERSION}]: Cache CSS, JS và font [deployed: ${DEPLOYED_AT}]`,
     "enabled": true,
     "expression": `(http.request.uri.path.extension in {"css" "js" "woff" "woff2" "ttf" "otf" "eot" "map"})`
   },
 // --------------------------------------------------------------------------------------------------------------------------------  
-  // Rule 3: Cache Media (Ảnh, Video, PDF)
-  // Các file tĩnh ảnh, pdf, media là thông tin hiếm khi thay đổi nhất, để cache dài được
+  // Rule 3: Cache Images
+  // Các file tĩnh ảnh là thông tin hiếm khi thay đổi nhất, để cache dài được
   // Danh sách này sắp xếp theo mức độ thường gặp
   {
     "action": "set_cache_settings",
     "action_parameters": {
       "cache": true,
       "edge_ttl": { "default": 31536000, "mode": "override_origin" }, // 1 năm
-      "browser_ttl": { "default": 2592000, "mode": "override_origin" } // 1 tháng
+      "browser_ttl": { "mode": "respect_origin" } // Tôn trọng đề xuất của server gốc
     },
-    "description": `Cache rules 3 [rtd-cafe-${RTD_CAFE_VERSION}]: Cache ảnh, PDF, media [deployed: ${DEPLOYED_AT}]`,
+    "description": `Cache rules 3 [rtd-cafe-${RTD_CAFE_VERSION}]: Cache ảnh [deployed: ${DEPLOYED_AT}]`,
     "enabled": true,
-    "expression": `(http.request.uri.path.extension in {"jpg" "jpeg" "png" "ico" "svg" "gif" "webp" "avif" "pdf" "mp3" "mp4" "webm"})`
+    "expression": `(http.request.uri.path.extension in {"jpg" "jpeg" "png" "ico" "svg" "gif" "webp" "avif"})`
   },
+// --------------------------------------------------------------------------------------------------------------------------------   
+ // Rule 3.5: Cache Tài liệu & Video (PDF, MP3, MP4, DOC, DOCX, PPT, PPTX...)
+  // Các file này hay bị ghi đè nội dung (giữ nguyên tên) nên chỉ cache Browser ngắn.
+  // QUAN TRỌNG: Caddyfile đang KHÔNG cấu hình cache cho nhóm này, 
+  // nên ở đây ta phải dùng "override_origin" để ép trình duyệt cache.
+  {
+    "action": "set_cache_settings",
+    "action_parameters": {
+      "cache": true,
+      "edge_ttl": { "default": 2592000, "mode": "override_origin" }, // Edge cache 1 tháng (xóa cache trên CF là xong)
+      "browser_ttl": { "default": 3600, "mode": "override_origin" } // Browser cache 60 phút, ngắn cho an toàn
+    },
+    "description": `Cache rules 3.5 [rtd-cafe-${RTD_CAFE_VERSION}]: Cache PDF, nhạc, video, tài liệu (doc, docx, ppt, pptx) [deployed: ${DEPLOYED_AT}]`,
+    "enabled": true,
+    "expression": `(http.request.uri.path.extension in {"pdf" "mp3" "mp4" "webm" "doc" "docx" "ppt" "pptx"})`
+  }, 
 // --------------------------------------------------------------------------------------------------------------------------------  
   // Rule 4: Cache ngắn cho Sitemap & Feed
   // sitemap có mức độ cập nhật vừa phải, cache ngắn vừa đảm bảo hiệu suất, vừa không ảnh hưởng đến tính cập nhật
