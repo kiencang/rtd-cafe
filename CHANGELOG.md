@@ -14,6 +14,12 @@ Ví dụ 1.0.26.f1 nghĩa là phiên bản này có lõi (worker.js) giống y p
 - Thêm cơ chế kiểm tra trước các quy tắc (rules) có sẵn trong Zone định chỉnh sửa.
 - Hiển thị thông báo cảnh báo để người dùng biết trước khi thao tác.
 
+## [1.0.35] - 2026-02-03
+
+### Fixed
+- Viết lại cache rule cho ảnh, CSS, JS, font ở phía cache trình duyệt, bằng cách điều chỉnh để nó tôn trọng quyết định từ phía server.
+- Bổ sung cache cho PDF, video, nhạc và các file tài liệu như doc, docx, ppt, pptx. Chỉ Cache trình duyệt 1 tiếng. Cache phía Cloudflare 30 ngày.
+
 ## [1.0.34] - 2026-02-01
 
 ### Fixed
@@ -172,6 +178,7 @@ Thông báo lỗi chuẩn xác hơn. Mục đích là để người dùng cuố
 
 ### Fixed
 - Thêm 2 quy tắc chặn file (file blocking rules) vào bộ quy tắc bảo mật số 2.
+
 
 
 
