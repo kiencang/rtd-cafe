@@ -8,7 +8,7 @@
  * Tác giả: wpsila - Nguyễn Đức Anh
  */
  // -------------------------------------------------------------------------------------------------------------------------------- 
-const RTD_CAFE_VERSION = "v1.0.37"; // Phiên bản của script
+const RTD_CAFE_VERSION = "v1.0.38"; // Phiên bản của script
 // -------------------------------------------------------------------------------------------------------------------------------- 
 
 // +++
@@ -104,7 +104,7 @@ const get_MY_WAF_RULES = (domain, vpsIP, DEPLOYED_AT) => [
     "action": "managed_challenge",
     "description": `Security rules 4 [rtd-cafe-${RTD_CAFE_VERSION}]: Hạn chế bot rác & query dò user [deployed: ${DEPLOYED_AT}]`,
     "enabled": true,
-    "expression": `(http.user_agent eq "" and not cf.client.bot) or (http.user_agent contains "go-http" and not cf.client.bot) or (http.user_agent contains "axios" and not cf.client.bot) or (http.user_agent contains "wpscan" and not cf.client.bot) or (http.user_agent contains "sqlmap" and not cf.client.bot) or (http.user_agent contains "nmap" and not cf.client.bot) or (http.user_agent contains "headless" and not cf.client.bot) or (http.user_agent contains "selenium" and not cf.client.bot) or (http.user_agent contains "python" and not cf.client.bot) or (http.user_agent contains "libwww-perl" and not cf.client.bot) or (http.user_agent contains "java" and not cf.client.bot) or (http.user_agent contains "wget" and not cf.client.bot) or (http.user_agent contains "curl" and not cf.client.bot) or (http.user_agent contains "WinHttp" and not cf.client.bot) or (http.user_agent contains "HTTrack" and not cf.client.bot) or (http.user_agent contains "Indy Library" and not cf.client.bot) or (http.user_agent contains "Bytespider" and not cf.client.bot) or (http.request.method eq "POST" and http.referer eq "" and not cf.client.bot) or (http.request.uri.query contains "author=" and not http.request.uri.path contains "/wp-admin/")`
+    "expression": `(http.user_agent eq "" and not cf.client.bot) or (http.user_agent contains "go-http" and not cf.client.bot) or (http.user_agent contains "axios" and not cf.client.bot) or (http.user_agent contains "wpscan" and not cf.client.bot) or (http.user_agent contains "sqlmap" and not cf.client.bot) or (http.user_agent contains "nmap" and not cf.client.bot) or (http.user_agent contains "headless" and not cf.client.bot) or (http.user_agent contains "selenium" and not cf.client.bot) or (http.user_agent contains "python" and not cf.client.bot) or (http.user_agent contains "libwww-perl" and not cf.client.bot) or (http.user_agent contains "java" and not cf.client.bot) or (http.user_agent contains "wget" and not cf.client.bot) or (http.user_agent contains "curl" and not cf.client.bot and http.host eq "${domain}") or (http.user_agent contains "WinHttp" and not cf.client.bot) or (http.user_agent contains "HTTrack" and not cf.client.bot) or (http.user_agent contains "Indy Library" and not cf.client.bot) or (http.user_agent contains "Bytespider" and not cf.client.bot) or (http.request.method eq "POST" and http.referer eq "" and not cf.client.bot) or (http.request.uri.query contains "author=" and not http.request.uri.path contains "/wp-admin/")`
   },
 // --------------------------------------------------------------------------------------------------------------------------------  
   // Bảo mật 5: Hạn chế Spam Comment
