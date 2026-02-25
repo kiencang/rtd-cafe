@@ -179,7 +179,7 @@ form.addEventListener('submit', async (e) => {
                 <h3>✅ Hoàn thành xuất sắc nhiệm vụ!</h3>
                 <p>Website <strong>${escapeHTML(data.domain)}</strong> (IP: <strong>${escapeHTML(data.server_ip)}</strong>) đã được tối ưu:</p>
                 <ul style="text-align: left; margin-bottom: 0;">
-                    <li>Đã tạo 6 Cache Rules (chuẩn Blog & tăng tốc Admin).</li>
+                    <li>Đã tạo 7 Cache Rules (chuẩn Blog & tăng tốc Admin).</li>
                     <li>Đã kích hoạt Bảo mật Login & chặn Bot rác.</li>
                     <li>Đã giới hạn Rate Limit trang đăng nhập.</li>
                     <li>Đã xóa Query Tracking phổ biến.</li>
