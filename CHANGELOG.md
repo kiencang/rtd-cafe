@@ -7,7 +7,7 @@ và dự án này tuân thủ [Semantic Versioning](https://semver.org/spec/v2.0
 
 Riêng chỉ sửa nhỏ giao diện mà không động đến worker.js sẽ sử dụng thêm giá trị f1, f2, f3,... đằng sau.
 
-Ví dụ 1.0.26.f1 nghĩa là phiên bản này có lõi (worker.js) giống y phiên bản 1.0.26, chỉ có fontend là chỉnh sửa nhỏ.
+Ví dụ 1.0.26.f1 nghĩa là phiên bản này có lõi (worker.js) giống y phiên bản 1.0.26, chỉ có frontend (giao diện người dùng) là chỉnh sửa nhỏ.
 
 ## [Unreleased]
 ### Added
@@ -203,6 +203,7 @@ Thông báo lỗi chuẩn xác hơn. Mục đích là để người dùng cuố
 
 ### Fixed
 - Thêm 2 quy tắc chặn file (file blocking rules) vào bộ quy tắc bảo mật số 2.
+
 
 
 
