@@ -8,7 +8,7 @@
  * Tác giả: wpsila - Nguyễn Đức Anh
  */
  // -------------------------------------------------------------------------------------------------------------------------------- 
-const RTD_CAFE_VERSION = "v1.0.38"; // Phiên bản của script
+const RTD_CAFE_VERSION = "v1.0.39"; // Phiên bản của script
 // -------------------------------------------------------------------------------------------------------------------------------- 
 
 // +++
@@ -141,7 +141,7 @@ const get_MY_RATE_LIMIT_RULES = (DEPLOYED_AT) => [
     },
     "description": `Rate limit [rtd-cafe-${RTD_CAFE_VERSION}]: Giới hạn số lần vào trang đăng nhập [deployed: ${DEPLOYED_AT}]`,
     "enabled": true,
-    "expression": `(http.request.uri.path contains "/wp-login.php")`
+    "expression": `(http.request.uri.path contains "/wp-login.php") or (http.request.uri.path contains "/wp-comments-post.php")`
   }
 ];
 // --------------------------------------------------------------------------------------------------------------------------------
