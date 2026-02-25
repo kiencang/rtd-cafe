@@ -14,6 +14,11 @@ Ví dụ 1.0.26.f1 nghĩa là phiên bản này có lõi (worker.js) giống y p
 - Thêm cơ chế kiểm tra trước các quy tắc (rules) có sẵn trong Zone định chỉnh sửa.
 - Hiển thị thông báo cảnh báo để người dùng biết trước khi thao tác.
 
+## [1.0.39] - 2026-02-25
+
+### Fixed
+- Thêm một lớp phòng thủ để chống tấn công khu vực bình luận.
+
 ## [1.0.38] - 2026-02-05
 
 ### Fixed
@@ -193,6 +198,7 @@ Thông báo lỗi chuẩn xác hơn. Mục đích là để người dùng cuố
 
 ### Fixed
 - Thêm 2 quy tắc chặn file (file blocking rules) vào bộ quy tắc bảo mật số 2.
+
 
 
 
