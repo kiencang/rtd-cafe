@@ -8,7 +8,7 @@
  * Tác giả: wpsila - Nguyễn Đức Anh
  */
  // -------------------------------------------------------------------------------------------------------------------------------- 
-const RTD_CAFE_VERSION = "v1.0.40"; // Phiên bản của script
+const RTD_CAFE_VERSION = "v1.0.41"; // Phiên bản của script
 // -------------------------------------------------------------------------------------------------------------------------------- 
 
 // +++
@@ -77,13 +77,13 @@ const get_MY_WAF_RULES = (domain, vpsIP, DEPLOYED_AT) => [
     "expression": `(ip.src eq ${vpsIP})` // Cho dấu nháy kép như thế này "${vpsIP}" sẽ bị lỗi
   },
 // --------------------------------------------------------------------------------------------------------------------------------  
-  // Bảo mật 2: Chặn file nhạy cảm
+  // Bảo mật 2: Chặn file nhạy cảm & Chống nhảy thư mục (Directory Traversal / LFI) & Chống tấn công trang login
   // Một danh sách dài các file chứa thông tin quan trọng không được để lộ ra ngoài.
   {
     "action": "block",
-    "description": `Security rules 2 [rtd-cafe-${RTD_CAFE_VERSION}]: Chặn truy cập các file nhạy cảm [deployed: ${DEPLOYED_AT}]`,
+    "description": `Security rules 2 [rtd-cafe-${RTD_CAFE_VERSION}]: Chặn truy cập các file nhạy cảm & Chống nhảy thư mục & Tấn công trang login [deployed: ${DEPLOYED_AT}]`,
     "enabled": true,
-	"expression": `(http.request.uri.path contains "/xmlrpc.php") or (http.request.uri.path contains "/wp-config.php") or (http.request.uri.path contains ".htaccess") or (http.request.uri.path contains "/.env") or (ends_with(http.request.uri.path, ".git")) or (http.request.uri.path contains "/.git/") or (http.request.uri.path contains ".DS_Store") or (http.request.uri.path contains "/wp-content/uploads/" and http.request.uri.path contains ".php") or (ends_with(http.request.uri.path, "/composer.json")) or (ends_with(http.request.uri.path, "/composer.lock")) or (ends_with(http.request.uri.path, "/package.json")) or (ends_with(http.request.uri.path, "/package-lock.json")) or (ends_with(http.request.uri.path, "/yarn.lock")) or (http.request.uri.path contains "/wp-includes/wlwmanifest.xml") or (ends_with(http.request.uri.path, ".log")) or (ends_with(http.request.uri.path, "/error_log")) or (ends_with(http.request.uri.path, ".sql")) or (ends_with(http.request.uri.path, ".bak")) or (ends_with(http.request.uri.path, ".old")) or (ends_with(http.request.uri.path, ".save")) or (ends_with(http.request.uri.path, ".ini")) or (ends_with(http.request.uri.path, ".conf")) or (ends_with(http.request.uri.path, ".yaml")) or (ends_with(http.request.uri.path, ".yml")) or (ends_with(http.request.uri.path, "readme.html")) or (ends_with(http.request.uri.path, "license.txt"))`
+	"expression": `(http.request.uri.path contains "/xmlrpc.php") or (http.request.uri.path contains "/wp-config.php") or (http.request.uri.path contains ".htaccess") or (http.request.uri.path contains "/.env") or (ends_with(http.request.uri.path, ".git")) or (http.request.uri.path contains "/.git/") or (http.request.uri.path contains ".DS_Store") or (http.request.uri.path contains "/wp-content/uploads/" and http.request.uri.path contains ".php") or (ends_with(http.request.uri.path, "/composer.json")) or (ends_with(http.request.uri.path, "/composer.lock")) or (ends_with(http.request.uri.path, "/package.json")) or (ends_with(http.request.uri.path, "/package-lock.json")) or (ends_with(http.request.uri.path, "/yarn.lock")) or (http.request.uri.path contains "/wp-includes/wlwmanifest.xml") or (ends_with(http.request.uri.path, ".log")) or (ends_with(http.request.uri.path, "/error_log")) or (ends_with(http.request.uri.path, ".sql")) or (ends_with(http.request.uri.path, ".bak")) or (ends_with(http.request.uri.path, ".old")) or (ends_with(http.request.uri.path, ".save")) or (ends_with(http.request.uri.path, ".ini")) or (ends_with(http.request.uri.path, ".conf")) or (ends_with(http.request.uri.path, ".yaml")) or (ends_with(http.request.uri.path, ".yml")) or (ends_with(http.request.uri.path, "readme.html")) or (ends_with(http.request.uri.path, "license.txt")) or (http.request.uri.path contains "../") or (http.request.uri.path contains "..%2F") or (http.request.uri.path contains "/wp-login.php" and http.request.method eq "POST" and not http.referer contains "${domain}")`
   },
 // --------------------------------------------------------------------------------------------------------------------------------  
   // Bảo mật 3: Bảo vệ Login & Admin & JSON
@@ -118,7 +118,7 @@ const get_MY_WAF_RULES = (domain, vpsIP, DEPLOYED_AT) => [
   }
 ];
 // --------------------------------------------------------------------------------------------------------------------------------
-
+  
 // +++
 
 // --------------------------------------------------------------------------------------------------------------------------------
@@ -136,7 +136,7 @@ const get_MY_RATE_LIMIT_RULES = (DEPLOYED_AT) => [
       // QUAN TRỌNG: Gói Free bắt buộc phải có "cf.colo.id"
       "characteristics": ["cf.colo.id", "ip.src"], 
       "period": 10, // Trong 10 giây
-      "requests_per_period": 5, // Tối đa 5 lần
+      "requests_per_period": 3, // Tối đa 3 lần
       "mitigation_timeout": 10 // Chặn 10 giây
     },
     "description": `Rate limit [rtd-cafe-${RTD_CAFE_VERSION}]: Giới hạn số lần vào trang đăng nhập & chống spam bình luận [deployed: ${DEPLOYED_AT}]`,
@@ -153,18 +153,23 @@ const get_MY_RATE_LIMIT_RULES = (DEPLOYED_AT) => [
 // 3. CẤU HÌNH TRANSFORM RULES (URL REWRITE)
 // Đảm bảo vẫn duy trì được hiệu suất cao khi trang được chia sẻ trên các nền tảng mạng xã hội.
 // Biến đầu vào DEPLOYED_AT là thời gian tạo rule.
-// Việc chuyển đổi query chỉ diễn ra khi có duy nhất một query mạng xã hội.
-// Điều này giúp tránh việc xóa bỏ toàn bộ query làm hỏng các tham số trước đó.
+// Chỉ xóa các query tracking mạng xã hội cụ thể được chỉ định, sử dụng remove_query_args
 // =========================================================================
-const get_MY_TRANSFORM_RULES = (DEPLOYED_AT) => [
+const get_MY_TRANSFORM_RULES = (DEPLOYED_AT) =>[
   {
     "action": "rewrite",
-    "action_parameters": { "uri": { "query": { "value": "" } } },
-    "description": `Transform rules 1 [rtd-cafe-${RTD_CAFE_VERSION}]: Xóa các query tracking phổ biến (fbclid, utm...) [deployed: ${DEPLOYED_AT}]`,
+    "action_parameters": {
+      "uri": {
+        "query": {
+          // Chỉ định đích danh các query rác cần bóc tách.
+          "expression": `remove_query_args(http.request.uri.query, "fbclid", "utm_source", "utm_medium", "utm_campaign", "utm_term", "utm_content", "gclid", "ttclid", "wbraid", "gbraid", "msclkid", "yclid", "mc_cid", "_hsenc", "dclid")`
+        }
+      }
+    },
+    "description": `Transform rules 1[rtd-cafe-${RTD_CAFE_VERSION}]: Xóa các query tracking phổ biến [deployed: ${DEPLOYED_AT}]`,
     "enabled": true,
-	// Đã thêm dấu = vào sau các ID để chính xác tuyệt đối. Riêng utm_ giữ nguyên.
-	// Điều kiện not http.request.uri.query contains & là để đảm bảo chỉ xóa toàn bộ query nếu nó có duy nhất một query tương ứng, tránh xóa toàn bộ query trong trường hợp như ?search=iphone&fbclid=123
-    "expression": `(starts_with(http.request.uri.query, "fbclid=") and not http.request.uri.query contains "&") or (starts_with(http.request.uri.query, "utm_") and not http.request.uri.query contains "&") or (starts_with(http.request.uri.query, "gclid=") and not http.request.uri.query contains "&") or (starts_with(http.request.uri.query, "ttclid=") and not http.request.uri.query contains "&") or (starts_with(http.request.uri.query, "wbraid=") and not http.request.uri.query contains "&") or (starts_with(http.request.uri.query, "gbraid=") and not http.request.uri.query contains "&") or (starts_with(http.request.uri.query, "msclkid=") and not http.request.uri.query contains "&") or (starts_with(http.request.uri.query, "yclid=") and not http.request.uri.query contains "&") or (starts_with(http.request.uri.query, "mc_cid=") and not http.request.uri.query contains "&") or (starts_with(http.request.uri.query, "_hsenc=") and not http.request.uri.query contains "&") or (starts_with(http.request.uri.query, "dclid=") and not http.request.uri.query contains "&")`
+    // Đã chuyển thành 'contains' để bắt được tracking query dù nó nằm ở bất kỳ đâu trong chuỗi
+    "expression": `(http.request.uri.query contains "fbclid=") or (http.request.uri.query contains "utm_") or (http.request.uri.query contains "gclid=") or (http.request.uri.query contains "ttclid=") or (http.request.uri.query contains "wbraid=") or (http.request.uri.query contains "gbraid=") or (http.request.uri.query contains "msclkid=") or (http.request.uri.query contains "yclid=") or (http.request.uri.query contains "mc_cid=") or (http.request.uri.query contains "_hsenc=") or (http.request.uri.query contains "dclid=")`
   }
 ];
 // --------------------------------------------------------------------------------------------------------------------------------
@@ -256,10 +261,10 @@ const get_MY_CACHE_RULES = (DEPLOYED_AT) => [
     "action": "set_cache_settings",
     "action_parameters": {
       "cache": true,
-      "edge_ttl": { "default": 28800, "mode": "override_origin" }, // 8 tiếng
-      "browser_ttl": { "default": 28800, "mode": "override_origin" } // 8 tiếng
+      "edge_ttl": { "default": 3600, "mode": "override_origin" }, // Giữ ở Cloudflare 60 phút
+      "browser_ttl": { "mode": "respect_origin" } // Tôn trọng file gốc, không ép trình duyệt người dùng lưu
     },
-    "description": `Cache rules 5 [rtd-cafe-${RTD_CAFE_VERSION}]: Cache ngắn cho Sitemap & Feed [deployed: ${DEPLOYED_AT}]`,
+    "description": `Cache rules 5[rtd-cafe-${RTD_CAFE_VERSION}]: Cache ngắn cho Sitemap & Feed[deployed: ${DEPLOYED_AT}]`,
     "enabled": true,
     "expression": `(http.request.uri.path contains "sitemap") or (http.request.uri.path contains "/feed/")`
   },
