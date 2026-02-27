@@ -14,6 +14,14 @@ Ví dụ 1.0.26.f1 nghĩa là phiên bản này có lõi (worker.js) giống y p
 - Thêm cơ chế kiểm tra trước các quy tắc (rules) có sẵn trong Zone định chỉnh sửa.
 - Hiển thị thông báo cảnh báo để người dùng biết trước khi thao tác.
 
+## [1.0.41] - 2026-02-27
+
+### Fixed
+- Chống nhảy thư mục (Directory Traversal / LFI) & Chống tấn công trang login.
+- Giảm tần số kích hoạt chặn từ 5/10s xuống 3/10s cho cả login và comment.
+- Giảm thời gian cache cho RSS và Feed.
+- Sử dụng remove_query_args để xóa các query mạng xã hội được chỉ định để tăng hit cache so với cách cũ (TRANSFORM RULES (URL REWRITE)).
+
 ## [1.0.40] - 2026-02-25
 
 ### Fixed
@@ -203,6 +211,7 @@ Thông báo lỗi chuẩn xác hơn. Mục đích là để người dùng cuố
 
 ### Fixed
 - Thêm 2 quy tắc chặn file (file blocking rules) vào bộ quy tắc bảo mật số 2.
+
 
 
 
