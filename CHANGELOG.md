@@ -20,7 +20,7 @@ Ví dụ 1.0.26.f1 nghĩa là phiên bản này có lõi (worker.js) giống y p
 - Chống nhảy thư mục (Directory Traversal / LFI) & Chống tấn công trang login.
 - Giảm tần số kích hoạt chặn từ 5/10s xuống 3/10s cho cả login và comment.
 - Giảm thời gian cache cho RSS và Feed.
-- Sử dụng remove_query_args để xóa các query mạng xã hội được chỉ định để tăng hit cache so với cách cũ (TRANSFORM RULES (URL REWRITE)).
+- Điều chỉnh TRANSFORM RULES (URL REWRITE). Sử dụng remove_query_args để xóa các query mạng xã hội được chỉ định để tăng hit cache so với cách cũ.
 
 ## [1.0.40] - 2026-02-25
 
@@ -211,6 +211,7 @@ Thông báo lỗi chuẩn xác hơn. Mục đích là để người dùng cuố
 
 ### Fixed
 - Thêm 2 quy tắc chặn file (file blocking rules) vào bộ quy tắc bảo mật số 2.
+
 
 
 
